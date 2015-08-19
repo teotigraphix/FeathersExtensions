@@ -1,0 +1,77 @@
+/**
+ * Created by Teoti on 5/25/2015.
+ */
+package com.teotigraphix.ui.theme
+{
+
+import feathers.controls.Button;
+import feathers.controls.Check;
+import feathers.skins.SmartDisplayObjectStateValueSelector;
+
+import starling.textures.Texture;
+
+public class CheckFactory extends AbstractThemeFactory
+{
+    protected var checkUpIconTexture:Texture;
+    protected var checkDownIconTexture:Texture;
+    protected var checkDisabledIconTexture:Texture;
+    protected var checkSelectedUpIconTexture:Texture;
+    protected var checkSelectedDownIconTexture:Texture;
+    protected var checkSelectedDisabledIconTexture:Texture;
+
+    public function CheckFactory(theme:AbstractTheme)
+    {
+        super(theme);
+    }
+
+    override public function initializeTextures():void
+    {
+        super.initializeTextures();
+
+        var backgroundSkinTexture:Texture = this.atlas.getTexture("background-skin");
+        var backgroundDownSkinTexture:Texture = this.atlas.getTexture("background-down-skin");
+        var backgroundDisabledSkinTexture:Texture = this.atlas.getTexture("background-disabled-skin");
+
+        this.checkUpIconTexture = backgroundSkinTexture;
+        this.checkDownIconTexture = backgroundDownSkinTexture;
+        this.checkDisabledIconTexture = backgroundDisabledSkinTexture;
+        this.checkSelectedUpIconTexture = this.atlas.getTexture("check-selected-up-icon");
+        this.checkSelectedDownIconTexture = this.atlas.getTexture("check-selected-down-icon");
+        this.checkSelectedDisabledIconTexture = this.atlas.getTexture("check-selected-disabled-icon");
+    }
+
+    override public function initializeStyleProviders():void
+    {
+        super.initializeStyleProviders();
+
+        setStyle(Check, setCheckStyles);
+    }
+    public function setCheckStyles(check:Check):void
+    {
+        var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
+        iconSelector.defaultValue = this.checkUpIconTexture;
+        iconSelector.defaultSelectedValue = this.checkSelectedUpIconTexture;
+        iconSelector.setValueForState(this.checkDownIconTexture, Button.STATE_DOWN, false);
+        iconSelector.setValueForState(this.checkDisabledIconTexture, Button.STATE_DISABLED, false);
+        iconSelector.setValueForState(this.checkSelectedDownIconTexture, Button.STATE_DOWN, true);
+        iconSelector.setValueForState(this.checkSelectedDisabledIconTexture, Button.STATE_DISABLED, true);
+        iconSelector.displayObjectProperties =
+        {
+            scaleX: properties.scale,
+            scaleY: properties.scale
+        };
+        check.stateToIconFunction = iconSelector.updateValue;
+
+        check.defaultLabelProperties.elementFormat = theme.fonts.lightUIElementFormat;
+        check.disabledLabelProperties.elementFormat = theme.fonts.lightUIDisabledElementFormat;
+        check.selectedDisabledLabelProperties.elementFormat = theme.fonts.lightUIDisabledElementFormat;
+
+        check.gap = properties.smallGutterSize;
+        check.minWidth = properties.controlSize;
+        check.minHeight = properties.controlSize;
+        check.minTouchWidth = properties.gridSize;
+        check.minTouchHeight = properties.gridSize;
+    }
+
+}
+}
