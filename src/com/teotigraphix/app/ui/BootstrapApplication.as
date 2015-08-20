@@ -71,8 +71,6 @@ CausticEngine.stop()
 
 public class BootstrapApplication extends DrawersApplication implements IBootstrapApplication
 {
-    public var theme:String;
-
     public function BootstrapApplication()
     {
         addEventListener(FeathersEventType.INITIALIZE, this_initializeHandler);
