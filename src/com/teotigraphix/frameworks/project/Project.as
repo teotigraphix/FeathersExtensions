@@ -5,14 +5,14 @@ package com.teotigraphix.frameworks.project
 {
 
 import com.teotigraphix.app.config.Version;
-import com.teotigraphix.caustic.core.caustic_internal;
+import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.IFileService;
 
 import flash.filesystem.File;
 
 import org.as3commons.lang.StringUtils;
 
-use namespace caustic_internal;
+use namespace sdk_internal;
 
 public final class Project
 {
@@ -194,16 +194,16 @@ public final class Project
         fileService = null;
     }
 
-    caustic_internal function initialize(state:IProjectState = null,
-                                         uid:String = null,
-                                         path:String = null,
-                                         name:String = null,
-                                         extension:String = null,
-                                         version:Version = null):void
+    sdk_internal function initialize(state:IProjectState = null,
+                                     uid:String = null,
+                                     path:String = null,
+                                     name:String = null,
+                                     extension:String = null,
+                                     version:Version = null):void
     {
         _state = state;
 
-        AbstractProjectState(_state).caustic_internal::setProject(this);
+        AbstractProjectState(_state).setProject(this);
 
         _uid = uid;
         _path = path;

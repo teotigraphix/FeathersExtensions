@@ -426,7 +426,7 @@ public class FileList extends LayoutGroup
 
         _upButton.isEnabled = _rootDirectory.parent != null;
 
-        var result:Array = getFileListing();
+        var result:Vector.<File> = getFileListing();
         var dataProvider:ListCollection = new ListCollection(result);
         _list.dataProvider = dataProvider;
     }
@@ -450,7 +450,7 @@ public class FileList extends LayoutGroup
         _label.text = _actionText;
     }
 
-    private function getFileListing():Array
+    private function getFileListing():Vector.<File>
     {
         if (_showFiles)
         {

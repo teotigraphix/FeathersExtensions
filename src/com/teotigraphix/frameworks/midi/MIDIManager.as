@@ -4,7 +4,7 @@
 package com.teotigraphix.frameworks.midi
 {
 
-import com.teotigraphix.caustic.core.caustic_internal;
+import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.frameworks.midi.model.MessageList;
 import com.teotigraphix.frameworks.midi.model.NoteItem;
 import com.teotigraphix.util.Files;
@@ -12,7 +12,7 @@ import com.teotigraphix.util.Files;
 import flash.filesystem.File;
 import flash.utils.ByteArray;
 
-use namespace caustic_internal;
+use namespace sdk_internal;
 
 public class MIDIManager
 {

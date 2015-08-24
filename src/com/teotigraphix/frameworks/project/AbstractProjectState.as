@@ -4,7 +4,9 @@
 package com.teotigraphix.frameworks.project
 {
 
-import com.teotigraphix.caustic.core.caustic_internal;
+import com.teotigraphix.core.sdk_internal;
+
+use namespace sdk_internal;
 
 public class AbstractProjectState implements IProjectState
 {
@@ -50,7 +52,7 @@ public class AbstractProjectState implements IProjectState
     {
     }
 
-    caustic_internal function setProject(value:Project):void
+    sdk_internal function setProject(value:Project):void
     {
         _project = value;
         onProjectCreate();

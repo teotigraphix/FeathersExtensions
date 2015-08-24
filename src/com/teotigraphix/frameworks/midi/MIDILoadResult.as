@@ -4,10 +4,12 @@
 package com.teotigraphix.frameworks.midi
 {
 
-import com.teotigraphix.caustic.core.caustic_internal;
+import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.frameworks.midi.model.MetaItem;
 
 import flash.filesystem.File;
+
+use namespace sdk_internal;
 
 public class MIDILoadResult
 {
@@ -105,7 +107,7 @@ public class MIDILoadResult
         return _trackNotes[channel];
     }
 
-    caustic_internal function addNote(channel:int, start:Number, end:Number, pitch:uint, velocity:int):void
+    sdk_internal function addNote(channel:int, start:Number, end:Number, pitch:uint, velocity:int):void
     {
         //trace("addNote(" + channel + ") start:" + start + ", end:" + end +
         //      ", pitch" + pitch + ", velocity:" + velocity);

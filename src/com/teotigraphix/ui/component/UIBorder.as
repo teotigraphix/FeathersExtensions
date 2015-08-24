@@ -15,7 +15,6 @@ public class UIBorder extends FeathersControl
     private var _color:uint = 0x000000;
     private var _quad:Quad;
 
-    [Bindable]
     public function get color():uint
     {
         return _color;
