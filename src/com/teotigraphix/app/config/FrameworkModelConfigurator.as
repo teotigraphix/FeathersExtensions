@@ -27,7 +27,6 @@ public class FrameworkModelConfigurator implements IConfigure
         //context.getInjector().mapSingletonOf(IProjectModel, ProjectModel);
         //context.getInjector().mapSingletonOf(IZipModel, ZipModel);
         //context.getInjector().mapSingletonOf(IMidiModel, MidiModel);
-
     }
 }
 }
