@@ -66,11 +66,26 @@ public final class Files
         return result;
     }
 
+    // TODO to fired to figure out the bug, so I have the filter at the end and in the recursion
     public static function listDirectories(directory:File, recursive:Boolean = false):Vector.<File>
     {
-        var result:Vector.<File> = getDirectoryListing(directory, null, true);
-        // TODO impl listDirectories() recursive
-        return result;
+        var result:Array = directory.getDirectoryListing();
+
+        if (recursive)
+        {
+            for each (var child:File in result)
+            {
+                recurseDirectory(child, result);
+            }
+        }
+
+        var r:Vector.<File> = new <File>[];
+        for each (var file:File in result)
+        {
+            if (file.isDirectory)
+                r.push(file);
+        }
+        return r;
     }
 
     /**
@@ -338,6 +353,35 @@ public final class Files
         {
             trace(e.getStackTrace());
         }
+    }
+
+    private static function recurseDirectory(child:File, directories:Array):void
+    {
+        if (!child.isDirectory)
+            return;
+
+        var result:Array = child.getDirectoryListing();
+        for each (var sub:File in result)
+        {
+            if (sub.isDirectory)
+            {
+                recurseDirectory(sub, directories);
+                if (!containsIn(directories, sub))
+                {
+                    directories.push(sub);
+                }
+            }
+        }
+    }
+
+    private static function containsIn(directories:Array, child:File):Boolean
+    {
+        for each (var file:File in directories)
+        {
+            if (file.nativePath == child.nativePath)
+                return true;
+        }
+        return false;
     }
 
     private static function recursiveDirectoryListing(directory:File,
