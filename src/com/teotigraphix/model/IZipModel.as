@@ -28,7 +28,9 @@ import org.as3commons.async.command.IAsyncCommand;
 
 public interface IZipModel
 {
-
+    /**
+     * The target copy directory once a zip file is loaded into memory.
+     */
     function get targetDirectory():File;
 
     function get fileCount():int;
@@ -40,14 +42,26 @@ public interface IZipModel
 
     function get files():Vector.<File>;
 
+    /**
+     * Loads a zip archive into the model where directories and files get populated.
+     *
+     * @param file The archive file.
+     * @param targetDirectory The target directory to unpack when writeFiles() is called.
+     */
     function loadFile(file:File, targetDirectory:File):void;
 
     function getFileAt(index:int):FZipFile;
 
     function getFileByName(name:String):FZipFile;
 
+    /**
+     * Writes all files to disk in the targetDirectory async.
+     */
     function writeFiles():IAsyncCommand;
 
+    /**
+     * Clears all files, directories and targetDirectory references.
+     */
     function clear():void;
 }
 }

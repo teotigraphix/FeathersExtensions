@@ -40,7 +40,6 @@ public class ApplicationService extends AbstractService implements IApplicationS
 }
 
 import com.teotigraphix.service.IFileService;
-import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.IPreferenceService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.StepCommand;
@@ -52,9 +51,6 @@ import org.as3commons.async.command.IAsyncCommand;
 
 class StartupCoreServicesCommand extends StepCommand implements IAsyncCommand
 {
-    [Inject]
-    public var logger:ILogger;
-
     [Inject]
     public var fileService:IFileService;
 

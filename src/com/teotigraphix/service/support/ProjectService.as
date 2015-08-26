@@ -109,7 +109,6 @@ import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.model.event.ProjectModelEventType;
 import com.teotigraphix.service.IFileService;
-import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.IPreferenceService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.StepCommand;
@@ -124,9 +123,6 @@ import starling.events.EventDispatcher;
 
 class CreateProjectCommand extends StepCommand implements IAsyncCommand
 {
-    [Inject]
-    public var logger:ILogger;
-
     [Inject]
     public var projectModel:IProjectModel;
 
@@ -165,9 +161,6 @@ class CreateProjectCommand extends StepCommand implements IAsyncCommand
 class LoadProjectCommand extends StepCommand implements IAsyncCommand
 {
     private static const TAG:String = "LoadProjectCommand";
-
-    [Inject]
-    public var logger:ILogger;
 
     [Inject]
     public var projectModel:IProjectModel;
@@ -225,9 +218,6 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
     private static const TAG:String = "LoadLastProjectCommand";
 
     [Inject]
-    public var logger:ILogger;
-
-    [Inject]
     public var preferenceService:IPreferenceService;
 
     [Inject]
@@ -266,9 +256,6 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
 
 class SaveProjectCommand extends StepCommand implements IAsyncCommand
 {
-    [Inject]
-    public var logger:ILogger;
-
     [Inject]
     public var eventDispatcher:EventDispatcher;
 

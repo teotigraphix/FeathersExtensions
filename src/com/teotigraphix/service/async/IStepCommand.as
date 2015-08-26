@@ -21,8 +21,9 @@ package com.teotigraphix.service.async
 {
 
 import org.as3commons.async.command.IAsyncCommand;
+import org.as3commons.async.operation.IProgressOperation;
 
-public interface IStepCommand extends IAsyncCommand
+public interface IStepCommand extends IAsyncCommand, IProgressOperation
 {
     function get data():Object;
 

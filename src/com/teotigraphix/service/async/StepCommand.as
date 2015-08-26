@@ -20,10 +20,12 @@
 package com.teotigraphix.service.async
 {
 
+import com.teotigraphix.service.ILogger;
+
 import flash.events.TimerEvent;
 import flash.utils.Timer;
 
-import org.as3commons.async.operation.impl.AbstractOperation;
+import org.as3commons.async.operation.impl.AbstractProgressOperation;
 
 /**
  * An operation that "may" not be async but needs to be treated that way
@@ -31,8 +33,11 @@ import org.as3commons.async.operation.impl.AbstractOperation;
  *
  * <p>Call #complete() in constructor if there is no async complete/error events.</p>
  */
-public class StepCommand extends AbstractOperation implements IStepCommand
+public class StepCommand extends AbstractProgressOperation implements IStepCommand
 {
+    [Inject]
+    public var logger:ILogger;
+
     private var _data:Object;
     private var timer:Timer;
     private var loopTimer:Timer;

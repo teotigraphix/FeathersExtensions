@@ -100,6 +100,18 @@ public class ApplicationDescriptor
         return DOCUMENTS_DIRECTORY.resolvePath(_name);
     }
 
+    // /storage/sdcard0/App/Library
+    public function get libraryDirectory():File
+    {
+        return applicationDirectory.resolvePath("Library");
+    }
+
+    // /storage/sdcard0/App/Library/Packages
+    public function get packagesDirectory():File
+    {
+        return libraryDirectory.resolvePath("Packages");
+    }
+
     // /storage/sdcard0/App/Projects
     public function get projectDirectory():File
     {

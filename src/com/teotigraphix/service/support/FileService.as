@@ -33,12 +33,19 @@ public class FileService extends AbstractService implements IFileService
     [Inject]
     public var descriptor:ApplicationDescriptor;
 
-    /**
-     * Returns something like /storage/sdcard0/CausticPlayer.
-     */
     public function get applicationDirectory():File
     {
         return descriptor.applicationDirectory;
+    }
+
+    public function get libraryDirectory():File
+    {
+        return descriptor.libraryDirectory
+    }
+
+    public function get packagesDirectory():File
+    {
+        return descriptor.packagesDirectory
     }
 
     public function get projectDirectory():File

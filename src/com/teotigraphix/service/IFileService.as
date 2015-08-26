@@ -29,6 +29,19 @@ public interface IFileService
      */
     function get applicationDirectory():File;
 
+    /**
+     * Returns something like /storage/sdcard0/MyApp/Library.
+     */
+    function get libraryDirectory():File;
+
+    /**
+     * Returns something like /storage/sdcard0/MyApp/Library/Packages.
+     */
+    function get packagesDirectory():File;
+
+    /**
+     * Returns something like /storage/sdcard0/MyApp/Projects.
+     */
     function get projectDirectory():File;
 
     function get preferenceBinFile():File;
