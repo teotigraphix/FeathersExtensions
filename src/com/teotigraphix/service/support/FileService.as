@@ -33,6 +33,11 @@ public class FileService extends AbstractService implements IFileService
     [Inject]
     public var descriptor:ApplicationDescriptor;
 
+    public function get storageDirectory():File
+    {
+        return descriptor.storageDirectory;
+    }
+
     public function get applicationDirectory():File
     {
         return descriptor.applicationDirectory;

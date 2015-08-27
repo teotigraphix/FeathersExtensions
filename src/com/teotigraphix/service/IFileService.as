@@ -24,6 +24,8 @@ import flash.filesystem.File;
 
 public interface IFileService
 {
+    function get storageDirectory():File;
+
     /**
      * Returns something like /storage/sdcard0/MyApp.
      */

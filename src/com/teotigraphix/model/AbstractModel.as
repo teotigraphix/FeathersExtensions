@@ -22,6 +22,10 @@ package com.teotigraphix.model
 
 import com.teotigraphix.service.ILogger;
 
+import flash.events.Event;
+
+import flash.events.IEventDispatcher;
+
 import org.robotlegs.starling.core.IInjector;
 import org.robotlegs.starling.mvcs.Actor;
 
@@ -34,6 +38,9 @@ public class AbstractModel extends Actor
 
     [Inject]
     public var injector:IInjector;
+
+    [Inject]
+    public var flashDispatcher:IEventDispatcher;
 
     [Inject]
     override public function set eventDispatcher(value:EventDispatcher):void
@@ -55,6 +62,12 @@ public class AbstractModel extends Actor
      */
     protected function onRegister():void
     {
+    }
+
+    override protected function dispatchWith(type:String, bubbles:Boolean = false, data:Object = null):void
+    {
+        super.dispatchWith(type, bubbles, data);
+        flashDispatcher.dispatchEvent(new Event(type, bubbles));
     }
 }
 }

@@ -94,6 +94,11 @@ public class ApplicationDescriptor
         return DOCUMENTS_DIRECTORY;
     }
 
+    public function get storageDirectory():File
+    {
+        return File.applicationStorageDirectory;
+    }
+
     // /storage/sdcard0/CausticPlayer
     public function get applicationDirectory():File
     {

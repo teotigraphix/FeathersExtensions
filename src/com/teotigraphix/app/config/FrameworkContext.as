@@ -51,6 +51,8 @@ public class FrameworkContext extends Context
 
     override public function startup():void
     {
+        injector.mapValue(IEventDispatcher, flashDispatcher);
+
         trace("    FrameworkContext.configureDescriptor()");
         configureDescriptor();
         trace("    FrameworkContext.configureCore()");
