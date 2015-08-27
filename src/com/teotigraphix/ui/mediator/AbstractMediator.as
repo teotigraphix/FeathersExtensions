@@ -17,43 +17,23 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.service.support
+package com.teotigraphix.ui.mediator
 {
 
 import com.teotigraphix.service.ILogger;
 
 import org.robotlegs.starling.core.IInjector;
-import org.robotlegs.starling.mvcs.Actor;
+import org.robotlegs.starling.mvcs.Mediator;
 
-import starling.events.EventDispatcher;
-
-public class AbstractModel extends Actor
+public class AbstractMediator extends Mediator
 {
-    [Inject]
-    public var logger:ILogger;
-
     [Inject]
     public var injector:IInjector;
 
     [Inject]
-    override public function set eventDispatcher(value:EventDispatcher):void
-    {
-        super.eventDispatcher = value;
-        onRegister();
-    }
+    public var logger:ILogger;
 
-    /**
-     * App specific ApplicationController must call this method.
-     * @param project
-     */
-    //public function onProjectChange(project:Project):void
-    //{
-    //}
-
-    /**
-     * Register context events with the #eventMap.
-     */
-    protected function onRegister():void
+    public function AbstractMediator()
     {
     }
 }
