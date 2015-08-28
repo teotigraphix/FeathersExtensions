@@ -66,6 +66,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
     public var gridGroups:GridGroupFactory;
     public var text:TextInputFactory;
     public var check:CheckFactory;
+    public var groupList:GroupListFactory;
 
     internal var _originalDPI:int;
     internal var _scaleToDPI:Boolean;
@@ -157,6 +158,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         gridGroups = new GridGroupFactory(this);
         text = new TextInputFactory(this);
         check = new CheckFactory(this);
+        groupList = new GroupListFactory(this);
     }
 
     protected function addFactories():void
@@ -176,6 +178,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         _factories.push(gridGroups);
         _factories.push(text);
         _factories.push(check);
+        _factories.push(groupList);
     }
 
     /**

@@ -36,8 +36,8 @@ import starling.display.Quad;
 
 public class ListFactory extends AbstractThemeFactory
 {
-    protected static const LIST_BACKGROUND_COLOR:uint = 0x383430;
-    protected static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 2, 82);
+    public static const LIST_BACKGROUND_COLOR:uint = 0x383430;
+    public static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 2, 82);
 
     protected var itemRendererUpSkinTextures:Scale9Textures;
     protected var itemRendererSelectedSkinTextures:Scale9Textures;
