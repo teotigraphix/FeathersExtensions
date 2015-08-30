@@ -133,8 +133,8 @@ public class FileService extends AbstractService implements IFileService
         if (File.applicationDirectory != null)
             logger.log(TAG, File.applicationDirectory.nativePath);
 
-        // C:\Users\Teoti\AppData\Roaming\com.teotigraphix.causticplayer.debug\Local Store
-        // /data/data/air.com.teotigraphix.causticplayer.debug/com.teotigraphix.causticplayer.debug/Local Store
+        // C:\Users\Teoti\AppData\Roaming\com.teotigraphix.tones.debug\Local Store
+        // /data/data/air.com.teotigraphix.tones.debug/com.teotigraphix.tones.debug/Local Store
         if (File.applicationStorageDirectory != null)
             logger.log(TAG, File.applicationStorageDirectory.nativePath);
 
