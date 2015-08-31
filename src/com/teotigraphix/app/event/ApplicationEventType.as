@@ -20,39 +20,54 @@
 package com.teotigraphix.app.event
 {
 
+/**
+ * The event type for the top level Application model.
+ */
 public final class ApplicationEventType
 {
-    /**
-     * Dispatched through Starling when the "rootCreated" event is fired
-     * after LoaderInfo.COMPLETE and Starling.startup() have been called.
-     *
-     * <p>data - StarlingRootSprite</p>
-     *
-     * @see StarlingRootSprite
-     */
-    public static const APPLICATION_START:String = "applicationStart";
 
-    public static const APPLICATION_ACTIVATE:String = "applicationActivate";
-
-    public static const APPLICATION_DEACTIVATE:String = "applicationDeactivate";
-
-    /**
-     * Dispatched when the application is being disposed, fires after deactivate.
-     */
-    public static const APPLICATION_EXIT:String = "applicationExit";
+    ///**
+    // * Dispatched through Starling when the "rootCreated" event is fired
+    // * after LoaderInfo.COMPLETE and Starling.startup() have been called.
+    // *
+    // * <p>data - StarlingRootSprite</p>
+    // *
+    // * @see StarlingRootSprite
+    // */
+    //public static const APPLICATION_START:String = "applicationStart";
+    //
+    //public static const APPLICATION_ACTIVATE:String = "applicationActivate";
+    //
+    //public static const APPLICATION_DEACTIVATE:String = "applicationDeactivate";
+    //
+    ///**
+    // * Dispatched when the application is being disposed, fires after deactivate.
+    // */
+    //public static const APPLICATION_EXIT:String = "applicationExit";
 
     /**
      * Dispatched after the MVC model and Project state have been initialized and loaded.
      *
      * <p>When this event is fired, all state is ready and the main application will
      * be show in the view, tearing down the loading image.</p>
+     *
+     * <p>The usual listener of this event is the MainNavigatorMediator. When it receives
+     * this event, it will show the first application screen, where a loading screen may
+     * have been shown.</p>
+     *
+     * <p>All loading and startup logic needs to be placed inside the ApplicationStartupCommand
+     * which is an IOperation and async. The startup is completed in progressive steps until
+     * that last step is complete, when that step is complete, the command will fire this
+     * event type on the context event dispatcher.</p>
+     *
+     * @data <code>null</code>
      */
     public static const APPLICATION_COMPLETE:String = "applicationComplete";
 
     /**
      * Dispatched after a Project has been loaded and set on the ProjectModel.
      *
-     * <p>data - Project</p>
+     * @data <code>com.teotigraphix.frameworks.project.Project</code>
      */
     public static const PROJECT_CHANGED:String = "projectChanged";
 

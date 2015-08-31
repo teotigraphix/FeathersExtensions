@@ -47,7 +47,31 @@ public class AbstractController extends Actor
     }
 
     /**
+     * Removes a listener from the eventMap.
+     *
+     * @param type The event type.
+     * @param listener The event listener Function.
+     */
+    protected function addContextListener(type:String, listener:Function):void
+    {
+        eventMap.mapListener(eventDispatcher, type, listener);
+    }
+
+    /**
+     * Adds a listener to the eventMap.
+     *
+     * @param type The event type.
+     * @param listener The event listener Function.
+     */
+    protected function removeContextListener(type:String, listener:Function):void
+    {
+        eventMap.unmapListener(eventDispatcher, type, listener);
+    }
+
+    /**
      * Register context events with the #eventMap.
+     *
+     * Called when the eventDispatcher is injected on this controller.
      */
     protected function onRegister():void
     {
