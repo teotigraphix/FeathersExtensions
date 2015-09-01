@@ -36,8 +36,15 @@ import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
+/**
+ *
+ */
 public class GridGroup extends FeathersControl
 {
+    //--------------------------------------------------------------------------
+    // Events
+    //--------------------------------------------------------------------------
+
     public static const EVENT_SELECTED_INDEX_CHANGE:String = "selectedIndexChange";
     public static const EVENT_ITEM_DOUBLE_TAP:String = "itemDoubleTap";
     /**
@@ -45,14 +52,22 @@ public class GridGroup extends FeathersControl
      */
     public static const EVENT_ITEM_LONG_PRESS:String = "itemLongPress";
 
-    public static const INVALIDATION_FLAG_DATA_CHANGE:String = "dataChange";
-    public static const INVALIDATION_FLAG_SELECTED_INDEX_CHANGE:String = "selectedIndex";
+    //--------------------------------------------------------------------------
+    // Flags
+    //--------------------------------------------------------------------------
+
+    protected static const INVALIDATION_FLAG_DATA_CHANGE:String = "dataChange";
+    protected static const INVALIDATION_FLAG_SELECTED_INDEX_CHANGE:String = "selectedIndex";
 
     public static var globalStyleProvider:IStyleProvider;
 
     public var buttonStyleName:String;
     public var isActiveElementStyle:ElementFormat;
     public var isNotActiveElementStyle:ElementFormat;
+
+    //--------------------------------------------------------------------------
+    // Private :: Variables
+    //--------------------------------------------------------------------------
 
     protected var _buttons:Dictionary;
 
@@ -64,12 +79,20 @@ public class GridGroup extends FeathersControl
     private var _numColumns:int;
     private var _numRows:int;
     private var updatingToggleGroup:Boolean;
-    // patternName:UIToggleButton
+    private var _touch:Touch;
 
     override protected function get defaultStyleProvider():IStyleProvider
     {
         return GridGroup.globalStyleProvider;
     }
+
+    //--------------------------------------------------------------------------
+    // Public API : Properties
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // selectedIndex
+    //----------------------------------
 
     public function get selectedIndex():int
     {
@@ -85,10 +108,18 @@ public class GridGroup extends FeathersControl
         dispatchEventWith(EVENT_SELECTED_INDEX_CHANGE, true, _selectedIndex);
     }
 
+    //----------------------------------
+    // toggleGroup
+    //----------------------------------
+
     public function get toggleGroup():ToggleGroup
     {
         return _toggleGroup;
     }
+
+    //----------------------------------
+    // dataProvider
+    //----------------------------------
 
     public function get dataProvider():ListCollection
     {
@@ -109,7 +140,12 @@ public class GridGroup extends FeathersControl
             _dataProvider.addEventListener(Event.CHANGE, dataProvider_changeHandler);
         }
         invalidate(INVALIDATION_FLAG_DATA);
+        invalidate(INVALIDATION_FLAG_SIZE);
     }
+
+    //----------------------------------
+    // numColumns
+    //----------------------------------
 
     public function get numColumns():int
     {
@@ -118,8 +154,15 @@ public class GridGroup extends FeathersControl
 
     public function set numColumns(value:int):void
     {
+        if (_numColumns == value)
+            return;
         _numColumns = value;
+        invalidate(INVALIDATION_FLAG_LAYOUT);
     }
+
+    //----------------------------------
+    // numRows
+    //----------------------------------
 
     public function get numRows():int
     {
@@ -128,8 +171,15 @@ public class GridGroup extends FeathersControl
 
     public function set numRows(value:int):void
     {
+        if (_numRows == value)
+            return;
         _numRows = value;
+        invalidate(INVALIDATION_FLAG_LAYOUT);
     }
+
+    //----------------------------------
+    // padding
+    //----------------------------------
 
     public function get padding():int
     {
@@ -138,9 +188,15 @@ public class GridGroup extends FeathersControl
 
     public function set padding(value:int):void
     {
+        if (_padding == value)
+            return;
         _padding = value;
-        invalidate(INVALIDATION_FLAG_STYLES);
+        invalidate(INVALIDATION_FLAG_LAYOUT);
     }
+
+    //----------------------------------
+    // gap
+    //----------------------------------
 
     public function get gap():int
     {
@@ -149,13 +205,23 @@ public class GridGroup extends FeathersControl
 
     public function set gap(value:int):void
     {
+        if (_gap == value)
+            return;
         _gap = value;
-        invalidate(INVALIDATION_FLAG_STYLES);
+        invalidate(INVALIDATION_FLAG_LAYOUT);
     }
+
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
 
     public function GridGroup()
     {
     }
+
+    //--------------------------------------------------------------------------
+    // Overridden Protected :: Methods
+    //--------------------------------------------------------------------------
 
     override protected function initialize():void
     {
@@ -169,7 +235,9 @@ public class GridGroup extends FeathersControl
     {
         super.draw();
 
-        if (isInvalid(INVALIDATION_FLAG_DATA) && _dataProvider != null)
+        const dataInvalid:Boolean = isInvalid(INVALIDATION_FLAG_DATA);
+
+        if (dataInvalid && _dataProvider != null)
         {
             commitData();
         }
@@ -184,14 +252,44 @@ public class GridGroup extends FeathersControl
             _toggleGroup.selectedIndex = _selectedIndex;
         }
 
-        if (isInvalid(INVALIDATION_FLAG_SIZE))
+        const layoutInvalid:Boolean = isInvalid(INVALIDATION_FLAG_LAYOUT);
+        const sizeInvalid:Boolean = autoSizeIfNeeded() || isInvalid(INVALIDATION_FLAG_SIZE);
+
+        if (sizeInvalid || layoutInvalid || dataInvalid)
         {
-            setSizeInternal((25 * _numColumns) + (_gap * _numColumns - 1) + (_padding * 2),
-                            (25 * _numRows) + (_gap * _numRows - 1) + (_padding * 2), false);
+            layoutChildren();
+        }
+    }
+
+    protected function autoSizeIfNeeded():Boolean
+    {
+        var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+        var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+        if (!needsWidth && !needsHeight)
+        {
+            return false;
         }
 
-        layoutChildren();
+        var newWidth:Number = this.explicitWidth;
+        var newHeight:Number = this.explicitHeight;
+
+        if (needsWidth)
+        {
+            newWidth = (25 * _numColumns) + (_gap * (_numColumns - 1)) + (_padding * 2);
+
+        }
+
+        if (needsHeight)
+        {
+            newHeight = (25 * _numRows) + (_gap * (_numRows - 1)) + (_padding * 2);
+        }
+
+        return setSizeInternal(newWidth, newHeight, false);
     }
+
+    //--------------------------------------------------------------------------
+    // Protected :: Methods
+    //--------------------------------------------------------------------------
 
     protected function commitData():void
     {
@@ -236,7 +334,6 @@ public class GridGroup extends FeathersControl
                 var child:GridButton = _buttons[data];
 
                 refreshButton(child, data);
-
                 index++;
             }
         }
@@ -272,16 +369,25 @@ public class GridGroup extends FeathersControl
         }
     }
 
+    protected function childSizeChanged(child:DisplayObject):void
+    {
+
+    }
+
     private function layoutChildren():void
     {
         if (numChildren == 0)
             return;
 
-        var contentWidth:Number = actualWidth - (_gap * _numColumns - 1) - (_padding * 2);
-        var contentHeight:Number = actualHeight - (_gap * _numRows - 1) - (_padding * 2);
+        var contentWidth:Number = actualWidth - (_gap * (_numColumns - 1)) - (_padding * 2);
+        var contentHeight:Number = actualHeight - (_gap * (_numRows - 1)) - (_padding * 2);
+
+        trace("layoutChildren " + contentWidth + ", " + contentHeight);
 
         var calcWidth:Number = contentWidth / _numColumns;
         var calcHeight:Number = contentHeight / _numRows;
+
+        trace("calcWidth/calcHeight " + calcWidth + ", " + calcHeight);
 
         var calcX:Number = _padding;
         var calcY:Number = _padding;
@@ -305,10 +411,9 @@ public class GridGroup extends FeathersControl
         }
     }
 
-    protected function childSizeChanged(child:DisplayObject):void
-    {
-
-    }
+    //--------------------------------------------------------------------------
+    // EventHandlers
+    //--------------------------------------------------------------------------
 
     private function toggleGroup_changeHandler(event:Event):void
     {
@@ -316,8 +421,6 @@ public class GridGroup extends FeathersControl
             return;
         selectedIndex = _toggleGroup.selectedIndex;
     }
-
-    private var _touch:Touch;
 
     private function button_touchHandler(event:TouchEvent):void
     {

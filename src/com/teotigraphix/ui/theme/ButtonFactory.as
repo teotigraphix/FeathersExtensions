@@ -68,7 +68,7 @@ public class ButtonFactory extends AbstractThemeFactory
     public function setBaseButtonStyles(button:Button):void
     {
         button.defaultLabelProperties.elementFormat = theme.fonts.lightElementFormat;
-        button.disabledLabelProperties.elementFormat = theme.fonts.lightUIDisabledElementFormat;
+        button.disabledLabelProperties.elementFormat = theme.fonts.darkUIDisabledElementFormat;
         if (button is ToggleButton)
         {
             //for convenience, this function can style both a regular button
