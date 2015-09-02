@@ -66,7 +66,28 @@ BootstrapApplication.CREATION_COMPLETE()
 
 CausticEngine.stop()
 
+private function setFocusListener():void
+{
+	stage.addEventListener(flash.events.Event.DEACTIVATE, deactivated);
+}
 
+private function deactivated(event:flash.events.Event):void
+{
+	stage.removeEventListener(flash.events.Event.DEACTIVATE, deactivated);
+	stage.addEventListener(flash.events.Event.ACTIVATE, activated);
+
+	starling.stop(true);  // <<<< TRUE
+	Starling.current.nativeStage.frameRate = 0.1;
+}
+
+private function activated(event:flash.events.Event):void
+{
+	stage.addEventListener(flash.events.Event.DEACTIVATE, deactivated);
+	stage.removeEventListener(flash.events.Event.ACTIVATE, activated);
+
+	starling.start();
+	Starling.current.nativeStage.frameRate = 60;
+}
 */
 
 public class BootstrapApplication extends DrawersApplication implements IBootstrapApplication
