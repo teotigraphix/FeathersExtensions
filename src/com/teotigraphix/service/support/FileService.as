@@ -24,6 +24,7 @@ import com.teotigraphix.app.config.ApplicationDescriptor;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.util.Files;
 
+import flash.errors.IllegalOperationError;
 import flash.filesystem.File;
 
 public class FileService extends AbstractService implements IFileService
@@ -95,6 +96,16 @@ public class FileService extends AbstractService implements IFileService
     public function deserialize(file:File):*
     {
         return Files.deserialize(file);
+    }
+
+    public function wakeup(file:File):*
+    {
+        throw new IllegalOperationError("FileService.wakeup() not impl");
+    }
+
+    public function sleep(file:File, data:Object):void
+    {
+        throw new IllegalOperationError("FileService.sleep() not impl");
     }
 
     public function listFiles(directory:File,

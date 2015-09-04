@@ -53,6 +53,10 @@ public interface IFileService
                        recursive:Boolean = false,
                        directoriesOnTop:Boolean = true):Vector.<File>;
 
+    function wakeup(file:File):*;
+
+    function sleep(file:File, data:Object):void;
+
     function serialize(data:Object, file:File):void;
 
     function deserialize(file:File):*;

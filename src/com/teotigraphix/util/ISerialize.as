@@ -20,10 +20,28 @@
 package com.teotigraphix.util
 {
 
+/**
+ * Interface used to call methods on instance' creation,
+ * serialization and deserialization cycle.
+ */
 public interface ISerialize
 {
+    /**
+     * Called when the parent project has just been created.
+     */
+    function create():void;
+
+    /**
+     * Called when the parent project has just been deserialized.
+     */
     function wakeup():void;
 
-    function sleep():void;
+    /**
+     * Called when the parent project is getting ready to serialize, preSleep (true) or right after
+     * the project has been serialized, preSleep (true).
+     *
+     * @param preSleep Before serialization (false), after serialization (true).
+     */
+    function sleep(preSleep:Boolean = false):void;
 }
 }

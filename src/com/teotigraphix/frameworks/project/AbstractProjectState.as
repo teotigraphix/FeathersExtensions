@@ -21,11 +21,18 @@ package com.teotigraphix.frameworks.project
 {
 
 import com.teotigraphix.core.sdk_internal;
+import com.teotigraphix.util.ISerialize;
+
+import org.robotlegs.starling.core.IInjector;
 
 use namespace sdk_internal;
 
-public class AbstractProjectState implements IProjectState
+public class AbstractProjectState implements IProjectState, ISerialize
 {
+    [Transient]
+    [Inject]
+    public var injector:IInjector;
+
     //--------------------------------------------------------------------------
     // Serialized API
     //--------------------------------------------------------------------------
@@ -50,28 +57,21 @@ public class AbstractProjectState implements IProjectState
     {
     }
 
-    /**
-     * Called when a new project has been created and state needs initialization.
-     */
-    public function initialize():void
+    public function create():void
     {
     }
 
-    /**
-     * called after a project has been deserialized and rack bytes are loaded.
-     */
     public function wakeup():void
     {
     }
 
-    protected function onProjectCreate():void
+    public function sleep(preSleep:Boolean = false):void
     {
     }
 
     sdk_internal function setProject(value:Project):void
     {
         _project = value;
-        onProjectCreate();
     }
 }
 }

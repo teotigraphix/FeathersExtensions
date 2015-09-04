@@ -23,7 +23,5 @@ package com.teotigraphix.frameworks.project
 public interface IProjectState
 {
     function get project():Project;
-
-    //function setProject(value:Project):void;
 }
 }

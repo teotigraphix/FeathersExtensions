@@ -233,19 +233,24 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
     override public function execute():*
     {
         logger.startup(TAG, "execute()");
-        var project:Project = ProjectService(projectService).sdk_internal::createProject("UntitledProject", "");
+        var project:Project = null;
 
         var path:String = preferenceService.appLastProjectPath;
 
-        var file:File = project.workingFile;
-        if (file.exists)
+        var file:File = path != null ? new File(path) : null;
+        if (file != null && file.exists)
         {
             logger.startup(TAG, "### Loading Project: " + file.nativePath);
-            project = fileService.deserialize(file);
+            // Project is injected before Project.wakeup() is called.
+            project = fileService.wakeup(file);
+            logger.log(TAG, "### Project.onWakeup()");
         }
         else
         {
             logger.startup(TAG, "### Using default Project: " + file.nativePath);
+            project = ProjectService(projectService).sdk_internal::createProject("UntitledProject", "");
+            logger.log(TAG, "### Project.onCreate()");
+            project.create();
         }
 
         complete(project);

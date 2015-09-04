@@ -23,16 +23,22 @@ package com.teotigraphix.frameworks.project
 import com.teotigraphix.app.config.Version;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.IFileService;
+import com.teotigraphix.util.ISerialize;
 
 import flash.filesystem.File;
 
 import org.as3commons.lang.StringUtils;
+import org.robotlegs.starling.core.IInjector;
 
 use namespace sdk_internal;
 
-public final class Project
+public final class Project implements ISerialize
 {
     private static const TEMP_DIR:String = ".temp";
+
+    [Inject]
+    [Transient]
+    public var injector:IInjector;
 
     [Inject]
     [Transient]
@@ -210,6 +216,31 @@ public final class Project
         fileService = null;
     }
 
+    public function create():void
+    {
+        if (_state is ISerialize)
+        {
+            ISerialize(_state).create();
+        }
+    }
+
+    public function wakeup():void
+    {
+        if (_state is ISerialize)
+        {
+            injector.injectInto(_state);
+            ISerialize(_state).wakeup();
+        }
+    }
+
+    public function sleep(preSleep:Boolean = false):void
+    {
+        if (_state is ISerialize)
+        {
+            ISerialize(_state).sleep(preSleep);
+        }
+    }
+
     sdk_internal function initialize(state:IProjectState = null,
                                      uid:String = null,
                                      path:String = null,
@@ -227,5 +258,6 @@ public final class Project
         _extension = extension;
         _version = version;
     }
+
 }
 }
