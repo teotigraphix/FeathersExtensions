@@ -158,7 +158,7 @@ public class OSCManager implements IOSCConnectorListener
      * recevied OSCMessage.
      * @param    listener The IOSCListener implementation to handle the OSC Messages.
      */
-    public function addMsgListener(listener:IOSCListener):void
+    public function addOSCListener(listener:IOSCListener):void
     {
         if (this.msgListener.indexOf(listener) > -1) return;
         this.msgListener.push(listener);
