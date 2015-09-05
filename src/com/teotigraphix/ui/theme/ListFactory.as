@@ -39,8 +39,9 @@ public class ListFactory extends AbstractThemeFactory
     public static const LIST_BACKGROUND_COLOR:uint = 0x383430;
     public static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 2, 82);
 
-    protected var itemRendererUpSkinTextures:Scale9Textures;
-    protected var itemRendererSelectedSkinTextures:Scale9Textures;
+    // Shared with SpinnerList etc.
+    public var itemRendererUpSkinTextures:Scale9Textures;
+    public var itemRendererSelectedSkinTextures:Scale9Textures;
 
     public function ListFactory(theme:AbstractTheme)
     {
@@ -67,14 +68,14 @@ public class ListFactory extends AbstractThemeFactory
         setStyle(DefaultListItemRenderer, setItemRendererStyles);
     }
 
-    protected function setListStyles(list:List):void
+    public function setListStyles(list:List):void
     {
         theme.scrollers.setScrollerStyles(list);
         var backgroundSkin:Quad = new Quad(properties.gridSize, properties.gridSize, LIST_BACKGROUND_COLOR);
         list.backgroundSkin = backgroundSkin;
     }
 
-    protected function setItemRendererStyles(renderer:BaseDefaultItemRenderer):void
+    public function setItemRendererStyles(renderer:BaseDefaultItemRenderer):void
     {
         var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
         skinSelector.defaultValue = itemRendererUpSkinTextures;
@@ -113,17 +114,17 @@ public class ListFactory extends AbstractThemeFactory
         renderer.iconLoaderFactory = imageLoaderFactory;
     }
 
-    protected function setItemRendererAccessoryLabelRendererStyles(renderer:TextBlockTextRenderer):void
+    public function setItemRendererAccessoryLabelRendererStyles(renderer:TextBlockTextRenderer):void
     {
         renderer.elementFormat = theme.fonts.lightElementFormat;
     }
 
-    protected function setItemRendererIconLabelStyles(renderer:TextBlockTextRenderer):void
+    public function setItemRendererIconLabelStyles(renderer:TextBlockTextRenderer):void
     {
         renderer.elementFormat = theme.fonts.lightElementFormat;
     }
 
-    protected function imageLoaderFactory():ImageLoader
+    public function imageLoaderFactory():ImageLoader
     {
         var image:ImageLoader = new ImageLoader();
         image.textureScale = theme.scale;

@@ -29,25 +29,21 @@ import starling.textures.TextureAtlas;
 public class AbstractTheme extends StyleNameFunctionTheme
 {
 
-    protected static var PRIMARY_BACKGROUND_COLOR:uint = 0x4a4137;
-
-    protected static var DRAWER_OVERLAY_COLOR:uint = 0x29241e;
-    protected static var DRAWER_OVERLAY_ALPHA:Number = 0.4;
-
     /**
      * The screen density of an iPhone with Retina display. The textures
      * used by this theme are designed for this density and scale for other
      * densities.
      */
     internal static const ORIGINAL_DPI_IPHONE_RETINA:int = 326;
-
     /**
      * The screen density of an iPad with Retina display. The textures used
      * by this theme are designed for this density and scale for other
      * densities.
      */
     internal static const ORIGINAL_DPI_IPAD_RETINA:int = 264;
-
+    protected static var PRIMARY_BACKGROUND_COLOR:uint = 0x4a4137;
+    protected static var DRAWER_OVERLAY_COLOR:uint = 0x29241e;
+    protected static var DRAWER_OVERLAY_ALPHA:Number = 0.4;
     public var scale:Number = 1;
 
     public var properties:ThemeProperties;
@@ -67,6 +63,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
     public var text:TextInputFactory;
     public var check:CheckFactory;
     public var groupList:GroupListFactory;
+    public var spinnerList:SpinnerListFactory;
 
     internal var _originalDPI:int;
     internal var _scaleToDPI:Boolean;
@@ -159,6 +156,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         text = new TextInputFactory(this);
         check = new CheckFactory(this);
         groupList = new GroupListFactory(this);
+        spinnerList = new SpinnerListFactory(this);
     }
 
     protected function addFactories():void
@@ -179,6 +177,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         _factories.push(text);
         _factories.push(check);
         _factories.push(groupList);
+        _factories.push(spinnerList);
     }
 
     /**
