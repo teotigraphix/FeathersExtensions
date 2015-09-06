@@ -85,7 +85,7 @@ public class ProjectService extends AbstractService implements IProjectService
         project.workingDirectory.createDirectory();
         project.workingTempDirectory.createDirectory();
 
-        fileService.serialize(project, project.workingFile);
+        fileService.serialize(project.workingFile, project);
     }
 
     sdk_internal function createProject(name:String, path:String):Project

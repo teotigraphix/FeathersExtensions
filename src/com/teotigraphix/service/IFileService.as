@@ -57,7 +57,7 @@ public interface IFileService
 
     function sleep(file:File, data:Object):void;
 
-    function serialize(data:Object, file:File):void;
+    function serialize(file:File, data:Object):void;
 
     function deserialize(file:File):*;
 

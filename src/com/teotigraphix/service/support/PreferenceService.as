@@ -118,7 +118,7 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
 
     public function flush():void
     {
-        fileService.serialize(_map, fileService.preferenceBinFile);
+        fileService.serialize(fileService.preferenceBinFile, _map);
     }
 
     public function save():void
