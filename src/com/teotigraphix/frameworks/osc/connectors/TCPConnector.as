@@ -13,36 +13,30 @@ import flash.utils.ByteArray;
 
 /**
  * An implementation of the <code>IOSCConnector</code> using TCP.
- * Note that the <code>TuioConnector</code> only works with bridges and trackers tht send TUIO in binary form via
- * TCP i.e. <b>not XML</b>
  */
 public class TCPConnector implements IOSCConnector
 {
-
-    private var host:String;
-    private var port:int;
-
-    private var connection:OSCSocket;
-
-    private var listeners:Array;
+    private var _host:String;
+    private var _port:int;
+    private var _connection:OSCSocket;
+    private var _listeners:Array;
 
     /**
      * Creates a new instance of the TCPConnector
      * @param    host The IP of the tracker or bridge.
-     * @param    port The port on which the tracker or bridge sends the TUIO tracking data.
+     * @param    port The port on which device sends data.
      */
     public function TCPConnector(host:String = "127.0.0.1", port:int = 3333)
     {
+        _listeners = [];
 
-        this.listeners = new Array();
+        _host = host;
+        _port = port;
 
-        this.host = host;
-        this.port = port;
+        _connection = new OSCSocket();
+        _connection.addEventListener(OSCEvent.OSC_DATA, receiveOscData);
 
-        this.connection = new OSCSocket();
-        this.connection.addEventListener(OSCEvent.OSC_DATA, receiveOscData);
-
-        this.connection.connect(host, port);
+        _connection.connect(host, port);
     }
 
     /**
@@ -50,11 +44,10 @@ public class TCPConnector implements IOSCConnector
      */
     public function addListener(listener:IOSCConnectorListener):void
     {
+        if (_listeners.indexOf(listener) > -1)
+            return;
 
-        if (this.listeners.indexOf(listener) > -1) return;
-
-        this.listeners.push(listener);
-
+        _listeners.push(listener);
     }
 
     /**
@@ -62,18 +55,7 @@ public class TCPConnector implements IOSCConnector
      */
     public function removeListener(listener:IOSCConnectorListener):void
     {
-
-        var tmp:Array = this.listeners.concat();
-        var newList:Array = [];
-
-        var item:Object = tmp.pop();
-        while (item != null)
-        {
-            if (item != listener) newList.push(item);
-        }
-
-        this.listeners = newList;
-
+        _listeners.splice(_listeners.indexOf(listener), 1);
     }
 
     /**
@@ -90,7 +72,7 @@ public class TCPConnector implements IOSCConnector
      */
     public function close():void
     {
-        if (this.connection.connected) this.connection.close();
+        if (_connection.connected) _connection.close();
     }
 
     private function debug(msg:String):void
@@ -108,10 +90,10 @@ public class TCPConnector implements IOSCConnector
         packet.position = 0;
         if (packet != null)
         {
-            if (this.listeners.length > 0)
+            if (_listeners.length > 0)
             {
                 //call receive listeners and push the received messages
-                for each(var l:IOSCConnectorListener in this.listeners)
+                for each(var l:IOSCConnectorListener in _listeners)
                 {
                     if (OSCBundle.isBundle(packet))
                     {
@@ -123,14 +105,12 @@ public class TCPConnector implements IOSCConnector
                     }
                     else
                     {
-                        this.debug("\nreceived: invalid osc packet.");
+                        debug("\nreceived: invalid osc packet.");
                     }
                 }
             }
         }
     }
-
 }
-
 }
 	

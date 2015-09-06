@@ -12,7 +12,5 @@ public interface IOSCListener
      * @param    oscmsg The OSCMessage which has to be handled.
      */
     function acceptOSCMessage(oscmsg:OSCMessage):void;
-
 }
-
 }

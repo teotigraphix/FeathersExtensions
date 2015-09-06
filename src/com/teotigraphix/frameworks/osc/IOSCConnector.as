@@ -31,5 +31,4 @@ public interface IOSCConnector
      */
     function close():void;
 }
-
 }

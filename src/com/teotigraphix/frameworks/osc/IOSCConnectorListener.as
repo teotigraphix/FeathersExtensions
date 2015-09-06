@@ -12,7 +12,5 @@ public interface IOSCConnectorListener
      * @param    oscPacket The received OSCPacket.
      */
     function acceptOSCPacket(oscPacket:OSCPacket):void;
-
 }
-
 }

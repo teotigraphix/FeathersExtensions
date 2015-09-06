@@ -4,15 +4,17 @@ package com.teotigraphix.frameworks.osc
 /**
  * An internaly used class which implements a tree structure
  * for managing OSCContainers and speeding up OSCAddress lookups.
+ *
+ * @author Michael Schmalle
  */
 public class OSCAddressSpace
 {
 
-    private var root:OSCContainer;
+    private var _root:OSCContainer;
 
     public function OSCAddressSpace()
     {
-        this.root = new OSCContainer("");
+        _root = new OSCContainer("");
     }
 
     /**
@@ -24,7 +26,7 @@ public class OSCAddressSpace
     {
         var parts:Array = address.split("/");
         var part:String;
-        var currentNode:OSCContainer = root;
+        var currentNode:OSCContainer = _root;
         var nextNode:OSCContainer;
         while (parts.length > 0)
         {
@@ -48,7 +50,7 @@ public class OSCAddressSpace
     {
         var parts:Array = address.split("/");
         var part:String;
-        var currentNode:OSCContainer = root;
+        var currentNode:OSCContainer = _root;
         var nextNode:OSCContainer;
         while (parts.length > 0)
         {
@@ -70,9 +72,7 @@ public class OSCAddressSpace
      */
     public function getMethods(pattern:String):Array
     {
-        return root.getMatchingChildren(pattern.substr(1, pattern.length));
+        return _root.getMatchingChildren(pattern.substr(1, pattern.length));
     }
-
 }
-
 }

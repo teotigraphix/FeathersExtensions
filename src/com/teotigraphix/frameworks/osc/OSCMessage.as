@@ -7,24 +7,25 @@ import flash.utils.ByteArray;
 /**
  * An OSCMessage
  * @author Immanuel Bauer
+ * @author Michael Schmalle
  */
 public class OSCMessage extends OSCPacket
 {
 
-    private var addressPattern:String;
-    private var pattern:String;
-    private var action:String;
-    private var argumentArray:Array;
-    private var openArray:Array;
-    private var innerArray:Array;
-    private var typesArray:Array;
+    private var _addressPattern:String;
+    private var _pattern:String;
+    private var _action:String;
+    private var _argumentArray:Array;
+    private var _openArray:Array;
+    private var _innerArray:Array;
+    private var _typesArray:Array;
 
     /**
      * @return The address pattern of the OSCMessage
      */
     public function get address():String
     {
-        return addressPattern;
+        return _addressPattern;
     }
 
     /**
@@ -32,7 +33,7 @@ public class OSCMessage extends OSCPacket
      */
     public function set address(address:String):void
     {
-        this.addressPattern = address;
+        _addressPattern = address;
     }
 
     /**
@@ -40,7 +41,7 @@ public class OSCMessage extends OSCPacket
      */
     public function get arguments():Array
     {
-        return argumentArray;
+        return _argumentArray;
     }
 
     /**
@@ -55,89 +56,88 @@ public class OSCMessage extends OSCPacket
         if (bytes != null)
         {
             //read the OSCMessage head
-            this.addressPattern = this.readString();
+            _addressPattern = readString();
 
             //read the parsing pattern for the following OSCMessage bytes
-            this.pattern = this.readString();
+            _pattern = readString();
 
-            this.typesArray = new Array();
-
-            this.argumentArray = new Array();
+            _typesArray = [];
+            _argumentArray = [];
 
             //read the remaining bytes according to the parsing pattern
-            this.openArray = this.argumentArray;
-            var l:int = this.pattern.length;
+            _openArray = _argumentArray;
+            var l:int = _pattern.length;
             try
             {
                 for (var c:int = 0; c < l; c++)
                 {
-                    switch (this.pattern.charAt(c))
+                    switch (_pattern.charAt(c))
                     {
                         case "s":
-                            openArray.push(this.readString());
-                            this.typesArray.push("s");
+                            _openArray.push(readString());
+                            _typesArray.push("s");
                             break;
                         case "f":
-                            openArray.push(this.bytes.readFloat());
-                            this.typesArray.push("f");
+                            _openArray.push(_bytes.readFloat());
+                            _typesArray.push("f");
                             break;
                         case "i":
-                            openArray.push(this.bytes.readInt());
-                            this.typesArray.push("i");
+                            _openArray.push(_bytes.readInt());
+                            _typesArray.push("i");
                             break;
                         case "b":
-                            openArray.push(this.readBlob());
-                            this.typesArray.push("b");
+                            _openArray.push(readBlob());
+                            _typesArray.push("b");
                             break;
                         case "h":
-                            openArray.push(this.read64BInt());
-                            this.typesArray.push("h");
+                            _openArray.push(read64BInt());
+                            _typesArray.push("h");
                             break;
                         case "t":
-                            openArray.push(this.readTimetag());
-                            this.typesArray.push("t");
+                            _openArray.push(readTimeTag());
+                            _typesArray.push("t");
                             break;
                         case "d":
-                            openArray.push(this.bytes.readDouble());
-                            this.typesArray.push("d");
+                            _openArray.push(_bytes.readDouble());
+                            _typesArray.push("d");
                             break;
                         case "S":
-                            openArray.push(this.readString());
-                            this.typesArray.push("S");
+                            _openArray.push(readString());
+                            _typesArray.push("S");
                             break;
                         case "c":
-                            openArray.push(this.bytes.readMultiByte(4, "US-ASCII"));
-                            this.typesArray.push("c");
+                            _openArray.push(_bytes.readMultiByte(4, "US-ASCII"));
+                            _typesArray.push("c");
                             break;
                         case "r":
-                            openArray.push(this.bytes.readUnsignedInt());
-                            this.typesArray.push("r");
+                            _openArray.push(_bytes.readUnsignedInt());
+                            _typesArray.push("r");
                             break;
                         case "T":
-                            openArray.push(true);
-                            this.typesArray.push("T");
+                            _openArray.push(true);
+                            _typesArray.push("T");
                             break;
                         case "F":
-                            openArray.push(false);
-                            this.typesArray.push("F");
+                            _openArray.push(false);
+                            _typesArray.push("F");
                             break;
                         case "N":
-                            openArray.push(null);
-                            this.typesArray.push("N");
+                            _openArray.push(null);
+                            _typesArray.push("N");
                             break;
                         case "I":
-                            openArray.push(Infinity);
-                            this.typesArray.push("I");
+                            _openArray.push(Infinity);
+                            _typesArray.push("I");
                             break;
                         case "[":
-                            innerArray = new Array();
-                            openArray = innerArray;
-                            this.typesArray.push("[");
+                            _innerArray = [];
+                            _openArray = _innerArray;
+                            _typesArray.push("[");
                             break;
                         case "]":
-                            this.argumentArray.push(innerArray.concat());
-                            openArray = this.argumentArray;
-                            this.typesArray.push("]");
+                            _argumentArray.push(_innerArray.concat());
+                            _openArray = _argumentArray;
+                            _typesArray.push("]");
                             break;
                         default:
                             break;
@@ -147,25 +147,25 @@ public class OSCMessage extends OSCPacket
             catch (e:EOFError)
             {
                 trace("corrupt");
-                this.argumentArray = new Array();
-                this.argumentArray.push("Corrupted OSCMessage");
-                openArray = null;
+                _argumentArray = [];
+                _argumentArray.push("Corrupted OSCMessage");
+                _openArray = null;
             }
         }
         else
         {
-            this.pattern = ",";
-            this.argumentArray = [];
-            this.openArray = this.argumentArray;
+            _pattern = ",";
+            _argumentArray = [];
+            _openArray = _argumentArray;
         }
     }
 
     public override function getBytes():ByteArray
     {
         var out:ByteArray = new ByteArray();
-        this.writeString(this.address, out);
-        this.writeString(this.pattern, out);
-        out.writeBytes(this.bytes, 0, this.bytes.length);
+        writeString(address, out);
+        writeString(_pattern, out);
+        out.writeBytes(_bytes, 0, _bytes.length);
         out.position = 0;
         return out;
     }
@@ -177,8 +177,8 @@ public class OSCMessage extends OSCPacket
      */
     public override function getPacketInfo():String
     {
-        var out:String = new String();
-        out += "\nMessagehead: " + this.addressPattern + " | " + this.pattern + " | ->  (" + this.argumentArray.length + ") \n" + this.argumentsToString();
+        var out:String = "";
+        out += "\nMessagehead: " + _addressPattern + " | " + _pattern + " | ->  (" + _argumentArray.length + ") \n" + argumentsToString();
         return out;
     }
 
@@ -201,76 +201,76 @@ public class OSCMessage extends OSCPacket
         {
             if ((oscType == "s" || oscType == "S") && value is String)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
-                this.writeString(value as String);
+                _pattern += oscType;
+                _openArray.push(value);
+                writeString(value as String);
             }
             else if (oscType == "f" && value is Number)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
-                this.bytes.writeFloat(value as Number);
+                _pattern += oscType;
+                _openArray.push(value);
+                _bytes.writeFloat(value as Number);
             }
             else if (oscType == "i" && value is int)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
-                this.bytes.writeInt(value as int);
+                _pattern += oscType;
+                _openArray.push(value);
+                _bytes.writeInt(value as int);
             }
             else if (oscType == "b" && value is ByteArray)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
-                this.writeBlob(value as ByteArray);
+                _pattern += oscType;
+                _openArray.push(value);
+                writeBlob(value as ByteArray);
             }
             else if (oscType == "h" && value is ByteArray)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
+                _pattern += oscType;
+                _openArray.push(value);
             }
-            else if (oscType == "t" && value is OSCTimetag)
+            else if (oscType == "t" && value is OSCTimeTag)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
-                this.writeTimetag(value as OSCTimetag);
+                _pattern += oscType;
+                _openArray.push(value);
+                writeTimeTag(value as OSCTimeTag);
             }
             else if (oscType == "d" && value is Number)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
-                this.bytes.writeDouble(value as Number);
+                _pattern += oscType;
+                _openArray.push(value);
+                _bytes.writeDouble(value as Number);
             }
             else if (oscType == "c" && value is String && (value as String).length == 1)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
-                this.bytes.writeMultiByte(value as String, "US-ASCII");
+                _pattern += oscType;
+                _openArray.push(value);
+                _bytes.writeMultiByte(value as String, "US-ASCII");
             }
             else if (oscType == "r" && value is uint)
             {
-                this.pattern += oscType;
-                this.openArray.push(value);
-                this.bytes.writeUnsignedInt(value as uint);
+                _pattern += oscType;
+                _openArray.push(value);
+                _bytes.writeUnsignedInt(value as uint);
             }
             else if (oscType == "T")
             {
-                this.pattern += oscType;
-                this.openArray.push(true);
+                _pattern += oscType;
+                _openArray.push(true);
             }
             else if (oscType == "F")
             {
-                this.pattern += oscType;
-                this.openArray.push(false);
+                _pattern += oscType;
+                _openArray.push(false);
             }
             else if (oscType == "N")
             {
-                this.pattern += oscType;
-                this.openArray.push(null);
+                _pattern += oscType;
+                _openArray.push(null);
             }
             else if (oscType == "I")
             {
-                this.pattern += oscType;
-                this.openArray.push(Infinity);
+                _pattern += oscType;
+                _openArray.push(Infinity);
             }
             else
             {
@@ -302,13 +302,13 @@ public class OSCMessage extends OSCPacket
             { //isn't a small letter
                 if (oscType == "[")
                 {
-                    innerArray = new Array();
-                    openArray = innerArray;
+                    _innerArray = new Array();
+                    _openArray = _innerArray;
                 }
                 else if (oscType == "]")
                 {
-                    this.argumentArray.push(innerArray.concat());
-                    openArray = this.argumentArray;
+                    _argumentArray.push(_innerArray.concat());
+                    _openArray = _argumentArray;
                 }
                 else if (oscType == "S")
                 {
@@ -336,17 +336,20 @@ public class OSCMessage extends OSCPacket
     public function argumentsToString():String
     {
         var out:String = "arguments: ";
-        if (this.argumentArray.length > 0)
+        if (_argumentArray.length > 0)
         {
-            try {
-                out += this.argumentArray[0].toString();
-            } catch (e:Error) {
+            try
+            {
+                out += _argumentArray[0].toString();
+            }
+            catch (e:Error)
+            {
                 trace("");
             }
 
-            for (var c:int = 1; c < this.argumentArray.length; c++)
+            for (var c:int = 1; c < _argumentArray.length; c++)
             {
-                out += " | " + this.argumentArray[c].toString();
+                out += " | " + _argumentArray[c].toString();
             }
         }
         return out;
@@ -361,15 +364,15 @@ public class OSCMessage extends OSCPacket
     {
         var toString:String = new String();
         toString = toString + ("<name:");
-        toString = toString + ("", this.address);
+        toString = toString + ("", address);
         toString = toString + (",");
 
         //types
         toString = toString + (" [types: ");
-        for (var i:Number = 0; i < this.typesArray.length; i++)
+        for (var i:Number = 0; i < _typesArray.length; i++)
         {
-            toString = toString + ("", this.typesArray[i]);
-            if (i < this.typesArray.length - 1)
+            toString = toString + ("", _typesArray[i]);
+            if (i < _typesArray.length - 1)
             {
                 toString = toString + (", ");
             }
@@ -378,10 +381,10 @@ public class OSCMessage extends OSCPacket
 
         //arguments
         toString = toString + (" [arguments: ");
-        for (i = 0; i < this.openArray.length; i++)
+        for (i = 0; i < _openArray.length; i++)
         {
-            toString = toString + ("", this.openArray[i]);
-            if (i < this.openArray.length - 1)
+            toString = toString + ("", _openArray[i]);
+            if (i < _openArray.length - 1)
             {
                 toString = toString + (", ");
             }
@@ -435,7 +438,7 @@ public class OSCMessage extends OSCPacket
     public static function createOSCMessage(address:String, valueOSCTypes:String, values:Array):OSCMessage
     {
         var msg:OSCMessage = new OSCMessage();
-        msg.addressPattern = address;
+        msg._addressPattern = address;
         msg.addArguments(valueOSCTypes, values);
         return msg;
     }

@@ -15,15 +15,20 @@ import flash.utils.ByteArray;
  */
 public class OSCDatagramSocket extends DatagramSocket
 {
-    private var Debug:Boolean = true;
-    private var Buffer:ByteArray = new ByteArray();
-    private var PartialRecord:Boolean = false;
+    private var _debug:Boolean = true;
+    private var _buffer:ByteArray = new ByteArray();
+    private var _partialRecord:Boolean = false;
 
-    public function OSCDatagramSocket(host:String = "127.0.0.1", port:int = 3333, bind:Boolean = true)
+    public function OSCDatagramSocket(host:String = "127.0.0.1", port:int = 3333, bindSocket:Boolean = true)
     {
         configureListeners();
-        if (bind) this.bind(port, host);
-        else this.connect(host, port);
+
+        // UDP never dispatches events when bound
+        if (bindSocket)
+            bind(port, host);
+        else
+            connect(host, port);
+
         receive();
     }
 
@@ -38,27 +43,31 @@ public class OSCDatagramSocket extends DatagramSocket
 
     private function dataReceived(event:DatagramSocketDataEvent):void
     {
-        this.dispatchEvent(new OSCEvent(event.data));
+        dispatchEvent(new OSCEvent(event.data));
     }
 
     private function closeHandler(event:Event):void
     {
-        if (Debug)trace("Connection Closed");
+        if (_debug)
+            trace("Connection Closed");
     }
 
     private function connectHandler(event:Event):void
     {
-        if (Debug)trace("Connected");
+        if (_debug)
+            trace("Connected");
     }
 
     private function ioErrorHandler(event:IOErrorEvent):void
     {
-        if (Debug)trace("ioErrorHandler: " + event);
+        if (_debug)
+            trace("ioErrorHandler: " + event);
     }
 
     private function securityErrorHandler(event:SecurityErrorEvent):void
     {
-        if (Debug)trace("securityErrorHandler: " + event);
+        if (_debug)
+            trace("securityErrorHandler: " + event);
     }
 
 }

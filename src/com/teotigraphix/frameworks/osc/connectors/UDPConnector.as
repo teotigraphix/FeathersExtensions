@@ -16,31 +16,23 @@ import flash.utils.ByteArray;
  * This connector only works in Adobe AIR since v2 due to it using the <code>DatagramSocket</code>
  *
  * This connector can be used to send an receive OSC bundles and messages.
- * Though you have to create seperate instances of the connector.
+ * Though you have to create separate instances of the connector.
  *
  * @author Johannes Luderschmidt
  * @author Immanuel Bauer
- *
+ * @author Michael Schmalle
  */
 public class UDPConnector implements IOSCConnector
 {
-    private var connection:OSCDatagramSocket;
-    private var listeners:Array;
+    private var _connection:OSCDatagramSocket;
+    private var _listeners:Array;
+
+    public function get bound():Boolean
+    {
+        return _connection.bound;
+    }
 
     /**
-     *
-     * @example The following code shows three approaches to initialize UDPConnector. Use only one of them:
-     * <listing version="3.0">
-     * //tracker runs on localhost on default port 3333
-     * var tuio:TuioClient = new TuioClient(new UDPConnector());
-     * //or
-     * //tracker runs on 192.0.0.5 on default port 3333
-     * var tuio:TuioClient = new TuioClient(new UDPConnector("192.0.0.5"));
-     * //or
-     * //tracker runs on 192.0.0.5 on port 3334
-     * var tuio:TuioClient = new TuioClient(new UDPConnector("192.0.0.5",3334));
-     * </listing>
-     *
      * @param host ip of the tracker resp. tuio message producer.
      * @param port of the tracker resp. tuio message producer.
      * @param bind If true the <code>UDPConnector</code> will try to bind the given IP:port and to receive packets.
@@ -50,10 +42,10 @@ public class UDPConnector implements IOSCConnector
      */
     public function UDPConnector(host:String = "127.0.0.1", port:int = 3333, bind:Boolean = true)
     {
-        this.listeners = new Array();
+        _listeners = [];
 
-        this.connection = new OSCDatagramSocket(host, port, bind);
-        this.connection.addEventListener(OSCEvent.OSC_DATA, receiveOscData);
+        _connection = new OSCDatagramSocket(host, port, bind);
+        _connection.addEventListener(OSCEvent.OSC_DATA, receiveOscData);
     }
 
     /**
@@ -61,9 +53,10 @@ public class UDPConnector implements IOSCConnector
      */
     public function addListener(listener:IOSCConnectorListener):void
     {
-        if (this.listeners.indexOf(listener) > -1) return;
+        if (_listeners.indexOf(listener) > -1)
+            return;
 
-        this.listeners.push(listener);
+        _listeners.push(listener);
     }
 
     /**
@@ -71,16 +64,7 @@ public class UDPConnector implements IOSCConnector
      */
     public function removeListener(listener:IOSCConnectorListener):void
     {
-        var tmp:Array = this.listeners.concat();
-        var newList:Array = new Array();
-
-        var item:Object = tmp.pop();
-        while (item != null)
-        {
-            if (item != listener) newList.push(item);
-        }
-
-        this.listeners = newList;
+        _listeners.splice(_listeners.indexOf(listener), 1);
     }
 
     /**
@@ -88,8 +72,10 @@ public class UDPConnector implements IOSCConnector
      */
     public function sendOSCPacket(oscPacket:OSCPacket):void
     {
-        if (this.connection.connected) this.connection.send(oscPacket.getBytes());
-        else throw new Error("Can't send if not connected.");
+        if (_connection.bound)
+            _connection.send(oscPacket.getBytes());
+        else
+            throw new Error("Can't send if not connected.");
     }
 
     /**
@@ -97,7 +83,8 @@ public class UDPConnector implements IOSCConnector
      */
     public function close():void
     {
-        if (this.connection.connected) this.connection.close();
+        if (_connection.bound)
+            _connection.close();
     }
 
     private function copyPacket(packet:ByteArray):ByteArray
@@ -122,10 +109,10 @@ public class UDPConnector implements IOSCConnector
 
         if (packet != null)
         {
-            if (this.listeners.length > 0)
+            if (_listeners.length > 0)
             {
                 //call receive listeners and push the received messages
-                for each(var l:IOSCConnectorListener in this.listeners)
+                for each(var l:IOSCConnectorListener in _listeners)
                 {
                     //packet has to be copied in order to allow for more than one listener
                     //that actually reads from the ByteArray (after one listener has read,

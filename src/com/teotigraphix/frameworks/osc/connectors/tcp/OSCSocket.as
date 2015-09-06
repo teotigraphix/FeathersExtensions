@@ -16,10 +16,10 @@ import flash.utils.ByteArray;
  */
 public class OSCSocket extends Socket
 {
-    private var Debug:Boolean = true;
-    private var Buffer:ByteArray = new ByteArray();
-    private var PartialRecord:Boolean = false;
-    private var isBundle:Boolean = false;
+    private var _debug:Boolean = true;
+    private var _buffer:ByteArray = new ByteArray();
+    private var _partialRecord:Boolean = false;
+    private var _isBundle:Boolean = false;
 
     public function OSCSocket()
     {
@@ -39,23 +39,22 @@ public class OSCSocket extends Socket
     {
 
         var data:ByteArray = new ByteArray();
-        if (PartialRecord)
+        if (_partialRecord)
         {
-            Buffer.readBytes(data, 0, Buffer.length);
-            PartialRecord = false;
+            _buffer.readBytes(data, 0, _buffer.length);
+            _partialRecord = false;
         }
 
         super.readBytes(data, data.length, super.bytesAvailable);
 
-        var Length:int;
+        var length:int;
 
         // While we have data to read
         while (data.position < data.length)
         {
+            _isBundle = OSCBundle.isBundle(data);
 
-            isBundle = OSCBundle.isBundle(data);
-
-            if (isBundle)
+            if (_isBundle)
             { //check if the bytes are already a OSCBundle
                 if (data.bytesAvailable > 20)
                 { //there should be size information
@@ -63,41 +62,44 @@ public class OSCSocket extends Socket
                     if (data.readUTFBytes(1) != "#")
                     {
                         data.position -= 1;
-                        Length = data.readInt() + 20;
+                        length = data.readInt() + 20;
                         data.position -= 20;
                     }
                     else
                     {
                         data.position -= 17;
-                        Length = 16;
+                        length = 16;
                     }
                 }
                 else
                 {
-                    Length = data.length + 1;
+                    length = data.length + 1;
                 }
             }
             else
             {
-                Length = data.readInt() + 4;
+                length = data.readInt() + 4;
                 data.position -= 4;
             }
 
             // If we have enough data to form a full packet.
-            if (Length <= (data.length - data.position))
+            if (length <= (data.length - data.position))
             {
                 var packet:ByteArray = new ByteArray();
-                if (isBundle) packet.writeInt(Length);
-                data.readBytes(packet, packet.position, Length);
+                if (_isBundle)
+                    packet.writeInt(length);
+
+                data.readBytes(packet, packet.position, length);
                 packet.position = 0;
-                this.dispatchEvent(new OSCEvent(packet));
+
+                dispatchEvent(new OSCEvent(packet));
             }
             else
             {
                 // Read the partial packet
-                Buffer = new ByteArray();
-                data.readBytes(Buffer, 0, data.length - data.position);
-                PartialRecord = true;
+                _buffer = new ByteArray();
+                data.readBytes(_buffer, 0, data.length - data.position);
+                _partialRecord = true;
             }
 
         }
@@ -106,23 +108,22 @@ public class OSCSocket extends Socket
 
     private function closeHandler(event:Event):void
     {
-        if (Debug)trace("Connection Closed");
+        if (_debug)trace("Connection Closed");
     }
 
     private function connectHandler(event:Event):void
     {
-        if (Debug)trace("Connected");
+        if (_debug)trace("Connected");
     }
 
     private function ioErrorHandler(event:IOErrorEvent):void
     {
-        if (Debug)trace("ioErrorHandler: " + event);
+        if (_debug)trace("ioErrorHandler: " + event);
     }
 
     private function securityErrorHandler(event:SecurityErrorEvent):void
     {
-        if (Debug)trace("securityErrorHandler: " + event);
+        if (_debug)trace("securityErrorHandler: " + event);
     }
-
 }
 }

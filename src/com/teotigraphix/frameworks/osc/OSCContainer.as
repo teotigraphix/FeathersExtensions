@@ -5,23 +5,23 @@ package com.teotigraphix.frameworks.osc
  * Represents OSC Containers as described in the OSC Spec.
  * Basically OSC Containers are nodes in the OSC Addressspace tree.
  * This class is used internally for OSC Message Address resolution.
+ *
+ * @author Michael Schmalle
  */
 public class OSCContainer
 {
-
     public var name:String;
     public var method:IOSCListener;
     public var parent:OSCContainer;
-    private var children:Array = [];
+
+    private var _children:Array = [];
 
     /**
      * Is <code>true</code> if the OSCContainer has children. Otherwise <code>false</code>.
      */
     public function get hasChildren():Boolean
     {
-
-        return (children.length > 0);
-
+        return (_children.length > 0);
     }
 
     /**
@@ -43,7 +43,7 @@ public class OSCContainer
      */
     public function addChild(child:OSCContainer):void
     {
-        this.children[child.name] = child;
+        _children[child.name] = child;
         child.parent = this;
     }
 
@@ -54,7 +54,7 @@ public class OSCContainer
      */
     public function getChild(name:String):OSCContainer
     {
-        return this.children[name];
+        return _children[name];
     }
 
     /**
@@ -65,14 +65,14 @@ public class OSCContainer
      */
     public function getMatchingChildren(pattern:String):Array
     {
-        var out:Array = new Array();
+        var out:Array = [];
 
         var firstSeperator:int = pattern.indexOf("/");
         var part:String = pattern.substring(0, firstSeperator);
         var rest:String = pattern.substring(firstSeperator + 1, pattern.length);
         var done:Boolean = (pattern.indexOf("/") == -1);
 
-        for each(var child:OSCContainer in this.children)
+        for each(var child:OSCContainer in _children)
         {
 
             if (child.matchName(part))
@@ -86,7 +86,6 @@ public class OSCContainer
                     out = out.concat(child.getMatchingChildren(rest));
                 }
             }
-
         }
 
         return out;
@@ -98,8 +97,10 @@ public class OSCContainer
      */
     public function removeChild(child:OSCContainer):void
     {
-        if (child.hasChildren) child.method = null;
-        else this.children[child.name] = null;
+        if (child.hasChildren)
+            child.method = null;
+        else
+            _children[child.name] = null;
     }
 
     /**
@@ -110,10 +111,11 @@ public class OSCContainer
      */
     public function matchName(pattern:String):Boolean
     {
+        if (pattern == name)
+            return true;
 
-        if (pattern == this.name) return true;
-
-        if (pattern == "*") return true;
+        if (pattern == "*")
+            return true;
 
         //convert address patter to regular expression
         var regExStr:String = "";
@@ -144,12 +146,10 @@ public class OSCContainer
 
         var regEx:RegExp = new RegExp(regExStr, "g");
 
-        if (regEx.test(this.name) && regEx.lastIndex == this.name.length) return true;
+        if (regEx.test(name) && regEx.lastIndex == this.name.length)
+            return true;
 
         return false;
-
     }
-
 }
-
 }

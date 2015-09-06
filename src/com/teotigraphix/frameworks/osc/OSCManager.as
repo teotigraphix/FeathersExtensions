@@ -3,6 +3,8 @@ package com.teotigraphix.frameworks.osc
 
 /**
  * The main class for receiving and sending OSC data.
+ *
+ * @author Michael Schmalle
  */
 public class OSCManager implements IOSCConnectorListener
 {
@@ -11,13 +13,19 @@ public class OSCManager implements IOSCConnectorListener
      * If <code>true</code> pattern matching is enabled for OSC addresse lookups. The default is <code>false</code>.
      */
     public var usePatternMatching:Boolean = false;
+
     private var _connectorIn:IOSCConnector;
     private var _connectorOut:IOSCConnector;
     private var _currentPacket:OSCPacket;
-    private var msgListener:Array;
-    private var oscMethods:Array;
-    private var oscAddressSpace:OSCAddressSpace = new OSCAddressSpace();
-    private var running:Boolean;
+    private var _listeners:Array;
+    private var _oscMethods:Array;
+    private var _oscAddressSpace:OSCAddressSpace = new OSCAddressSpace();
+    private var _running:Boolean;
+
+    public function get running():Boolean
+    {
+        return _running;
+    }
 
     public function get connectorIn():IOSCConnector
     {
@@ -29,17 +37,22 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function set connectorIn(conn:IOSCConnector):void
     {
-        if (this._connectorIn != null)
+        if (_connectorIn != null)
         {
-            this._connectorIn.removeListener(this);
+            _connectorIn.removeListener(this);
         }
-        this._connectorIn = conn;
-        this._connectorIn.addListener(this);
+
+        _connectorIn = conn;
+
+        if (conn != null)
+        {
+            _connectorIn.addListener(this);
+        }
     }
 
     public function get connectorOut():IOSCConnector
     {
-        return this._connectorOut;
+        return _connectorOut;
     }
 
     /**
@@ -47,7 +60,7 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function set connectorOut(conn:IOSCConnector):void
     {
-        this._connectorOut = conn;
+        _connectorOut = conn;
     }
 
     /**
@@ -55,7 +68,7 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function get currentPacket():OSCPacket
     {
-        return this._currentPacket;
+        return _currentPacket;
     }
 
     /**
@@ -70,14 +83,17 @@ public class OSCManager implements IOSCConnectorListener
                                autoStart:Boolean = true)
     {
 
-        this.msgListener = [];
-        this.oscMethods = [];
+        this._listeners = [];
+        this._oscMethods = [];
 
-        this._connectorIn = connectorIn;
-        if (this._connectorIn != null) this._connectorIn.addListener(this);
-        this._connectorOut = connectorOut;
+        _connectorIn = connectorIn;
 
-        this.running = autoStart;
+        if (_connectorIn != null)
+            _connectorIn.addListener(this);
+
+        _connectorOut = connectorOut;
+
+        _running = autoStart;
 
     }
 
@@ -86,7 +102,7 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function start():void
     {
-        this.running = true;
+        _running = true;
     }
 
     /**
@@ -94,7 +110,7 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function stop():void
     {
-        this.running = false;
+        _running = false;
     }
 
     /**
@@ -103,9 +119,9 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function sendOSCPacket(oscPacket:OSCPacket):void
     {
-        if (this._connectorOut)
+        if (_connectorOut)
         {
-            this._connectorOut.sendOSCPacket(oscPacket);
+            _connectorOut.sendOSCPacket(oscPacket);
         }
     }
 
@@ -114,10 +130,10 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function acceptOSCPacket(oscPacket:OSCPacket):void
     {
-        if (running)
+        if (_running)
         {
-            this._currentPacket = oscPacket;
-            this.distributeOSCPacket(this._currentPacket);
+            _currentPacket = oscPacket;
+            distributeOSCPacket(_currentPacket);
             oscPacket = null;
         }
     }
@@ -125,7 +141,7 @@ public class OSCManager implements IOSCConnectorListener
     public function theLength():int
     {
         var count:int = 0;
-        for each (var object:Object in oscMethods)
+        for each (var object:Object in _oscMethods)
         {
             count++;
         }
@@ -139,8 +155,8 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function addMethod(address:String, listener:IOSCListener):void
     {
-        this.oscMethods[address] = listener;
-        this.oscAddressSpace.addMethod(address, listener);
+        _oscMethods[address] = listener;
+        _oscAddressSpace.addMethod(address, listener);
     }
 
     /**
@@ -149,8 +165,8 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function removeMethod(address:String):void
     {
-        this.oscMethods[address] = null;
-        this.oscAddressSpace.removeMethod(address);
+        _oscMethods[address] = null;
+        _oscAddressSpace.removeMethod(address);
     }
 
     /**
@@ -160,22 +176,18 @@ public class OSCManager implements IOSCConnectorListener
      */
     public function addOSCListener(listener:IOSCListener):void
     {
-        if (this.msgListener.indexOf(listener) > -1) return;
-        this.msgListener.push(listener);
+        if (_listeners.indexOf(listener) > -1)
+            return;
+        _listeners.push(listener);
     }
 
     /**
      * Removes the given OSC Method listener
      * @param    listener The listener to be removed.
      */
-    public function removeMsgListener(listener:IOSCListener):void
+    public function removeOSCListener(listener:IOSCListener):void
     {
-        var temp:Array = new Array();
-        for each(var l:IOSCListener in this.msgListener)
-        {
-            if (l != listener) temp.push(l);
-        }
-        this.msgListener = temp.concat();
+        _listeners.splice(_listeners.indexOf(listener), 1);
     }
 
     /**
@@ -188,14 +200,14 @@ public class OSCManager implements IOSCConnectorListener
     {
         if (packet is OSCMessage)
         {
-            this.distributeOSCMessage(packet as OSCMessage);
+            distributeOSCMessage(packet as OSCMessage);
         }
         else if (packet is OSCBundle)
         {
             var cont:Array = (packet as OSCBundle).subPackets;
             for each(var p:OSCPacket in cont)
             {
-                this.distributeOSCPacket(p);
+                distributeOSCPacket(p);
             }
         }
     }
@@ -206,8 +218,7 @@ public class OSCManager implements IOSCConnectorListener
      */
     private function distributeOSCMessage(msg:OSCMessage):void
     {
-
-        for each(var l:IOSCListener in this.msgListener)
+        for each(var l:IOSCListener in _listeners)
         {
             l.acceptOSCMessage(msg);
         }
@@ -218,9 +229,9 @@ public class OSCManager implements IOSCConnectorListener
             var oscMethod:IOSCListener;
             var oscMethods:Array;
 
-            if (this.usePatternMatching)
+            if (usePatternMatching)
             {
-                oscMethods = this.oscAddressSpace.getMethods(msg.address);
+                oscMethods = _oscAddressSpace.getMethods(msg.address);
                 for each(l in oscMethods)
                 {
                     l.acceptOSCMessage(msg);
@@ -228,13 +239,11 @@ public class OSCManager implements IOSCConnectorListener
             }
             else
             {
-                oscMethod = this.oscMethods[msg.address];
-                if (oscMethod != null) oscMethod.acceptOSCMessage(msg);
+                oscMethod = oscMethods[msg.address];
+                if (oscMethod != null)
+                    oscMethod.acceptOSCMessage(msg);
             }
         }
-
     }
-
 }
-
 }
