@@ -27,6 +27,8 @@ import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.service.*;
 import com.teotigraphix.service.async.IStepCommand;
+import com.teotigraphix.service.async.IStepSequence;
+import com.teotigraphix.service.async.StepSequence;
 import com.teotigraphix.util.IDUtils;
 
 import flash.filesystem.File;
@@ -37,6 +39,10 @@ public class ProjectService extends AbstractService implements IProjectService
 {
     private static const TAG:String = "ProjectService";
 
+    //--------------------------------------------------------------------------
+    // Public Inject :: Variables
+    //--------------------------------------------------------------------------
+
     [Inject]
     public var fileService:IFileService;
 
@@ -46,6 +52,10 @@ public class ProjectService extends AbstractService implements IProjectService
     [Inject]
     public var descriptor:ApplicationDescriptor;
 
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+
     public function ProjectService()
     {
     }
@@ -54,6 +64,10 @@ public class ProjectService extends AbstractService implements IProjectService
     {
         logger.startup(TAG, "startup()");
     }
+
+    //--------------------------------------------------------------------------
+    // Public IProjectService :: Methods
+    //--------------------------------------------------------------------------
 
     public function loadLastProject():IStepCommand
     {
@@ -74,10 +88,21 @@ public class ProjectService extends AbstractService implements IProjectService
         return command;
     }
 
-    public function saveAsync():IStepCommand
+    public function saveAsync():IStepSequence
     {
-        return injector.instantiate(SaveProjectCommand);
+        var sequence:IStepSequence = new StepSequence();
+        // saves internal state before the Project is written to disk
+        var step1:IStepSequence = projectModel.project.saveAsync();
+        // save the Project to disk
+        var step2:IStepCommand = injector.instantiate(SaveProjectCommand);
+        sequence.addCommand(step1);
+        sequence.addCommand(step2);
+        return sequence;
     }
+
+    //--------------------------------------------------------------------------
+    // sdk_internal :: Methods
+    //--------------------------------------------------------------------------
 
     sdk_internal function save():void
     {
@@ -111,6 +136,7 @@ import com.teotigraphix.model.event.ProjectModelEventType;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IPreferenceService;
 import com.teotigraphix.service.IProjectService;
+import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepCommand;
 import com.teotigraphix.service.support.ProjectService;
 
@@ -144,7 +170,7 @@ class CreateProjectCommand extends StepCommand implements IAsyncCommand
         // unload last project
         projectModel.project = ProjectService(projectService).sdk_internal::createProject(_name, _path);
 
-        var command:IAsyncCommand = projectService.saveAsync();
+        var command:IStepSequence = projectService.saveAsync();
         command.addCompleteListener(onSaveCompleteHandler);
         command.execute();
 
@@ -185,7 +211,7 @@ class LoadProjectCommand extends StepCommand implements IAsyncCommand
         if (_file.exists)
         {
             logger.log(TAG, "### Loading Project: " + _file.nativePath);
-            var project:Project = fileService.deserialize(_file);
+            var project:Project = fileService.wakeup(_file);
             projectModel.project = project;
         }
         else
@@ -247,7 +273,7 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
         }
         else
         {
-            logger.startup(TAG, "### Using default Project: " + file.nativePath);
+            logger.startup(TAG, "### Using default Project: ");
             project = ProjectService(projectService).sdk_internal::createProject("UntitledProject", "");
             logger.log(TAG, "### Project.onCreate()");
             project.create();

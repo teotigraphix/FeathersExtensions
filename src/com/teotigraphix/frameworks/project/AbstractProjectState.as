@@ -21,7 +21,12 @@ package com.teotigraphix.frameworks.project
 {
 
 import com.teotigraphix.core.sdk_internal;
+import com.teotigraphix.service.async.IStepCommand;
+import com.teotigraphix.service.async.IStepSequence;
+import com.teotigraphix.service.async.StepSequence;
 import com.teotigraphix.util.ISerialize;
+
+import feathers.controls.IScrollContainer;
 
 import org.robotlegs.starling.core.IInjector;
 
@@ -72,6 +77,47 @@ public class AbstractProjectState implements IProjectState, ISerialize
     sdk_internal function setProject(value:Project):void
     {
         _project = value;
+    }
+
+    /**
+     * Saves the state async, to call this command subclasses must impl createSaveStep().
+     *
+     * Note: The IProjectModel actually saves the Project, the Project calls this method.
+     *
+     * @return A presave and save sequence.
+     * @see #createPreSaveStep()
+     * @see #createSaveStep()
+     * @see IProjectService
+     */
+    public function saveAsync():IStepSequence
+    {
+        var sequence:StepSequence = new StepSequence();
+        var step1:IStepCommand = createPreSaveStep();
+        if (step1 != null)
+            sequence.addCommand(step1);
+        var step2:IStepCommand = createSaveStep();
+        sequence.addCommand(step2);
+        return sequence;
+    }
+
+    /**
+     * Optional, to save data before the save command runs.
+     *
+     * @see #saveAsync()
+     */
+    protected function createPreSaveStep():IStepCommand
+    {
+        return null;
+    }
+
+    /**
+     * Required, the command that saves any data into the sate.
+     *
+     * @see #saveAsync()
+     */
+    protected function createSaveStep():IStepCommand
+    {
+        return null;
     }
 }
 }

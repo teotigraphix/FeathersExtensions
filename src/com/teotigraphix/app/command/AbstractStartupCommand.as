@@ -27,6 +27,10 @@ import com.teotigraphix.service.IApplicationService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepCommand;
 
+import flash.events.Event;
+
+import flash.events.IEventDispatcher;
+
 import org.as3commons.async.command.CompositeCommandKind;
 import org.as3commons.async.command.IAsyncCommand;
 import org.as3commons.async.command.impl.CompositeCommand;
@@ -46,6 +50,9 @@ public class AbstractStartupCommand extends Command
 
     [Inject]
     public var projectModel:IProjectModel;
+
+    [Inject]
+    public var flashDispatcher:IEventDispatcher;
 
     public function AbstractStartupCommand()
     {
@@ -88,6 +95,7 @@ public class AbstractStartupCommand extends Command
         {
             trace("    ApplicationStartupCommand.dispatchEventWith(APPLICATION_COMPLETE)");
             dispatchWith(ApplicationEventType.APPLICATION_COMPLETE);
+            flashDispatcher.dispatchEvent(new Event(ApplicationEventType.APPLICATION_COMPLETE));
         }
     }
 

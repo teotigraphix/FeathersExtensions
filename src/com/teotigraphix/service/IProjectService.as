@@ -21,6 +21,7 @@ package com.teotigraphix.service
 {
 
 import com.teotigraphix.service.async.IStepCommand;
+import com.teotigraphix.service.async.IStepSequence;
 
 import flash.filesystem.File;
 
@@ -39,7 +40,7 @@ public interface IProjectService
 
     function createProjectAsync(name:String, path:String):IStepCommand;
 
-    function saveAsync():IStepCommand;
+    function saveAsync():IStepSequence;
 
 }
 }

@@ -23,6 +23,7 @@ package com.teotigraphix.frameworks.project
 import com.teotigraphix.app.config.Version;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.IFileService;
+import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.util.ISerialize;
 
 import flash.filesystem.File;
@@ -214,6 +215,16 @@ public final class Project implements ISerialize
     public function close():void
     {
         fileService = null;
+    }
+
+    /**
+     * Any save operations that need to be done on the internal state before serialization.
+     *
+     * @see AbstractProjectState#saveAsync()
+     */
+    public function saveAsync():IStepSequence
+    {
+        return AbstractProjectState(_state).saveAsync();
     }
 
     public function create():void

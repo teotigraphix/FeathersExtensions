@@ -20,6 +20,11 @@
 package com.teotigraphix.app.config
 {
 
+import com.teotigraphix.service.IFileService;
+import com.teotigraphix.service.ILogger;
+import com.teotigraphix.service.support.FileService;
+import com.teotigraphix.service.support.Logger;
+
 import flash.errors.IllegalOperationError;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
@@ -31,6 +36,8 @@ import org.robotlegs.starling.core.IMediatorMap;
 import org.robotlegs.starling.core.IViewMap;
 import org.robotlegs.starling.mvcs.Context;
 
+import starling.animation.Juggler;
+import starling.core.Starling;
 import starling.display.DisplayObjectContainer;
 
 public class FrameworkContext extends Context
@@ -47,6 +54,23 @@ public class FrameworkContext extends Context
     public function FrameworkContext(contextView:DisplayObjectContainer = null, autoStartup:Boolean = true)
     {
         super(contextView, autoStartup);
+    }
+
+    // Called in the constructor
+    override protected function mapInjections():void
+    {
+        //injector.mapValue(IReflector, reflector);
+        //injector.mapValue(IInjector, injector);
+        //injector.mapValue(EventDispatcher, eventDispatcher);
+        //injector.mapValue(DisplayObjectContainer, contextView);
+        //injector.mapValue(ICommandMap, commandMap);
+        //injector.mapValue(IMediatorMap, mediatorMap);
+        //injector.mapValue(IViewMap, viewMap);
+        //injector.mapClass(IEventMap, EventMap)
+
+        trace("FrameworkContext.mapInjections()");
+
+        super.mapInjections();
     }
 
     override public function startup():void
@@ -90,8 +114,9 @@ public class FrameworkContext extends Context
 
     protected function configureCore():void
     {
-        new FrameworkServiceConfigurator().configure(this);
-        new FrameworkModelConfigurator().configure(this);
+        injector.mapValue(Juggler, Starling.juggler);
+        injector.mapSingletonOf(ILogger, Logger);
+        injector.mapSingletonOf(IFileService, FileService);
     }
 
     protected function configureApplication():void
