@@ -41,7 +41,5 @@ public interface IPreferenceService
     function getBoolean(key:String, defaultValue:Boolean = false):Boolean;
 
     function flush():void;
-
-    function save():void;
 }
 }

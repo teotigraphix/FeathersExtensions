@@ -31,13 +31,29 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
 
     private static const GLOBAL_LAST_PROJECT:String = "Application/lastProject";
 
+    //--------------------------------------------------------------------------
+    // Public Inject :: Variables
+    //--------------------------------------------------------------------------
+
     [Inject]
     public var fileService:IFileService;
 
     [Inject]
     public var descriptor:ApplicationDescriptor;
 
+    //--------------------------------------------------------------------------
+    // Private :: Variables
+    //--------------------------------------------------------------------------
+
     private var _map:Object;
+
+    //--------------------------------------------------------------------------
+    // Public IPreferenceService :: Properties
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // appLastProjectPath
+    //----------------------------------
 
     public function get appLastProjectPath():String
     {
@@ -49,9 +65,17 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
         put(GLOBAL_LAST_PROJECT, value);
     }
 
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+
     public function PreferenceService()
     {
     }
+
+    //--------------------------------------------------------------------------
+    // Public :: Methods
+    //--------------------------------------------------------------------------
 
     public function startup():void
     {
@@ -79,6 +103,10 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
             flush();
         }
     }
+
+    //--------------------------------------------------------------------------
+    // Public IPreferenceService :: Methods
+    //--------------------------------------------------------------------------
 
     public function put(key:String, value:Object):void
     {
@@ -116,21 +144,8 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
 
     public function flush():void
     {
+        logger.debug(TAG, "flush()");
         fileService.serialize(fileService.preferenceBinFile, _map);
     }
-
-    public function save():void
-    {
-        logger.log(TAG, "save()");
-        //
-        //// refresh so all clients can add onto the root node
-        //root = XMLMemento.createWriteRoot("preferences");
-        //
-        //ApplicationModelEvent.dispatchPreferenceEvent(
-        //        dispatcher, ApplicationModelEvent.PREFERENCES_SAVE, root);
-        //
-        //fileManager.writeString(fileManager.preferenceFile, root.toXMLString());
-    }
-
 }
 }

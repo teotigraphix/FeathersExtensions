@@ -61,11 +61,22 @@ public class AbstractApplicationController extends AbstractController
 
     private function context_projectChanged(event:Event, project:Project):void
     {
-        for (var i:int = 0; i < _listeners.length; i++)
+        var i:int;
+        var listener:Object;
+        const len:int = _listeners.length;
+
+        for (i = 0; i < len; i++)
         {
-            var listener:Object = _listeners.getItemAt(i);
+            listener = _listeners.getItemAt(i);
             if (listener is IProjectChangeListener)
                 IProjectChangeListener(listener).projectChanged(project, null);
+        }
+
+        for (i = 0; i < len; i++)
+        {
+            listener = _listeners.getItemAt(i);
+            if (listener is IProjectChangeListener)
+                IProjectChangeListener(listener).projectChangeComplete(project);
         }
     }
 }

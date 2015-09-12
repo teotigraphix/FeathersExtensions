@@ -35,5 +35,13 @@ public interface IProjectChangeListener
      * @see com.teotigraphix.app.event.ApplicationEventType.PROJECT_CHANGED
      */
     function projectChanged(project:Project, old:Project):void;
+
+    /**
+     * Safe for models to access full application state, #projectChanged() has been called on
+     * all listeners.
+     *
+     * @param project the current project.
+     */
+    function projectChangeComplete(project:Project):void;
 }
 }
