@@ -122,6 +122,14 @@ public class FileService extends AbstractService implements IFileService
 
     private function checkAndCreatePublicApplicationDirectory():void
     {
+        if (descriptor.flushState)
+        {
+            if (applicationDirectory.exists)
+            {
+                applicationDirectory.deleteDirectory(true);
+            }
+        }
+
         if (!applicationDirectory.exists)
         {
             applicationDirectory.createDirectory();

@@ -28,6 +28,8 @@ import com.teotigraphix.util.ISerialize;
 
 import flash.filesystem.File;
 
+import org.as3commons.lang.Assert;
+
 import org.as3commons.lang.StringUtils;
 import org.robotlegs.starling.core.IInjector;
 
@@ -37,6 +39,10 @@ public final class Project implements ISerialize
 {
     private static const TEMP_DIR:String = ".temp";
 
+    //--------------------------------------------------------------------------
+    // Public Inject :: Variables
+    //--------------------------------------------------------------------------
+
     [Inject]
     [Transient]
     public var injector:IInjector;
@@ -45,17 +51,24 @@ public final class Project implements ISerialize
     [Transient]
     public var fileService:IFileService;
 
+    //--------------------------------------------------------------------------
+    // Serialized API
+    //--------------------------------------------------------------------------
+
     private var _uid:String;
-
     private var _path:String = "";
-
     private var _name:String = "UntitledProject";
-
     private var _extension:String;
-
     private var _version:Version;
-
     private var _state:IProjectState;
+
+    //--------------------------------------------------------------------------
+    // Public :: Properties
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // uid
+    //----------------------------------
 
     public function get uid():String
     {
@@ -66,6 +79,10 @@ public final class Project implements ISerialize
     {
         _uid = value;
     }
+
+    //----------------------------------
+    // path
+    //----------------------------------
 
     /**
      * The relative path from the Application's project directory.
@@ -79,6 +96,10 @@ public final class Project implements ISerialize
     {
         _path = value;
     }
+
+    //----------------------------------
+    // name
+    //----------------------------------
 
     /**
      * Returns the name of the project, the path and name are used to assemble the
@@ -96,6 +117,10 @@ public final class Project implements ISerialize
         _name = value;
     }
 
+    //----------------------------------
+    // extension
+    //----------------------------------
+
     public function get extension():String
     {
         return _extension;
@@ -105,6 +130,10 @@ public final class Project implements ISerialize
     {
         _extension = value;
     }
+
+    //----------------------------------
+    // version
+    //----------------------------------
 
     public function get version():Version
     {
@@ -116,6 +145,10 @@ public final class Project implements ISerialize
         _version = value;
     }
 
+    //----------------------------------
+    // state
+    //----------------------------------
+
     public function get state():IProjectState
     {
         return _state;
@@ -126,6 +159,10 @@ public final class Project implements ISerialize
         _state = value;
     }
 
+    //----------------------------------
+    // workingFile
+    //----------------------------------
+
     /**
      * Returns the project's serialized file.
      *
@@ -135,6 +172,10 @@ public final class Project implements ISerialize
     {
         return workingDirectory.resolvePath(_name + "." + _extension);
     }
+
+    //----------------------------------
+    // workingDirectory
+    //----------------------------------
 
     /**
      * Returns the project's working directory.
@@ -149,6 +190,10 @@ public final class Project implements ISerialize
         return fileService.projectDirectory.resolvePath(path);
     }
 
+    //----------------------------------
+    // workingTempDirectory
+    //----------------------------------
+
     /**
      * Returns the project's working .temp directory.
      *
@@ -159,14 +204,29 @@ public final class Project implements ISerialize
         return workingDirectory.resolvePath(TEMP_DIR);
     }
 
+    //----------------------------------
+    // workingTempDirectory
+    //----------------------------------
+
+    /**
+     * Whether the Project's working file exists on disk.
+     */
+    public function get exists():Boolean
+    {
+        return workingFile.exists;
+    }
+
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+
     public function Project()
     {
     }
 
-    public function exists():Boolean
-    {
-        return workingFile.exists;
-    }
+    //--------------------------------------------------------------------------
+    // Public :: Methods
+    //--------------------------------------------------------------------------
 
     /**
      * Returns a directory or file from within the project's root directory.
@@ -193,11 +253,6 @@ public final class Project implements ISerialize
         if (!resource.exists)
             resource.createDirectory();
         return resource;
-    }
-
-    public function toString():String
-    {
-        return "Project{_uid=" + String(_uid) + ",_name=" + String(_name) + "}";
     }
 
     /**
@@ -227,6 +282,10 @@ public final class Project implements ISerialize
         return AbstractProjectState(_state).saveAsync();
     }
 
+    //--------------------------------------------------------------------------
+    // Public ISerialize :: Methods
+    //--------------------------------------------------------------------------
+
     public function create():void
     {
         if (_state is ISerialize)
@@ -252,6 +311,15 @@ public final class Project implements ISerialize
         }
     }
 
+    public function toString():String
+    {
+        return "Project{_uid=" + String(_uid) + ",_name=" + String(_name) + "}";
+    }
+
+    //--------------------------------------------------------------------------
+    // sdk_internal :: Methods
+    //--------------------------------------------------------------------------
+
     sdk_internal function initialize(state:IProjectState = null,
                                      uid:String = null,
                                      path:String = null,
@@ -259,6 +327,8 @@ public final class Project implements ISerialize
                                      extension:String = null,
                                      version:Version = null):void
     {
+        Assert.notNull(state, "IProjectState must not be null");
+
         _state = state;
 
         AbstractProjectState(_state).setProject(this);

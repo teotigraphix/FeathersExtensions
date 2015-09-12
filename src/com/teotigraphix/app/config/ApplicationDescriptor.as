@@ -47,6 +47,7 @@ public class ApplicationDescriptor
     private var _name:String;
     private var _extension:String;
     private var _version:Version;
+    private var _flushState:Boolean;
 
     public function get appID():String
     {
@@ -86,6 +87,19 @@ public class ApplicationDescriptor
     public function set version(value:Version):void
     {
         _version = value;
+    }
+
+    /**
+     * Whether to flush application state each startup.
+     */
+    public function get flushState():Boolean
+    {
+        return _flushState;
+    }
+
+    public function set flushState(value:Boolean):void
+    {
+        _flushState = value;
     }
 
     // /storage/sdcard0

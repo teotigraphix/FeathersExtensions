@@ -20,6 +20,7 @@
 package com.teotigraphix.service.support
 {
 
+import com.teotigraphix.app.config.ApplicationDescriptor;
 import com.teotigraphix.service.*;
 
 import flash.filesystem.File;
@@ -32,6 +33,9 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
 
     [Inject]
     public var fileService:IFileService;
+
+    [Inject]
+    public var descriptor:ApplicationDescriptor;
 
     private var _map:Object;
 
@@ -53,15 +57,13 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
     {
         logger.startup(TAG, "startup()");
 
-        //root = XMLMemento.createWriteRoot("preferences");
-        //
-        //var preferenceFile:File = fileService.preferenceFile;
-        //if (preferenceFile.exists)
-        //{
-        //    var data:String = fileService.readString(preferenceFile);
-        //    if (data != null && data != "")
-        //        root = XMLMemento.createReadRoot(data);
-        //}
+        if (descriptor.flushState)
+        {
+            if (fileService.preferenceBinFile.exists)
+            {
+                fileService.preferenceBinFile.deleteFile();
+            }
+        }
 
         _map = {};
 
@@ -76,10 +78,6 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
             logger.startup(TAG, "    Created binary application preferences " + binFile.nativePath);
             flush();
         }
-
-        //       logger.startup(TAG, "Dispatch ApplicationModelEvent.PREFERENCES_LOADED");
-        //       ApplicationModelEvent.dispatchPreferenceEvent(
-        //               dispatcher, ApplicationModelEvent.PREFERENCES_LOADED, root);
     }
 
     public function put(key:String, value:Object):void

@@ -26,14 +26,16 @@ import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepSequence;
 import com.teotigraphix.util.ISerialize;
 
-import feathers.controls.IScrollContainer;
-
 import org.robotlegs.starling.core.IInjector;
 
 use namespace sdk_internal;
 
 public class AbstractProjectState implements IProjectState, ISerialize
 {
+    //--------------------------------------------------------------------------
+    // Public Inject :: Variables
+    //--------------------------------------------------------------------------
+
     [Transient]
     [Inject]
     public var injector:IInjector;
@@ -45,8 +47,12 @@ public class AbstractProjectState implements IProjectState, ISerialize
     private var _project:Project;
 
     //--------------------------------------------------------------------------
-    // Private :: Variables
+    // Public :: Properties
     //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // project
+    //----------------------------------
 
     public function get project():Project
     {
@@ -58,9 +64,17 @@ public class AbstractProjectState implements IProjectState, ISerialize
         _project = value;
     }
 
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+
     public function AbstractProjectState()
     {
     }
+
+    //--------------------------------------------------------------------------
+    // Public ISerialize :: Methods
+    //--------------------------------------------------------------------------
 
     public function create():void
     {
@@ -74,10 +88,9 @@ public class AbstractProjectState implements IProjectState, ISerialize
     {
     }
 
-    sdk_internal function setProject(value:Project):void
-    {
-        _project = value;
-    }
+    //--------------------------------------------------------------------------
+    // Public :: Methods
+    //--------------------------------------------------------------------------
 
     /**
      * Saves the state async, to call this command subclasses must impl createSaveStep().
@@ -118,6 +131,11 @@ public class AbstractProjectState implements IProjectState, ISerialize
     protected function createSaveStep():IStepCommand
     {
         return null;
+    }
+
+    sdk_internal function setProject(value:Project):void
+    {
+        _project = value;
     }
 }
 }
