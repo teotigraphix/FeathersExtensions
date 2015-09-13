@@ -24,6 +24,7 @@ import com.teotigraphix.app.event.ApplicationEventType;
 import com.teotigraphix.controller.AbstractController;
 import com.teotigraphix.controller.IProjectChangeListener;
 import com.teotigraphix.frameworks.project.Project;
+import com.teotigraphix.model.IDeviceModel;
 
 import feathers.data.ListCollection;
 
@@ -36,6 +37,9 @@ import starling.events.Event;
  */
 public class AbstractApplicationController extends AbstractController
 {
+    [Inject]
+    public var deviceModel:IDeviceModel;
+
     private var _listeners:ListCollection = new ListCollection();
 
     public function AbstractApplicationController()

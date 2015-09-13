@@ -101,6 +101,7 @@ public class BootstrapApplication extends DrawersApplication implements IBootstr
 
         var application:NativeApplication = NativeApplication.nativeApplication;
         application.addEventListener(/*flash.events.Event.EXITING*/"exiting", closingHandler);
+
     }
 
     private function this_initializeHandler(event:starling.events.Event):void
