@@ -28,12 +28,8 @@ import feathers.controls.ToggleButton;
 import feathers.skins.SmartDisplayObjectStateValueSelector;
 import feathers.textures.Scale9Textures;
 
-import flash.geom.Rectangle;
-
 public class ButtonFactory extends AbstractThemeFactory
 {
-    public static const BUTTON_SCALE9_GRID:Rectangle = new Rectangle(5, 5, 50, 50);
-    public static const BUTTON_SELECTED_SCALE9_GRID:Rectangle = new Rectangle(8, 8, 44, 44);
 
     public var buttonUpSkinTextures:Scale9Textures;
     public var buttonDownSkinTextures:Scale9Textures;
@@ -48,13 +44,16 @@ public class ButtonFactory extends AbstractThemeFactory
 
     override public function initializeTextures():void
     {
-        buttonUpSkinTextures = AssetMap.createScale9Textures("button-up-skin", BUTTON_SCALE9_GRID);
-        buttonDownSkinTextures = AssetMap.createScale9Textures("button-down-skin", BUTTON_SCALE9_GRID);
-        buttonDisabledSkinTextures = AssetMap.createScale9Textures("button-disabled-skin", BUTTON_SCALE9_GRID);
+        buttonUpSkinTextures = AssetMap.createScale9Textures("button-up-skin",
+                                                             SharedFactory.BUTTON_SCALE9_GRID);
+        buttonDownSkinTextures = AssetMap.createScale9Textures("button-down-skin",
+                                                               SharedFactory.BUTTON_SCALE9_GRID);
+        buttonDisabledSkinTextures = AssetMap.createScale9Textures("button-disabled-skin",
+                                                                   SharedFactory.BUTTON_SCALE9_GRID);
         buttonSelectedUpSkinTextures = AssetMap.createScale9Textures("button-selected-up-skin",
-                                                                     BUTTON_SELECTED_SCALE9_GRID);
+                                                                     SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
         buttonSelectedDisabledSkinTextures = AssetMap.createScale9Textures("button-selected-disabled-skin",
-                                                                           BUTTON_SELECTED_SCALE9_GRID);
+                                                                           SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
     }
 
     override public function initializeStyleProviders():void

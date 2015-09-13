@@ -18,15 +18,13 @@ import flash.geom.Rectangle;
 
 import starling.display.Quad;
 
-public class GroupListFactory extends AbstractThemeFactory
+public class GroupedListFactory extends AbstractThemeFactory
 {
-    protected static const GROUPED_LIST_HEADER_BACKGROUND_COLOR:uint = 0x2e2a26;
-    protected static const GROUPED_LIST_FOOTER_BACKGROUND_COLOR:uint = 0x2e2a26;
     // TODO
-    protected static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 2, 82);
-    protected static const INSET_ITEM_RENDERER_FIRST_SCALE9_GRID:Rectangle = new Rectangle(13, 13, 3, 70);
-    protected static const INSET_ITEM_RENDERER_LAST_SCALE9_GRID:Rectangle = new Rectangle(13, 0, 3, 75);
-    protected static const INSET_ITEM_RENDERER_SINGLE_SCALE9_GRID:Rectangle = new Rectangle(13, 13, 3, 62);
+    public static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 2, 82);
+    public static const INSET_ITEM_RENDERER_FIRST_SCALE9_GRID:Rectangle = new Rectangle(13, 13, 3, 70);
+    public static const INSET_ITEM_RENDERER_LAST_SCALE9_GRID:Rectangle = new Rectangle(13, 0, 3, 75);
+    public static const INSET_ITEM_RENDERER_SINGLE_SCALE9_GRID:Rectangle = new Rectangle(13, 13, 3, 62);
 
     protected var itemRendererUpSkinTextures:Scale9Textures;
     protected var itemRendererSelectedSkinTextures:Scale9Textures;
@@ -37,7 +35,7 @@ public class GroupListFactory extends AbstractThemeFactory
     protected var insetItemRendererSingleUpSkinTextures:Scale9Textures;
     protected var insetItemRendererSingleSelectedSkinTextures:Scale9Textures;
 
-    public function GroupListFactory(theme:AbstractTheme)
+    public function GroupedListFactory(theme:AbstractTheme)
     {
         super(theme);
     }
@@ -88,8 +86,9 @@ public class GroupListFactory extends AbstractThemeFactory
 
     protected function setGroupedListStyles(list:GroupedList):void
     {
-        theme.scrollers.setScrollerStyles(list);
-        var backgroundSkin:Quad = new Quad(properties.gridSize, properties.gridSize, ListFactory.LIST_BACKGROUND_COLOR);
+        theme.scroller.setScrollerStyles(list);
+        var backgroundSkin:Quad = new Quad(properties.gridSize, properties.gridSize,
+                                           SharedFactory.LIST_BACKGROUND_COLOR);
         list.backgroundSkin = backgroundSkin;
     }
 
@@ -97,7 +96,7 @@ public class GroupListFactory extends AbstractThemeFactory
 
     protected function setGroupedListHeaderRendererStyles(renderer:DefaultGroupedListHeaderOrFooterRenderer):void
     {
-        renderer.backgroundSkin = new Quad(1, 1, GROUPED_LIST_HEADER_BACKGROUND_COLOR);
+        renderer.backgroundSkin = new Quad(1, 1, SharedFactory.GROUPED_LIST_HEADER_BACKGROUND_COLOR);
 
         renderer.horizontalAlign = DefaultGroupedListHeaderOrFooterRenderer.HORIZONTAL_ALIGN_LEFT;
         renderer.contentLabelProperties.elementFormat = theme.fonts.lightUIElementFormat;
@@ -107,12 +106,12 @@ public class GroupListFactory extends AbstractThemeFactory
         renderer.paddingLeft = properties.smallGutterSize + properties.gutterSize;
         renderer.paddingRight = properties.gutterSize;
 
-        renderer.contentLoaderFactory = this.imageLoaderFactory;
+        renderer.contentLoaderFactory = imageLoaderFactory;
     }
 
     protected function setGroupedListFooterRendererStyles(renderer:DefaultGroupedListHeaderOrFooterRenderer):void
     {
-        renderer.backgroundSkin = new Quad(1, 1, GROUPED_LIST_FOOTER_BACKGROUND_COLOR);
+        renderer.backgroundSkin = new Quad(1, 1, SharedFactory.GROUPED_LIST_FOOTER_BACKGROUND_COLOR);
 
         renderer.horizontalAlign = DefaultGroupedListHeaderOrFooterRenderer.HORIZONTAL_ALIGN_CENTER;
         renderer.contentLabelProperties.elementFormat = theme.fonts.lightElementFormat;
@@ -121,7 +120,7 @@ public class GroupListFactory extends AbstractThemeFactory
         renderer.paddingLeft = properties.smallGutterSize + properties.gutterSize;
         renderer.paddingRight = properties.gutterSize;
 
-        renderer.contentLoaderFactory = this.imageLoaderFactory;
+        renderer.contentLoaderFactory = imageLoaderFactory;
     }
 
     protected function setInsetGroupedListStyles(list:GroupedList):void
@@ -158,10 +157,10 @@ public class GroupListFactory extends AbstractThemeFactory
         };
         renderer.stateToSkinFunction = skinSelector.updateValue;
 
-        renderer.defaultLabelProperties.elementFormat = theme.fonts.largeLightElementFormat;
-        renderer.downLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
-        renderer.defaultSelectedLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
-        renderer.disabledLabelProperties.elementFormat = theme.fonts.largeDisabledElementFormat;
+        renderer.defaultLabelProperties.elementFormat = font.largeLightElementFormat;
+        renderer.downLabelProperties.elementFormat = font.largeDarkElementFormat;
+        renderer.defaultSelectedLabelProperties.elementFormat = font.largeDarkElementFormat;
+        renderer.disabledLabelProperties.elementFormat = font.largeDisabledElementFormat;
 
         renderer.horizontalAlign = Button.HORIZONTAL_ALIGN_LEFT;
         renderer.paddingTop = properties.smallGutterSize;
@@ -177,32 +176,32 @@ public class GroupListFactory extends AbstractThemeFactory
         renderer.minWidth = renderer.minHeight = properties.gridSize;
         renderer.minTouchWidth = renderer.minTouchHeight = properties.gridSize;
 
-        renderer.accessoryLoaderFactory = this.imageLoaderFactory;
-        renderer.iconLoaderFactory = this.imageLoaderFactory;
+        renderer.accessoryLoaderFactory = imageLoaderFactory;
+        renderer.iconLoaderFactory = imageLoaderFactory;
     }
 
     protected function setInsetGroupedListMiddleItemRendererStyles(renderer:DefaultGroupedListItemRenderer):void
     {
-        this.setInsetGroupedListItemRendererStyles(renderer, this.itemRendererUpSkinTextures,
-                                                   this.itemRendererSelectedSkinTextures);
+        this.setInsetGroupedListItemRendererStyles(renderer, itemRendererUpSkinTextures,
+                                                   itemRendererSelectedSkinTextures);
     }
 
     protected function setInsetGroupedListFirstItemRendererStyles(renderer:DefaultGroupedListItemRenderer):void
     {
-        this.setInsetGroupedListItemRendererStyles(renderer, this.insetItemRendererFirstUpSkinTextures,
-                                                   this.insetItemRendererFirstSelectedSkinTextures);
+        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererFirstUpSkinTextures,
+                                                   insetItemRendererFirstSelectedSkinTextures);
     }
 
     protected function setInsetGroupedListLastItemRendererStyles(renderer:DefaultGroupedListItemRenderer):void
     {
-        this.setInsetGroupedListItemRendererStyles(renderer, this.insetItemRendererLastUpSkinTextures,
-                                                   this.insetItemRendererLastSelectedSkinTextures);
+        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererLastUpSkinTextures,
+                                                   insetItemRendererLastSelectedSkinTextures);
     }
 
     protected function setInsetGroupedListSingleItemRendererStyles(renderer:DefaultGroupedListItemRenderer):void
     {
-        this.setInsetGroupedListItemRendererStyles(renderer, this.insetItemRendererSingleUpSkinTextures,
-                                                   this.insetItemRendererSingleSelectedSkinTextures);
+        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererSingleUpSkinTextures,
+                                                   insetItemRendererSingleSelectedSkinTextures);
     }
 
     protected function setInsetGroupedListHeaderRendererStyles(renderer:DefaultGroupedListHeaderOrFooterRenderer):void
@@ -221,7 +220,7 @@ public class GroupListFactory extends AbstractThemeFactory
         renderer.minWidth = properties.controlSize;
         renderer.minHeight = properties.controlSize;
 
-        renderer.contentLoaderFactory = this.imageLoaderFactory;
+        renderer.contentLoaderFactory = imageLoaderFactory;
     }
 
     protected function setInsetGroupedListFooterRendererStyles(renderer:DefaultGroupedListHeaderOrFooterRenderer):void
@@ -240,7 +239,7 @@ public class GroupListFactory extends AbstractThemeFactory
         renderer.minWidth = properties.controlSize;
         renderer.minHeight = properties.controlSize;
 
-        renderer.contentLoaderFactory = this.imageLoaderFactory;
+        renderer.contentLoaderFactory = imageLoaderFactory;
     }
 
     // TODO

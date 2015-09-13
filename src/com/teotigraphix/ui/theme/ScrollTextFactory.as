@@ -20,11 +20,12 @@
 package com.teotigraphix.ui.theme
 {
 
-import feathers.controls.Label;
+import feathers.controls.ScrollText;
 
-public class LabelFactory extends AbstractThemeFactory
+public class ScrollTextFactory extends AbstractThemeFactory
 {
-    public function LabelFactory(theme:AbstractTheme)
+
+    public function ScrollTextFactory(theme:AbstractTheme)
     {
         super(theme);
     }
@@ -38,27 +39,17 @@ public class LabelFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
-        setStyle(Label, setLabelStyles);
-        setStyle(Label, setHeadingLabelStyles, Label.ALTERNATE_STYLE_NAME_HEADING);
-        setStyle(Label, setDetailLabelStyles, Label.ALTERNATE_STYLE_NAME_DETAIL);
+        setStyle(ScrollText, setScrollTextStyles);
     }
 
-    public function setLabelStyles(label:Label):void
+    protected function setScrollTextStyles(text:ScrollText):void
     {
-        label.textRendererProperties.elementFormat = theme.fonts.lightElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
-    }
+        theme.scroller.setScrollerStyles(text);
 
-    public function setHeadingLabelStyles(label:Label):void
-    {
-        label.textRendererProperties.elementFormat = theme.fonts.largeLightElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.largeDisabledElementFormat;
-    }
-
-    public function setDetailLabelStyles(label:Label):void
-    {
-        label.textRendererProperties.elementFormat = theme.fonts.smallLightElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.smallDisabledElementFormat;
+        text.textFormat = font.scrollTextTextFormat;
+        text.disabledTextFormat = font.scrollTextDisabledTextFormat;
+        text.padding = properties.gutterSize;
+        text.paddingRight = properties.gutterSize + properties.smallGutterSize;
     }
 }
 }

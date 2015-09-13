@@ -30,6 +30,16 @@ public class AbstractThemeFactory
     public var properties:ThemeProperties;
     private var _atlas:TextureAtlas;
 
+    public final function get font():FontFactory
+    {
+        return theme.fonts;
+    }
+
+    public final function get shared():SharedFactory
+    {
+        return theme.shared;
+    }
+
     public function get atlas():TextureAtlas
     {
         return _atlas;

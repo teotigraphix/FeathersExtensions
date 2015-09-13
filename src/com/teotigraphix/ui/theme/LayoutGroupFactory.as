@@ -20,11 +20,14 @@
 package com.teotigraphix.ui.theme
 {
 
-import feathers.controls.Label;
+import feathers.controls.LayoutGroup;
+import feathers.display.TiledImage;
+import feathers.layout.HorizontalLayout;
 
-public class LabelFactory extends AbstractThemeFactory
+public class LayoutGroupFactory extends AbstractThemeFactory
 {
-    public function LabelFactory(theme:AbstractTheme)
+
+    public function LayoutGroupFactory(theme:AbstractTheme)
     {
         super(theme);
     }
@@ -38,27 +41,25 @@ public class LabelFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
-        setStyle(Label, setLabelStyles);
-        setStyle(Label, setHeadingLabelStyles, Label.ALTERNATE_STYLE_NAME_HEADING);
-        setStyle(Label, setDetailLabelStyles, Label.ALTERNATE_STYLE_NAME_DETAIL);
+        setStyle(LayoutGroup, setToolbarLayoutGroupStyles, LayoutGroup.ALTERNATE_STYLE_NAME_TOOLBAR);
     }
 
-    public function setLabelStyles(label:Label):void
+    public function setToolbarLayoutGroupStyles(group:LayoutGroup):void
     {
-        label.textRendererProperties.elementFormat = theme.fonts.lightElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
-    }
+        if (!group.layout)
+        {
+            var layout:HorizontalLayout = new HorizontalLayout();
+            layout.padding = properties.smallGutterSize;
+            layout.gap = properties.smallGutterSize;
+            layout.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
+            group.layout = layout;
+        }
+        group.minWidth = properties.gridSize;
+        group.minHeight = properties.gridSize;
 
-    public function setHeadingLabelStyles(label:Label):void
-    {
-        label.textRendererProperties.elementFormat = theme.fonts.largeLightElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.largeDisabledElementFormat;
-    }
-
-    public function setDetailLabelStyles(label:Label):void
-    {
-        label.textRendererProperties.elementFormat = theme.fonts.smallLightElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.smallDisabledElementFormat;
+        var backgroundSkin:TiledImage = new TiledImage(theme.header.headerBackgroundSkinTexture, properties.scale);
+        backgroundSkin.width = backgroundSkin.height = properties.gridSize;
+        group.backgroundSkin = backgroundSkin;
     }
 }
 }

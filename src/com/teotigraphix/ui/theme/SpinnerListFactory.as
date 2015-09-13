@@ -36,7 +36,6 @@ public class SpinnerListFactory extends AbstractThemeFactory
         super.initializeTextures();
         spinnerListSelectionOverlaySkinTextures = new Scale9Textures(atlas.getTexture("spinner-list-selection-overlay-skin"),
                                                                      SPINNER_LIST_SELECTION_OVERLAY_SCALE9_GRID);
-
     }
 
     override public function initializeGlobals():void
@@ -65,7 +64,7 @@ public class SpinnerListFactory extends AbstractThemeFactory
 
     protected function setSpinnerListStyles(list:SpinnerList):void
     {
-        theme.lists.setListStyles(list);
+        theme.list.setListStyles(list);
         list.customItemRendererStyleName = THEME_STYLE_NAME_SPINNER_LIST_ITEM_RENDERER;
         list.selectionOverlaySkin = new Scale9Image(this.spinnerListSelectionOverlaySkinTextures, properties.scale);
     }
@@ -73,7 +72,7 @@ public class SpinnerListFactory extends AbstractThemeFactory
     protected function setSpinnerListItemRendererStyles(renderer:DefaultListItemRenderer):void
     {
         var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.lists.itemRendererUpSkinTextures;
+        skinSelector.defaultValue = theme.list.itemRendererUpSkinTextures;
         skinSelector.displayObjectProperties =
         {
             width: properties.gridSize,
@@ -101,8 +100,8 @@ public class SpinnerListFactory extends AbstractThemeFactory
         renderer.minTouchWidth = properties.gridSize;
         renderer.minTouchHeight = properties.gridSize;
 
-        renderer.accessoryLoaderFactory = theme.lists.imageLoaderFactory;
-        renderer.iconLoaderFactory = theme.lists.imageLoaderFactory;
+        renderer.accessoryLoaderFactory = theme.list.imageLoaderFactory;
+        renderer.iconLoaderFactory = theme.list.imageLoaderFactory;
     }
 
 }

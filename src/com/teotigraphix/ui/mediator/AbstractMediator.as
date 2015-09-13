@@ -56,7 +56,7 @@ public class AbstractMediator extends Mediator
 
         addContextListener(DeviceModelEventType.ORIENTATION_CHANGE, context_orientationChange);
 
-        onOrientationChange(deviceModel.isLandscape);
+        onOrientationChange(deviceModel.isLandscape, deviceModel.isTablet);
     }
 
     override public function onRemove():void
@@ -64,15 +64,15 @@ public class AbstractMediator extends Mediator
         super.onRemove();
     }
 
-    protected function onOrientationChange(isLandscape:Boolean):void
+    protected function onOrientationChange(isLandscape:Boolean, isTablet:Boolean):void
     {
         if (viewComponent is IOrientationAware)
-            IOrientationAware(viewComponent).isLandscape = isLandscape;
+            IOrientationAware(viewComponent).orientationChange(isLandscape, isTablet);
     }
 
     private function context_orientationChange(event:Event, model:IDeviceModel):void
     {
-        onOrientationChange(model.isLandscape);
+        onOrientationChange(deviceModel.isLandscape, deviceModel.isTablet);
     }
 }
 }

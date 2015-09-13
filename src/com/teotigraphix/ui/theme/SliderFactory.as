@@ -71,17 +71,12 @@ public class SliderFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
-        theme.getStyleProviderForClass(Slider).defaultStyleFunction = this.setSliderStyles;
-        theme.getStyleProviderForClass(Button).setFunctionForStyleName(Slider.DEFAULT_CHILD_STYLE_NAME_THUMB,
-                                                                       theme.shared.setSimpleButtonStyles);
-        theme.getStyleProviderForClass(Button).setFunctionForStyleName(THEME_STYLE_NAME_HORIZONTAL_SLIDER_MINIMUM_TRACK,
-                                                                       this.setHorizontalSliderMinimumTrackStyles);
-        theme.getStyleProviderForClass(Button).setFunctionForStyleName(THEME_STYLE_NAME_HORIZONTAL_SLIDER_MAXIMUM_TRACK,
-                                                                       this.setHorizontalSliderMaximumTrackStyles);
-        theme.getStyleProviderForClass(Button).setFunctionForStyleName(THEME_STYLE_NAME_VERTICAL_SLIDER_MINIMUM_TRACK,
-                                                                       this.setVerticalSliderMinimumTrackStyles);
-        theme.getStyleProviderForClass(Button).setFunctionForStyleName(THEME_STYLE_NAME_VERTICAL_SLIDER_MAXIMUM_TRACK,
-                                                                       this.setVerticalSliderMaximumTrackStyles);
+        setStyle(Slider, setSliderStyles);
+        setStyle(Button, theme.shared.setSimpleButtonStyles, Slider.DEFAULT_CHILD_STYLE_NAME_THUMB);
+        setStyle(Button, setHorizontalSliderMinimumTrackStyles, THEME_STYLE_NAME_HORIZONTAL_SLIDER_MINIMUM_TRACK);
+        setStyle(Button, setHorizontalSliderMaximumTrackStyles, THEME_STYLE_NAME_HORIZONTAL_SLIDER_MAXIMUM_TRACK);
+        setStyle(Button, setVerticalSliderMinimumTrackStyles, THEME_STYLE_NAME_VERTICAL_SLIDER_MINIMUM_TRACK);
+        setStyle(Button, setVerticalSliderMaximumTrackStyles, THEME_STYLE_NAME_VERTICAL_SLIDER_MAXIMUM_TRACK);
     }
 
     public function setHorizontalSliderMinimumTrackStyles(track:Button):void

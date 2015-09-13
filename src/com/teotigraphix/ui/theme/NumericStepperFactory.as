@@ -88,7 +88,7 @@ public class NumericStepperFactory extends AbstractThemeFactory
 
     public function setNumericStepperButtonStyles(button:Button):void
     {
-        theme.buttons.setButtonStyles(button);
+        theme.button.setButtonStyles(button);
         button.keepDownStateOnRollOut = true;
     }
 

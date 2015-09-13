@@ -382,12 +382,12 @@ public class GridGroup extends FeathersControl
         var contentWidth:Number = actualWidth - (_gap * (_numColumns - 1)) - (_padding * 2);
         var contentHeight:Number = actualHeight - (_gap * (_numRows - 1)) - (_padding * 2);
 
-        trace("layoutChildren " + contentWidth + ", " + contentHeight);
+        //trace("layoutChildren " + contentWidth + ", " + contentHeight);
 
         var calcWidth:Number = contentWidth / _numColumns;
         var calcHeight:Number = contentHeight / _numRows;
 
-        trace("calcWidth/calcHeight " + calcWidth + ", " + calcHeight);
+        //trace("calcWidth/calcHeight " + calcWidth + ", " + calcHeight);
 
         var calcX:Number = _padding;
         var calcY:Number = _padding;

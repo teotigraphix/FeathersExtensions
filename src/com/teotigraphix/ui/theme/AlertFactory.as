@@ -36,9 +36,6 @@ public class AlertFactory extends AbstractThemeFactory
 {
     protected static const THEME_STYLE_NAME_ALERT_BUTTON_GROUP_BUTTON:String = "metal-works-mobile-alert-button-group-button";
 
-    internal static const MODAL_OVERLAY_COLOR:uint = 0x29241e;
-    internal static const MODAL_OVERLAY_ALPHA:Number = 0.8;
-
     protected var backgroundPopUpSkinTextures:Scale9Textures;
 
     public function AlertFactory(theme:AbstractTheme)
@@ -83,7 +80,7 @@ public class AlertFactory extends AbstractThemeFactory
 
     protected function setAlertStyles(alert:Alert):void
     {
-        theme.scrollers.setScrollerStyles(alert);
+        theme.scroller.setScrollerStyles(alert);
 
         var backgroundSkin:Scale9Image = new Scale9Image(backgroundPopUpSkinTextures, theme.scale);
         alert.backgroundSkin = backgroundSkin;
@@ -112,7 +109,7 @@ public class AlertFactory extends AbstractThemeFactory
 
     protected function setAlertButtonGroupButtonStyles(button:Button):void
     {
-        theme.buttons.setButtonStyles(button);
+        theme.button.setButtonStyles(button);
         button.minWidth = 2 * properties.controlSize;
     }
 
@@ -135,8 +132,8 @@ public class AlertFactory extends AbstractThemeFactory
 
     protected static function popUpOverlayFactory():DisplayObject
     {
-        var quad:Quad = new Quad(100, 100, MODAL_OVERLAY_COLOR);
-        quad.alpha = MODAL_OVERLAY_ALPHA;
+        var quad:Quad = new Quad(100, 100, SharedFactory.MODAL_OVERLAY_COLOR);
+        quad.alpha = SharedFactory.MODAL_OVERLAY_ALPHA;
         return quad;
     }
 

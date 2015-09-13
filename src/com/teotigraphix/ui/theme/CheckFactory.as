@@ -44,16 +44,16 @@ public class CheckFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        var backgroundSkinTexture:Texture = this.atlas.getTexture("background-skin");
-        var backgroundDownSkinTexture:Texture = this.atlas.getTexture("background-down-skin");
-        var backgroundDisabledSkinTexture:Texture = this.atlas.getTexture("background-disabled-skin");
+        var backgroundSkinTexture:Texture = atlas.getTexture("background-skin");
+        var backgroundDownSkinTexture:Texture = atlas.getTexture("background-down-skin");
+        var backgroundDisabledSkinTexture:Texture = atlas.getTexture("background-disabled-skin");
 
-        this.checkUpIconTexture = backgroundSkinTexture;
-        this.checkDownIconTexture = backgroundDownSkinTexture;
-        this.checkDisabledIconTexture = backgroundDisabledSkinTexture;
-        this.checkSelectedUpIconTexture = this.atlas.getTexture("check-selected-up-icon");
-        this.checkSelectedDownIconTexture = this.atlas.getTexture("check-selected-down-icon");
-        this.checkSelectedDisabledIconTexture = this.atlas.getTexture("check-selected-disabled-icon");
+        checkUpIconTexture = backgroundSkinTexture;
+        checkDownIconTexture = backgroundDownSkinTexture;
+        checkDisabledIconTexture = backgroundDisabledSkinTexture;
+        checkSelectedUpIconTexture = atlas.getTexture("check-selected-up-icon");
+        checkSelectedDownIconTexture = atlas.getTexture("check-selected-down-icon");
+        checkSelectedDisabledIconTexture = atlas.getTexture("check-selected-disabled-icon");
     }
 
     override public function initializeStyleProviders():void
@@ -65,12 +65,12 @@ public class CheckFactory extends AbstractThemeFactory
     public function setCheckStyles(check:Check):void
     {
         var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        iconSelector.defaultValue = this.checkUpIconTexture;
-        iconSelector.defaultSelectedValue = this.checkSelectedUpIconTexture;
-        iconSelector.setValueForState(this.checkDownIconTexture, Button.STATE_DOWN, false);
-        iconSelector.setValueForState(this.checkDisabledIconTexture, Button.STATE_DISABLED, false);
-        iconSelector.setValueForState(this.checkSelectedDownIconTexture, Button.STATE_DOWN, true);
-        iconSelector.setValueForState(this.checkSelectedDisabledIconTexture, Button.STATE_DISABLED, true);
+        iconSelector.defaultValue = checkUpIconTexture;
+        iconSelector.defaultSelectedValue = checkSelectedUpIconTexture;
+        iconSelector.setValueForState(checkDownIconTexture, Button.STATE_DOWN, false);
+        iconSelector.setValueForState(checkDisabledIconTexture, Button.STATE_DISABLED, false);
+        iconSelector.setValueForState(checkSelectedDownIconTexture, Button.STATE_DOWN, true);
+        iconSelector.setValueForState(checkSelectedDisabledIconTexture, Button.STATE_DISABLED, true);
         iconSelector.displayObjectProperties =
         {
             scaleX: properties.scale,

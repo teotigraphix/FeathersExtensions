@@ -9,15 +9,10 @@ import feathers.controls.ToggleButton;
 import feathers.display.Scale9Image;
 import feathers.textures.Scale9Textures;
 
-import flash.geom.Rectangle;
-
 import starling.display.Quad;
 
 public class TabBarFactory extends AbstractThemeFactory
 {
-    public static const TAB_BACKGROUND_COLOR:uint = 0x1a1816;
-    public static const TAB_DISABLED_BACKGROUND_COLOR:uint = 0x292624;
-    public static const TAB_SCALE9_GRID:Rectangle = new Rectangle(19, 19, 50, 50);
 
     public var tabDownSkinTextures:Scale9Textures;
     public var tabSelectedSkinTextures:Scale9Textures;
@@ -32,10 +27,11 @@ public class TabBarFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        tabDownSkinTextures = new Scale9Textures(this.atlas.getTexture("tab-down-skin"), TAB_SCALE9_GRID);
-        tabSelectedSkinTextures = new Scale9Textures(this.atlas.getTexture("tab-selected-skin"), TAB_SCALE9_GRID);
+        tabDownSkinTextures = new Scale9Textures(this.atlas.getTexture("tab-down-skin"), SharedFactory.TAB_SCALE9_GRID);
+        tabSelectedSkinTextures = new Scale9Textures(this.atlas.getTexture("tab-selected-skin"),
+                                                     SharedFactory.TAB_SCALE9_GRID);
         tabSelectedDisabledSkinTextures = new Scale9Textures(this.atlas.getTexture("tab-selected-disabled-skin"),
-                                                             TAB_SCALE9_GRID);
+                                                             SharedFactory.TAB_SCALE9_GRID);
     }
 
     override public function initializeStyleProviders():void
@@ -53,7 +49,7 @@ public class TabBarFactory extends AbstractThemeFactory
 
     public function setTabStyles(tab:ToggleButton):void
     {
-        var defaultSkin:Quad = new Quad(properties.gridSize, properties.gridSize, TAB_BACKGROUND_COLOR);
+        var defaultSkin:Quad = new Quad(properties.gridSize, properties.gridSize, SharedFactory.TAB_BACKGROUND_COLOR);
         tab.defaultSkin = defaultSkin;
 
         var downSkin:Scale9Image = new Scale9Image(tabDownSkinTextures, properties.scale);
@@ -62,7 +58,8 @@ public class TabBarFactory extends AbstractThemeFactory
         var defaultSelectedSkin:Scale9Image = new Scale9Image(tabSelectedSkinTextures, properties.scale);
         tab.defaultSelectedSkin = defaultSelectedSkin;
 
-        var disabledSkin:Quad = new Quad(properties.gridSize, properties.gridSize, TAB_DISABLED_BACKGROUND_COLOR);
+        var disabledSkin:Quad = new Quad(properties.gridSize, properties.gridSize,
+                                         SharedFactory.TAB_DISABLED_BACKGROUND_COLOR);
         tab.disabledSkin = disabledSkin;
 
         var selectedDisabledSkin:Scale9Image = new Scale9Image(tabSelectedDisabledSkinTextures, properties.scale);

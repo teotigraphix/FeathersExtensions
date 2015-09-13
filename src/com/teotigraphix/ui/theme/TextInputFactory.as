@@ -20,15 +20,20 @@
 package com.teotigraphix.ui.theme
 {
 
-import feathers.controls.TextArea;
 import feathers.controls.TextInput;
 import feathers.skins.SmartDisplayObjectStateValueSelector;
+
+import starling.textures.SubTexture;
+import starling.textures.Texture;
 
 public class TextInputFactory extends AbstractThemeFactory
 {
     protected static const LIGHT_TEXT_COLOR:uint = 0xe5e5e5;
     protected static const DARK_TEXT_COLOR:uint = 0x1a1816;
     protected static const DISABLED_TEXT_COLOR:uint = 0x8a8a8a;
+
+    public var searchIconTexture:Texture;
+    public var searchIconDisabledTexture:Texture;
 
     public function TextInputFactory(theme:AbstractTheme)
     {
@@ -38,6 +43,9 @@ public class TextInputFactory extends AbstractThemeFactory
     override public function initializeTextures():void
     {
         super.initializeTextures();
+
+        searchIconTexture = atlas.getTexture("search-icon");
+        searchIconDisabledTexture = atlas.getTexture("search-icon-disabled");
     }
 
     override public function initializeStyleProviders():void
@@ -45,34 +53,7 @@ public class TextInputFactory extends AbstractThemeFactory
         super.initializeStyleProviders();
 
         setStyle(TextInput, setTextInputStyles);
-        setStyle(TextArea, setTextAreaStyles);
-    }
-
-    //-------------------------
-    // TextArea
-    //-------------------------
-
-    public function setTextAreaStyles(textArea:TextArea):void
-    {
-        theme.scrollers.setScrollerStyles(textArea);
-
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.shared.backgroundInsetSkinTextures;
-        skinSelector.setValueForState(theme.shared.backgroundDisabledSkinTextures, TextArea.STATE_DISABLED);
-        skinSelector.setValueForState(theme.shared.backgroundFocusedSkinTextures, TextArea.STATE_FOCUSED);
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.wideControlSize,
-            height: properties.wideControlSize,
-            textureScale: properties.scale
-        };
-        textArea.stateToSkinFunction = skinSelector.updateValue;
-
-        textArea.padding = properties.smallGutterSize;
-
-        textArea.textEditorProperties.textFormat = theme.fonts.scrollTextTextFormat;
-        textArea.textEditorProperties.disabledTextFormat = theme.fonts.scrollTextDisabledTextFormat;
-        textArea.textEditorProperties.padding = properties.smallGutterSize;
+        setStyle(TextInput, setSearchTextInputStyles, TextInput.ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT);
     }
 
     //-------------------------
@@ -114,19 +95,19 @@ public class TextInputFactory extends AbstractThemeFactory
         input.promptProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
     }
 
-    public function setSearchTextInputStyles(input:TextInput):void
+    protected function setSearchTextInputStyles(input:TextInput):void
     {
         this.setBaseTextInputStyles(input);
 
         var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        //iconSelector.setValueTypeHandler(SubTexture, textureValueTypeHandler);
-        //iconSelector.defaultValue = this.searchIconTexture;
-        //iconSelector.setValueForState(this.searchIconDisabledTexture, TextInput.STATE_DISABLED, false);
+        iconSelector.setValueTypeHandler(SubTexture, SharedFactory.textureValueTypeHandler);
+        iconSelector.defaultValue = searchIconTexture;
+        iconSelector.setValueForState(searchIconDisabledTexture, TextInput.STATE_DISABLED, false);
         iconSelector.displayObjectProperties =
         {
             textureScale: properties.scale,
             snapToPixels: true
-        }
+        };
         input.stateToIconFunction = iconSelector.updateValue;
     }
 

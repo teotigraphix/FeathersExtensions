@@ -30,14 +30,10 @@ import feathers.controls.text.TextBlockTextRenderer;
 import feathers.skins.SmartDisplayObjectStateValueSelector;
 import feathers.textures.Scale9Textures;
 
-import flash.geom.Rectangle;
-
 import starling.display.Quad;
 
 public class ListFactory extends AbstractThemeFactory
 {
-    public static const LIST_BACKGROUND_COLOR:uint = 0x383430;
-    public static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 2, 82);
 
     // Shared with SpinnerList etc.
     public var itemRendererUpSkinTextures:Scale9Textures;
@@ -53,9 +49,9 @@ public class ListFactory extends AbstractThemeFactory
         super.initializeTextures();
 
         itemRendererUpSkinTextures = new Scale9Textures(atlas.getTexture("list-item-up-skin"),
-                                                        ITEM_RENDERER_SCALE9_GRID);
+                                                        SharedFactory.ITEM_RENDERER_SCALE9_GRID);
         itemRendererSelectedSkinTextures = new Scale9Textures(atlas.getTexture("list-item-selected-skin"),
-                                                              ITEM_RENDERER_SCALE9_GRID);
+                                                              SharedFactory.ITEM_RENDERER_SCALE9_GRID);
     }
 
     override public function initializeStyleProviders():void
@@ -70,8 +66,9 @@ public class ListFactory extends AbstractThemeFactory
 
     public function setListStyles(list:List):void
     {
-        theme.scrollers.setScrollerStyles(list);
-        var backgroundSkin:Quad = new Quad(properties.gridSize, properties.gridSize, LIST_BACKGROUND_COLOR);
+        theme.scroller.setScrollerStyles(list);
+        var backgroundSkin:Quad = new Quad(properties.gridSize, properties.gridSize,
+                                           SharedFactory.LIST_BACKGROUND_COLOR);
         list.backgroundSkin = backgroundSkin;
     }
 

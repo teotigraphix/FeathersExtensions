@@ -21,15 +21,14 @@ package com.teotigraphix.ui.theme
 {
 
 import feathers.controls.Header;
+import feathers.controls.Panel;
+import feathers.controls.PanelScreen;
+import feathers.display.Scale9Image;
 
-import starling.display.Image;
-import starling.textures.Texture;
-
-public class HeaderFactory extends AbstractThemeFactory
+public class PanelFactory extends AbstractThemeFactory
 {
-    public var headerBackgroundSkinTexture:Texture;
 
-    public function HeaderFactory(theme:AbstractTheme)
+    public function PanelFactory(theme:AbstractTheme)
     {
         super(theme);
     }
@@ -37,18 +36,36 @@ public class HeaderFactory extends AbstractThemeFactory
     override public function initializeTextures():void
     {
         super.initializeTextures();
-
-        this.headerBackgroundSkinTexture = this.atlas.getTexture("header-background-skin");
     }
 
     override public function initializeStyleProviders():void
     {
         super.initializeStyleProviders();
 
-        setStyle(Header, setHeaderStyles);
+        setStyle(Panel, setPanelStyles);
+        setStyle(Header, setHeaderWithoutBackgroundStyles, Panel.DEFAULT_CHILD_STYLE_NAME_HEADER);
+
+        setStyle(PanelScreen, setPanelScreenStyles);
+        setStyle(Header, setPanelScreenHeaderStyles, PanelScreen.DEFAULT_CHILD_STYLE_NAME_HEADER);
     }
 
-    public function setHeaderStyles(header:Header):void
+    //-------------------------
+    // Panel
+    //-------------------------
+
+    public function setPanelStyles(panel:Panel):void
+    {
+        theme.scroller.setScrollerStyles(panel);
+
+        panel.backgroundSkin = new Scale9Image(shared.backgroundPopUpSkinTextures, properties.scale);
+
+        panel.paddingTop = 0;
+        panel.paddingRight = properties.smallGutterSize;
+        panel.paddingBottom = properties.smallGutterSize;
+        panel.paddingLeft = properties.smallGutterSize;
+    }
+
+    public function setHeaderWithoutBackgroundStyles(header:Header):void
     {
         header.minWidth = properties.gridSize;
         header.minHeight = properties.gridSize;
@@ -56,11 +73,23 @@ public class HeaderFactory extends AbstractThemeFactory
         header.gap = properties.smallGutterSize;
         header.titleGap = properties.smallGutterSize;
 
-        var backgroundSkin:Image = new Image(headerBackgroundSkinTexture);
-        backgroundSkin.width = properties.gridSize;
-        backgroundSkin.height = properties.gridSize;
-        header.backgroundSkin = backgroundSkin;
         header.titleProperties.elementFormat = font.headerElementFormat;
     }
+
+    //-------------------------
+    // PanelScreen
+    //-------------------------
+
+    public function setPanelScreenStyles(screen:PanelScreen):void
+    {
+        theme.scroller.setScrollerStyles(screen);
+    }
+
+    public function setPanelScreenHeaderStyles(header:Header):void
+    {
+        theme.header.setHeaderStyles(header);
+        header.useExtraPaddingForOSStatusBar = true;
+    }
+
 }
 }

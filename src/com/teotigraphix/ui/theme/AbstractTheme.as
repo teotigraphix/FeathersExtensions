@@ -29,42 +29,47 @@ import starling.textures.TextureAtlas;
 public class AbstractTheme extends StyleNameFunctionTheme
 {
 
-    /**
-     * The screen density of an iPhone with Retina display. The textures
-     * used by this theme are designed for this density and scale for other
-     * densities.
-     */
-    internal static const ORIGINAL_DPI_IPHONE_RETINA:int = 326;
-    /**
-     * The screen density of an iPad with Retina display. The textures used
-     * by this theme are designed for this density and scale for other
-     * densities.
-     */
-    internal static const ORIGINAL_DPI_IPAD_RETINA:int = 264;
-    protected static var PRIMARY_BACKGROUND_COLOR:uint = 0x4a4137;
-    protected static var DRAWER_OVERLAY_COLOR:uint = 0x29241e;
-    protected static var DRAWER_OVERLAY_ALPHA:Number = 0.4;
     public var scale:Number = 1;
 
     public var properties:ThemeProperties;
     public var fonts:FontFactory;
     public var shared:SharedFactory;
-    public var buttons:ButtonFactory;
-    public var alerts:AlertFactory;
-    public var scrollers:ScrollerFactory;
-    public var sliders:SliderFactory;
-    public var labels:LabelFactory;
-    public var headers:HeaderFactory;
-    public var tabBar:TabBarFactory;
-    public var lists:ListFactory;
-    public var progressbars:ProgressBarFactory;
-    public var numericsteppers:NumericStepperFactory;
-    public var toasts:ToastFactory;
-    public var gridGroups:GridGroupFactory;
-    public var text:TextInputFactory;
+
+    public var alert:AlertFactory;
+    public var autoComplete:AutoCompleteFactory;
+    public var button:ButtonFactory;
+    public var buttonGroup:ButtonGroupFactory;
+    public var callout:CalloutFactory;
     public var check:CheckFactory;
-    public var groupList:GroupListFactory;
+    public var defaultItemRenderer:DefaultItemRendererFactory;
+    public var drawers:DrawersFactory;
+    public var groupedList:GroupedListFactory;
+    public var header:HeaderFactory;
+    public var label:LabelFactory;
+    public var layoutGroup:LayoutGroupFactory;
+    public var list:ListFactory;
+    public var numericStepper:NumericStepperFactory;
+    public var pageIndicator:PageIndicatorFactory;
+    public var panel:PanelFactory;
+    public var pickerList:PickerListFactory;
+    public var progressBar:ProgressBarFactory;
+    public var radio:RadioFactory;
+    public var scroller:ScrollerFactory;
+    public var scrollContainer:ScrollContainerFactory;
+    public var scrollScreen:ScrollScreenFactory;
+    public var scrollText:ScrollTextFactory;
+    public var simpleScrollbar:SimpleScrollBarFactory;
+    public var slider:SliderFactory;
     public var spinnerList:SpinnerListFactory;
+    public var tabBar:TabBarFactory;
+    public var textArea:TextAreaFactory;
+    public var textInput:TextInputFactory;
+    public var toggleButton:ToggleButtonFactory;
+    public var toggleSwitch:ToggleSwitchFactory;
+
+    // Framework
+    public var gridGroups:GridGroupFactory;
+    public var toasts:ToastFactory;
 
     internal var _originalDPI:int;
     internal var _scaleToDPI:Boolean;
@@ -143,44 +148,84 @@ public class AbstractTheme extends StyleNameFunctionTheme
         properties = new ThemeProperties(this);
         fonts = new FontFactory(this);
         shared = new SharedFactory(this);
-        buttons = new ButtonFactory(this);
-        alerts = new AlertFactory(this);
-        scrollers = new ScrollerFactory(this);
-        sliders = new SliderFactory(this);
-        labels = new LabelFactory(this);
-        headers = new HeaderFactory(this);
-        lists = new ListFactory(this);
-        progressbars = new ProgressBarFactory(this);
-        numericsteppers = new NumericStepperFactory(this);
-        toasts = new ToastFactory(this);
-        gridGroups = new GridGroupFactory(this);
-        text = new TextInputFactory(this);
+
+        alert = new AlertFactory(this);
+        autoComplete = new AutoCompleteFactory(this);
+        button = new ButtonFactory(this);
+        buttonGroup = new ButtonGroupFactory(this);
+        callout = new CalloutFactory(this);
         check = new CheckFactory(this);
-        groupList = new GroupListFactory(this);
+        defaultItemRenderer = new DefaultItemRendererFactory(this);
+        drawers = new DrawersFactory(this);
+        groupedList = new GroupedListFactory(this);
+        header = new HeaderFactory(this);
+        label = new LabelFactory(this);
+        layoutGroup = new LayoutGroupFactory(this);
+        list = new ListFactory(this);
+        numericStepper = new NumericStepperFactory(this);
+        pageIndicator = new PageIndicatorFactory(this);
+        panel = new PanelFactory(this);
+        pickerList = new PickerListFactory(this);
+        progressBar = new ProgressBarFactory(this);
+        radio = new RadioFactory(this);
+        scroller = new ScrollerFactory(this);
+        scrollContainer = new ScrollContainerFactory(this);
+        scrollScreen = new ScrollScreenFactory(this);
+        scrollText = new ScrollTextFactory(this);
+        simpleScrollbar = new SimpleScrollBarFactory(this);
+        slider = new SliderFactory(this);
         spinnerList = new SpinnerListFactory(this);
         tabBar = new TabBarFactory(this);
+        textArea = new TextAreaFactory(this);
+        textInput = new TextInputFactory(this);
+        toggleButton = new ToggleButtonFactory(this);
+        toggleSwitch = new ToggleSwitchFactory(this);
+
+        // Framework
+        toasts = new ToastFactory(this);
+        gridGroups = new GridGroupFactory(this);
     }
 
     protected function addFactories():void
     {
         _factories.push(fonts);
         _factories.push(shared);
-        _factories.push(buttons);
-        _factories.push(alerts);
-        _factories.push(scrollers);
-        _factories.push(sliders);
-        _factories.push(labels);
-        _factories.push(headers);
-        _factories.push(lists);
-        _factories.push(progressbars);
-        _factories.push(numericsteppers);
-        _factories.push(toasts);
-        _factories.push(gridGroups);
-        _factories.push(text);
+
+        _factories.push(alert);
+        _factories.push(autoComplete);
+        _factories.push(button);
+        _factories.push(buttonGroup);
+        _factories.push(callout);
         _factories.push(check);
-        _factories.push(groupList);
+        _factories.push(defaultItemRenderer);
+        _factories.push(drawers);
+        _factories.push(groupedList);
+        _factories.push(header);
+        _factories.push(label);
+        _factories.push(layoutGroup);
+        _factories.push(list);
+        _factories.push(numericStepper);
+        _factories.push(pageIndicator);
+        _factories.push(panel);
+        _factories.push(pickerList);
+        _factories.push(progressBar);
+        _factories.push(radio);
+        _factories.push(scroller);
+        _factories.push(scrollContainer);
+        _factories.push(scrollScreen);
+        _factories.push(scrollText);
+        _factories.push(simpleScrollbar);
+        _factories.push(slider);
         _factories.push(spinnerList);
         _factories.push(tabBar);
+        _factories.push(textArea);
+        _factories.push(textInput);
+        _factories.push(toggleButton);
+        _factories.push(toggleSwitch);
+
+        // Framework
+        _factories.push(gridGroups);
+        _factories.push(toasts);
     }
 
     /**
@@ -204,8 +249,8 @@ public class AbstractTheme extends StyleNameFunctionTheme
      */
     protected function initializeStage():void
     {
-        Starling.current.stage.color = PRIMARY_BACKGROUND_COLOR;
-        Starling.current.nativeStage.color = PRIMARY_BACKGROUND_COLOR;
+        Starling.current.stage.color = SharedFactory.PRIMARY_BACKGROUND_COLOR;
+        Starling.current.nativeStage.color = SharedFactory.PRIMARY_BACKGROUND_COLOR;
 
         for each (var factory:AbstractThemeFactory in _factories)
             factory.initializeStage();
@@ -232,11 +277,11 @@ public class AbstractTheme extends StyleNameFunctionTheme
         {
             if (DeviceCapabilities.isTablet(Starling.current.nativeStage))
             {
-                _originalDPI = ORIGINAL_DPI_IPAD_RETINA;
+                _originalDPI = SharedFactory.ORIGINAL_DPI_IPAD_RETINA;
             }
             else
             {
-                _originalDPI = ORIGINAL_DPI_IPHONE_RETINA;
+                _originalDPI = SharedFactory.ORIGINAL_DPI_IPHONE_RETINA;
             }
         }
         scale = scaledDPI / _originalDPI;
