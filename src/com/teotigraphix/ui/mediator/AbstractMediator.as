@@ -36,5 +36,20 @@ public class AbstractMediator extends Mediator
     public function AbstractMediator()
     {
     }
+
+    /**
+     * Called creationComplete on the view.
+     *
+     * <p>The view's creationComplete handler is called before the onRegister() call.</p>
+     */
+    override public function onRegister():void
+    {
+        super.onRegister();
+    }
+
+    override public function onRemove():void
+    {
+        super.onRemove();
+    }
 }
 }

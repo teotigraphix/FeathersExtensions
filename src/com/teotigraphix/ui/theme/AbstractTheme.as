@@ -55,6 +55,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
     public var sliders:SliderFactory;
     public var labels:LabelFactory;
     public var headers:HeaderFactory;
+    public var tabBar:TabBarFactory;
     public var lists:ListFactory;
     public var progressbars:ProgressBarFactory;
     public var numericsteppers:NumericStepperFactory;
@@ -157,6 +158,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         check = new CheckFactory(this);
         groupList = new GroupListFactory(this);
         spinnerList = new SpinnerListFactory(this);
+        tabBar = new TabBarFactory(this);
     }
 
     protected function addFactories():void
@@ -178,6 +180,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         _factories.push(check);
         _factories.push(groupList);
         _factories.push(spinnerList);
+        _factories.push(tabBar);
     }
 
     /**
