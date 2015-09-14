@@ -1,4 +1,4 @@
-﻿package com.teotigraphix.frameworks.osc
+package com.teotigraphix.frameworks.osc
 {
 
 /**

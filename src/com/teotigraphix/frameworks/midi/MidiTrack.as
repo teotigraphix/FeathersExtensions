@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright(C) 2008 Efishocean
  *
  * This file is part of Midias.
