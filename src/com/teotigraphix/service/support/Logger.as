@@ -24,36 +24,45 @@ import com.teotigraphix.service.ILogger;
 
 public class Logger implements ILogger
 {
-    //var logger:org.as3commons.logging.api.ILogger = getLogger("Logger");
-
     public function Logger()
     {
     }
 
-    public function log(tag:String, message:String):void
+    public function log(tag:String, message:String, ...rest):void
     {
-        trace("    [Log] {" + tag + "} " + ", " + message);
-        //logger
+        trace("    [Log] {" + tag + "} " + replaceTokens(message, rest));
     }
 
-    public function warn(tag:String, message:String):void
+    public function warn(tag:String, message:String, ...rest):void
     {
-        trace("!!! [Warning] {" + tag + "} " + message);
+        trace("!!! [Warning] {" + tag + "} " + replaceTokens(message, rest));
     }
 
-    public function err(tag:String, message:String):void
+    public function err(tag:String, message:String, ...rest):void
     {
-        trace("!!! [Error] | " + tag + ", " + message);
+        trace("!!! [Error] | " + tag + ", " + replaceTokens(message, rest));
     }
 
-    public function startup(tag:String, message:String):void
+    public function startup(tag:String, message:String, ...rest):void
     {
-        trace(" [STARTUP] {" + tag + "} " + message);
+        trace(" [STARTUP] {" + tag + "} " + replaceTokens(message, rest));
     }
 
-    public function debug(tag:String, message:String):void
+    public function debug(tag:String, message:String, ...rest):void
     {
-        trace("    [Debug] {" + tag + "} " + message);
+        trace("    [Debug] {" + tag + "} " + replaceTokens(message, rest));
+    }
+
+    private static function replaceTokens(message:String, tokens:Array):String
+    {
+        if (tokens.length > 0)
+        {
+            for (var i:int = 0; i < tokens.length; i++)
+            {
+                message = message.replace("$" + i, tokens[i]);
+            }
+        }
+        return message;
     }
 }
 }
