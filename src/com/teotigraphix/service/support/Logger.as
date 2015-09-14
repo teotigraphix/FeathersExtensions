@@ -59,7 +59,7 @@ public class Logger implements ILogger
         {
             for (var i:int = 0; i < tokens.length; i++)
             {
-                message = message.replace("$" + i, tokens[i]);
+                message = message.replace("{" + i + "}", tokens[i]);
             }
         }
         return message;

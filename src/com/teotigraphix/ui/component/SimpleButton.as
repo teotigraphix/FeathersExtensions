@@ -20,9 +20,11 @@
 package com.teotigraphix.ui.component
 {
 
+import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.theme.AssetMap;
 
 import feathers.core.FeathersControl;
+import feathers.core.IToggle;
 import feathers.core.IValidating;
 import feathers.events.FeathersEventType;
 import feathers.skins.IStyleProvider;
@@ -36,8 +38,17 @@ import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
-public class SimpleButton extends FeathersControl
+[Event(name="touchDown", type="starling.events.Event")]
+[Event(name="touchUp", type="starling.events.Event")]
+
+[Event(name="triggered", type="starling.events.Event")]
+
+public class SimpleButton extends FeathersControl implements IToggle
 {
+    //--------------------------------------------------------------------------
+    // Constants
+    //--------------------------------------------------------------------------
+
     public static const STATE_UP:String = "up";
     public static const STATE_DOWN:String = "down";
     public static const STATE_HOVER:String = "hover";
@@ -46,9 +57,17 @@ public class SimpleButton extends FeathersControl
 
     public static var globalStyleProvider:IStyleProvider;
 
+    //--------------------------------------------------------------------------
+    // Public :: Variables
+    //--------------------------------------------------------------------------
+
     public var upSkin:DisplayObject;
     public var downSkin:DisplayObject;
     public var selectedSkin:DisplayObject;
+
+    //--------------------------------------------------------------------------
+    // Private :: Variables
+    //--------------------------------------------------------------------------
 
     protected var currentSkin:DisplayObject;
     protected var _currentState:String = STATE_UP;
@@ -69,6 +88,14 @@ public class SimpleButton extends FeathersControl
         return SimpleButton.globalStyleProvider;
     }
 
+    //--------------------------------------------------------------------------
+    // Public :: Properties
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // data
+    //----------------------------------
+
     public function get data():Object
     {
         return _data;
@@ -80,6 +107,10 @@ public class SimpleButton extends FeathersControl
         invalidate(INVALIDATION_FLAG_DATA);
     }
 
+    //----------------------------------
+    // isToggle
+    //----------------------------------
+
     public function get isToggle():Boolean
     {
         return _isToggle;
@@ -89,6 +120,10 @@ public class SimpleButton extends FeathersControl
     {
         _isToggle = value;
     }
+
+    //----------------------------------
+    // isSelected
+    //----------------------------------
 
     public function get isSelected():Boolean
     {
@@ -106,6 +141,10 @@ public class SimpleButton extends FeathersControl
         invalidate(INVALIDATION_FLAG_STATE);
         dispatchEventWith(Event.CHANGE, false, _data);
     }
+
+    //----------------------------------
+    // isLongPressEnabled
+    //----------------------------------
 
     public function get isLongPressEnabled():Boolean
     {
@@ -153,9 +192,6 @@ public class SimpleButton extends FeathersControl
         upSkin = AssetMap.createImage("button-up-skin");
         downSkin = AssetMap.createImage("button-down-skin");
         selectedSkin = AssetMap.createImage("button-selected-up-skin");
-
-
-
     }
 
     override protected function draw():void
@@ -273,6 +309,16 @@ public class SimpleButton extends FeathersControl
         }
     }
 
+    protected function touchDown():void
+    {
+        dispatchEventWith(FrameworkEventType.TOUCH_DOWN);
+    }
+
+    protected function touchUp():void
+    {
+        dispatchEventWith(FrameworkEventType.TOUCH_UP);
+    }
+
     protected function trigger():void
     {
         dispatchEventWith(Event.TRIGGERED);
@@ -337,6 +383,10 @@ public class SimpleButton extends FeathersControl
             else if (touch.phase == TouchPhase.ENDED)
             {
                 resetTouchState(touch);
+
+                // always dispatch a touchUp even if out of bounds
+                touchUp();
+
                 //we we dispatched a long press, then triggered and change
                 //won't be able to happen until the next touch begins
                 if (!_hasLongPressed && isInBounds)
@@ -353,6 +403,7 @@ public class SimpleButton extends FeathersControl
             {
                 currentState = STATE_DOWN;
                 touchPointID = touch.id;
+                touchDown();
                 if (_isLongPressEnabled)
                 {
                     _touchBeginTime = getTimer();
