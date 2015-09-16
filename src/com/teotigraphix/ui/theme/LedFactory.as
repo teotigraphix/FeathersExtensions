@@ -16,16 +16,17 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
 package com.teotigraphix.ui.theme
 {
 
-import com.teotigraphix.ui.component.GridButton;
+import com.teotigraphix.ui.component.Led;
 
-public class GridGroupFactory extends AbstractThemeFactory
+import starling.display.Quad;
+
+public class LedFactory extends AbstractThemeFactory
 {
 
-    public function GridGroupFactory(theme:AbstractTheme)
+    public function LedFactory(theme:AbstractTheme)
     {
         super(theme);
     }
@@ -39,12 +40,18 @@ public class GridGroupFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
-        setStyle(GridButton, setGridButtonStyles);
+        setStyle(Led, setLedStyles);
     }
 
-    private function setGridButtonStyles(button:GridButton):void
+    public function setLedStyles(led:Led):void
     {
-        theme.button.setButtonStyles(button);
+        var current:Quad = new Quad(25, 25, 0x00FF00);
+        var lit:Quad = new Quad(25, 25, 0xFF0000);
+        var unlit:Quad = new Quad(25, 25, 0xCCCCCC);
+        led.isCurrentSkin = current;
+        led.isLitSkin = lit;
+        led.isUnLitSkin = unlit;
+
     }
 }
 }

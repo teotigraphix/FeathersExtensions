@@ -21,6 +21,7 @@ package com.teotigraphix.ui.component.event
 
 public class FrameworkEventType
 {
+    public static const DOUBLE_TAP:String = "doubleTap";
     public static const TOUCH_DOWN:String = "touchDown";
     public static const TOUCH_UP:String = "touchUp";
 }

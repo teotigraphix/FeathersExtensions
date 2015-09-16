@@ -68,8 +68,9 @@ public class AbstractTheme extends StyleNameFunctionTheme
     public var toggleSwitch:ToggleSwitchFactory;
 
     // Framework
-    public var gridGroups:GridGroupFactory;
-    public var toasts:ToastFactory;
+    public var led:LedFactory;
+    public var gridGroup:GridGroupFactory;
+    public var toast:ToastFactory;
 
     internal var _originalDPI:int;
     internal var _scaleToDPI:Boolean;
@@ -182,8 +183,9 @@ public class AbstractTheme extends StyleNameFunctionTheme
         toggleSwitch = new ToggleSwitchFactory(this);
 
         // Framework
-        toasts = new ToastFactory(this);
-        gridGroups = new GridGroupFactory(this);
+        led = new LedFactory(this);
+        toast = new ToastFactory(this);
+        gridGroup = new GridGroupFactory(this);
     }
 
     protected function addFactories():void
@@ -224,8 +226,9 @@ public class AbstractTheme extends StyleNameFunctionTheme
         _factories.push(toggleSwitch);
 
         // Framework
-        _factories.push(gridGroups);
-        _factories.push(toasts);
+        _factories.push(led);
+        _factories.push(gridGroup);
+        _factories.push(toast);
     }
 
     /**

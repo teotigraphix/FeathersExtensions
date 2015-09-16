@@ -36,6 +36,8 @@ import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
+[Event(name="selectedIndexChange", type="starling.events.Event")]
+
 /**
  *
  */
@@ -52,6 +54,9 @@ public class GridGroup extends FeathersControl
      */
     public static const EVENT_ITEM_LONG_PRESS:String = "itemLongPress";
 
+
+    public static const STYLE_NAME_GRID_BUTTON:String = "grid-group-grid-button";
+
     //--------------------------------------------------------------------------
     // Flags
     //--------------------------------------------------------------------------
@@ -60,8 +65,7 @@ public class GridGroup extends FeathersControl
     protected static const INVALIDATION_FLAG_SELECTED_INDEX_CHANGE:String = "selectedIndex";
 
     public static var globalStyleProvider:IStyleProvider;
-
-    public var buttonStyleName:String;
+    ;
     public var isActiveElementStyle:ElementFormat;
     public var isNotActiveElementStyle:ElementFormat;
 
@@ -80,6 +84,8 @@ public class GridGroup extends FeathersControl
     private var _numRows:int;
     private var updatingToggleGroup:Boolean;
     private var _touch:Touch;
+
+    private var _buttonStyleName:String = STYLE_NAME_GRID_BUTTON;
 
     override protected function get defaultStyleProvider():IStyleProvider
     {
@@ -141,6 +147,7 @@ public class GridGroup extends FeathersControl
         }
         invalidate(INVALIDATION_FLAG_DATA);
         invalidate(INVALIDATION_FLAG_SIZE);
+        invalidate(INVALIDATION_FLAG_LAYOUT);
     }
 
     //----------------------------------
@@ -211,6 +218,20 @@ public class GridGroup extends FeathersControl
         invalidate(INVALIDATION_FLAG_LAYOUT);
     }
 
+    //----------------------------------
+    // buttonStyleName
+    //----------------------------------
+
+    public function get buttonStyleName():String
+    {
+        return _buttonStyleName;
+    }
+
+    public function set buttonStyleName(value:String):void
+    {
+        _buttonStyleName = value;
+    }
+
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------
@@ -236,23 +257,23 @@ public class GridGroup extends FeathersControl
         super.draw();
 
         const dataInvalid:Boolean = isInvalid(INVALIDATION_FLAG_DATA);
+        const layoutInvalid:Boolean = isInvalid(INVALIDATION_FLAG_LAYOUT);
 
         if (dataInvalid && _dataProvider != null)
         {
             commitData();
         }
 
-        if (isInvalid(INVALIDATION_FLAG_DATA_CHANGE) && _dataProvider != null)
+        if (_dataProvider != null && isInvalid(INVALIDATION_FLAG_DATA_CHANGE))
         {
             refreshData();
         }
 
-        if (isInvalid(INVALIDATION_FLAG_SELECTED_INDEX_CHANGE))
+        if (_dataProvider != null && isInvalid(INVALIDATION_FLAG_SELECTED_INDEX_CHANGE))
         {
             _toggleGroup.selectedIndex = _selectedIndex;
         }
 
-        const layoutInvalid:Boolean = isInvalid(INVALIDATION_FLAG_LAYOUT);
         const sizeInvalid:Boolean = autoSizeIfNeeded() || isInvalid(INVALIDATION_FLAG_SIZE);
 
         if (sizeInvalid || layoutInvalid || dataInvalid)
@@ -349,7 +370,7 @@ public class GridGroup extends FeathersControl
             data.index = index;
         }
         child.data = data;
-        child.styleNameList.add(buttonStyleName);
+        child.styleNameList.add(_buttonStyleName);
         child.label = data.label;
         _buttons[data] = child;
         _toggleGroup.addItem(child);

@@ -38,10 +38,12 @@ import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
+[Event(name="doubleTap", type="starling.events.Event")]
 [Event(name="touchDown", type="starling.events.Event")]
 [Event(name="touchUp", type="starling.events.Event")]
 
 [Event(name="triggered", type="starling.events.Event")]
+[Event(name="change", type="starling.events.Event")]
 
 public class SimpleButton extends FeathersControl implements IToggle
 {
@@ -319,6 +321,11 @@ public class SimpleButton extends FeathersControl implements IToggle
         dispatchEventWith(FrameworkEventType.TOUCH_UP);
     }
 
+    protected function doubleTap():void
+    {
+        dispatchEventWith(FrameworkEventType.DOUBLE_TAP);
+    }
+
     protected function trigger():void
     {
         dispatchEventWith(Event.TRIGGERED);
@@ -392,6 +399,11 @@ public class SimpleButton extends FeathersControl implements IToggle
                 if (!_hasLongPressed && isInBounds)
                 {
                     trigger();
+                }
+
+                if (touch.tapCount == 2)
+                {
+                    doubleTap();
                 }
             }
             return;
