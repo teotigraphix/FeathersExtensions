@@ -25,21 +25,28 @@ import starling.display.DisplayObject;
 
 public class Led extends SimpleButton
 {
-    public static const STATE_LIT:String = "lit";
-    public static const STATE_UNLIT:String = "unlit";
 
     //--------------------------------------------------------------------------
     // Constants
     //--------------------------------------------------------------------------
-    public static const STATE_CURRENT:String = "current";
+
+    public static const STATE_FOCUS:String = "current";
+    public static const STATE_LIT:String = "lit";
+    public static const STATE_UNLIT:String = "unlit";
+    public static const STATE_HIGHLIGHT:String = "highlight";
+
+
     public static var globalStyleProvider:IStyleProvider;
+
     private var _isLit:Boolean;
-    private var _isCurrent:Boolean;
-    private var _isCurrentSkin:DisplayObject;
+    private var _isFocus:Boolean;
+    private var _isHighlight:Boolean;
 
     // Skins
-    private var _isLitSkin:DisplayObject;
-    private var _isUnLitSkin:DisplayObject;
+    private var _focusedSkin:DisplayObject;
+    private var _litSkin:DisplayObject;
+    private var _unLitSkin:DisplayObject;
+    private var _highlightSkin:DisplayObject;
 
     override protected function get defaultStyleProvider():IStyleProvider
     {
@@ -48,7 +55,7 @@ public class Led extends SimpleButton
 
     override protected function set currentState(value:String):void
     {
-        if (value == STATE_CURRENT || value == STATE_LIT || value == STATE_UNLIT)
+        if (value == STATE_FOCUS || value == STATE_LIT || value == STATE_UNLIT || value == STATE_HIGHLIGHT)
         {
             super.currentState = value;
         }
@@ -74,60 +81,89 @@ public class Led extends SimpleButton
     }
 
     //----------------------------------
-    // isCurrent
+    // isFocus
     //----------------------------------
 
-    public function get isCurrent():Boolean
+    public function get isFocus():Boolean
     {
-        return _isCurrent;
+        return _isFocus;
     }
 
-    //----------------------------------
-    // isCurrentSkin
-    //----------------------------------
-
-    public function set isCurrent(value:Boolean):void
+    public function set isFocus(value:Boolean):void
     {
-        _isCurrent = value;
+        _isFocus = value;
         updateState();
     }
 
-    public function get isCurrentSkin():DisplayObject
+    //----------------------------------
+    // isHighlight
+    //----------------------------------
+
+    public function get isHighlight():Boolean
     {
-        return _isCurrentSkin;
+        return _isHighlight;
+    }
+
+    public function set isHighlight(value:Boolean):void
+    {
+        _isHighlight = value;
+        updateState();
     }
 
     //----------------------------------
-    // isLitSkin
+    // focusedSkin
     //----------------------------------
 
-    public function set isCurrentSkin(value:DisplayObject):void
+    public function get focusedSkin():DisplayObject
     {
-        _isCurrentSkin = value;
+        return _focusedSkin;
     }
 
-    public function get isLitSkin():DisplayObject
+    public function set focusedSkin(value:DisplayObject):void
     {
-        return _isLitSkin;
+        _focusedSkin = value;
     }
 
     //----------------------------------
-    // isUnLitSkin
+    // litSkin
     //----------------------------------
 
-    public function set isLitSkin(value:DisplayObject):void
+    public function get litSkin():DisplayObject
     {
-        _isLitSkin = value;
+        return _litSkin;
     }
 
-    public function get isUnLitSkin():DisplayObject
+    public function set litSkin(value:DisplayObject):void
     {
-        return _isUnLitSkin;
+        _litSkin = value;
     }
 
-    public function set isUnLitSkin(value:DisplayObject):void
+    //----------------------------------
+    // unLitSkin
+    //----------------------------------
+
+    public function get unLitSkin():DisplayObject
     {
-        _isUnLitSkin = value;
+        return _unLitSkin;
+    }
+
+    public function set unLitSkin(value:DisplayObject):void
+    {
+        _unLitSkin = value;
+    }
+
+    //----------------------------------
+    // highlightSkin
+    //----------------------------------
+
+    public function get highlightSkin():DisplayObject
+    {
+        return _highlightSkin;
+    }
+
+    public function set highlightSkin(value:DisplayObject):void
+    {
+        _highlightSkin = value;
     }
 
     //--------------------------------------------------------------------------
@@ -170,14 +206,17 @@ public class Led extends SimpleButton
         var skin:DisplayObject;
         switch (state)
         {
-            case STATE_CURRENT:
-                skin = isCurrentSkin;
+            case STATE_FOCUS:
+                skin = focusedSkin;
                 break;
             case STATE_LIT:
-                skin = isLitSkin;
+                skin = litSkin;
                 break;
             case STATE_UNLIT:
-                skin = isUnLitSkin;
+                skin = unLitSkin;
+                break;
+            case STATE_HIGHLIGHT:
+                skin = highlightSkin;
                 break;
             //case STATE_DISABLED:
             //    skin = upSkin;
@@ -188,9 +227,13 @@ public class Led extends SimpleButton
 
     private function updateState():void
     {
-        if (_isCurrent)
+        if (_isHighlight)
         {
-            currentState = STATE_CURRENT;
+            currentState = STATE_HIGHLIGHT;
+        }
+        else if (_isFocus)
+        {
+            currentState = STATE_FOCUS;
         }
         else if (_isLit)
         {

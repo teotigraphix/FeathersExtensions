@@ -45,13 +45,14 @@ public class LedFactory extends AbstractThemeFactory
 
     public function setLedStyles(led:Led):void
     {
-        var current:Quad = new Quad(25, 25, 0x00FF00);
-        var lit:Quad = new Quad(25, 25, 0xFF0000);
-        var unlit:Quad = new Quad(25, 25, 0xCCCCCC);
-        led.isCurrentSkin = current;
-        led.isLitSkin = lit;
-        led.isUnLitSkin = unlit;
-
+        var focus:Quad = new Quad(25, 25, 0x009B00);
+        var lit:Quad = new Quad(25, 25, 0x9F0000);
+        var unlit:Quad = new Quad(25, 25, 0xE0E0E0);
+        var highlight:Quad = new Quad(25, 25, 0x000000);
+        led.focusedSkin = focus;
+        led.litSkin = lit;
+        led.unLitSkin = unlit;
+        led.highlightSkin = highlight;
     }
 }
 }
