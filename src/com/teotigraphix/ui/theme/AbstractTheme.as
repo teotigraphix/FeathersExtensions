@@ -20,6 +20,41 @@
 package com.teotigraphix.ui.theme
 {
 
+import com.teotigraphix.ui.theme.feathers.AlertFactory;
+import com.teotigraphix.ui.theme.feathers.AutoCompleteFactory;
+import com.teotigraphix.ui.theme.feathers.ButtonFactory;
+import com.teotigraphix.ui.theme.feathers.ButtonGroupFactory;
+import com.teotigraphix.ui.theme.feathers.CalloutFactory;
+import com.teotigraphix.ui.theme.feathers.CheckFactory;
+import com.teotigraphix.ui.theme.feathers.DefaultItemRendererFactory;
+import com.teotigraphix.ui.theme.feathers.DrawersFactory;
+import com.teotigraphix.ui.theme.feathers.GroupedListFactory;
+import com.teotigraphix.ui.theme.feathers.HeaderFactory;
+import com.teotigraphix.ui.theme.feathers.LabelFactory;
+import com.teotigraphix.ui.theme.feathers.LayoutGroupFactory;
+import com.teotigraphix.ui.theme.feathers.ListFactory;
+import com.teotigraphix.ui.theme.feathers.NumericStepperFactory;
+import com.teotigraphix.ui.theme.feathers.PageIndicatorFactory;
+import com.teotigraphix.ui.theme.feathers.PanelFactory;
+import com.teotigraphix.ui.theme.feathers.PickerListFactory;
+import com.teotigraphix.ui.theme.feathers.ProgressBarFactory;
+import com.teotigraphix.ui.theme.feathers.RadioFactory;
+import com.teotigraphix.ui.theme.feathers.ScrollContainerFactory;
+import com.teotigraphix.ui.theme.feathers.ScrollScreenFactory;
+import com.teotigraphix.ui.theme.feathers.ScrollTextFactory;
+import com.teotigraphix.ui.theme.feathers.ScrollerFactory;
+import com.teotigraphix.ui.theme.feathers.SimpleScrollBarFactory;
+import com.teotigraphix.ui.theme.feathers.SliderFactory;
+import com.teotigraphix.ui.theme.feathers.SpinnerListFactory;
+import com.teotigraphix.ui.theme.feathers.TabBarFactory;
+import com.teotigraphix.ui.theme.feathers.TextAreaFactory;
+import com.teotigraphix.ui.theme.feathers.TextInputFactory;
+import com.teotigraphix.ui.theme.feathers.ToggleButtonFactory;
+import com.teotigraphix.ui.theme.feathers.ToggleSwitchFactory;
+import com.teotigraphix.ui.theme.framework.GridGroupFactory;
+import com.teotigraphix.ui.theme.framework.LedFactory;
+import com.teotigraphix.ui.theme.framework.ToastFactory;
+
 import feathers.system.DeviceCapabilities;
 import feathers.themes.StyleNameFunctionTheme;
 
