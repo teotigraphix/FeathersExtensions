@@ -105,6 +105,11 @@ public class ButtonFactory extends AbstractThemeFactory
         {
             //for convenience, this function can style both a regular button
             //and a toggle button
+            // ME
+            var toggleButton:ToggleButton = ToggleButton(button);
+            toggleButton.defaultSelectedLabelProperties.elementFormat = font.darkUIElementFormat;
+            toggleButton.selectedDisabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
+
             skinSelector.defaultSelectedValue = buttonSelectedUpSkinTextures;
             skinSelector.setValueForState(buttonSelectedDisabledSkinTextures, Button.STATE_DISABLED, true);
         }
