@@ -35,9 +35,9 @@ import starling.events.Event;
 public class Toast extends LayoutGroup
 {
     protected static const DEFAULT_DELAY:int = 3000;
-
+    public static const SHORT:Number = 1000;
+    public static const LONG:Number = 3000;
     public static var globalStyleProvider:IStyleProvider;
-
     private var _message:String;
     private var _duration:Number = DEFAULT_DELAY;
     private var _label:Label;
