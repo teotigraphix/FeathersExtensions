@@ -58,7 +58,7 @@ public class MidiFile
      * 16bits
      * Quantity of exist tracks plus one global track,
      */
-    private var _tracks:uint;
+    private var _trackCount:uint;
 
     /**
      * 16bits
@@ -74,7 +74,7 @@ public class MidiFile
     /**
      * track array including main track
      */
-    private var _trackArray:Array;
+    private var _tracks:Vector.<MidiTrack>;
 
     /**
      * Midi track format, 0/1/2 are available.
@@ -103,9 +103,9 @@ public class MidiFile
     /**
      * Property indicates how many tracks in midi file.
      */
-    public function get tracks():uint
+    public function get trackCount():uint
     {
-        return _tracks & 0xFFFF;
+        return _trackCount & 0xFFFF;
     }
 
     /**
@@ -132,7 +132,7 @@ public class MidiFile
      */
     public function MidiFile(file:ByteArray = null):void
     {
-        _trackArray = new Array();
+        _tracks = new <MidiTrack>[];
         if (file)
         {
             input(file);
@@ -140,7 +140,7 @@ public class MidiFile
         else
         {
             _format = 1;
-            _tracks = 0;
+            _trackCount = 0;
             _division = DIV_120;
         }
     }
@@ -167,16 +167,16 @@ public class MidiFile
 
         //read following infomation
         _format = fileStream.readShort();
-        _tracks = fileStream.readShort();
+        _trackCount = fileStream.readShort();
         _division = fileStream.readShort();
         var track:MidiTrack;
 
         //puts every track into track array
-        for (var i:uint = 0; i < _tracks; i++)
+        for (var i:uint = 0; i < _trackCount; i++)
         {
             //unserialize a track data
             track = new MidiTrack(fileStream);
-            _trackArray[i] = track;
+            _tracks[i] = track;
         }
 
         //separate channels into diffence tracks when the format is 0.
@@ -188,13 +188,13 @@ public class MidiFile
             var tempArray:Array = [];
             var channels:Array = [];
 
-            for each(var item:MessageItem in _trackArray[0].msgList)
+            for each(var item:MessageItem in _tracks[0].messages)
             {
                 if (item is NoteItem)
                 {
                     if (channels.indexOf((item as NoteItem).channel) < 0)
                     {
-                        _tracks++;
+                        _trackCount++;
                         //If the channel is not recorded, create a new track for that channel
                         channels.push((item as NoteItem).channel);
                         tempArray[(item as NoteItem).channel] = new MessageList();
@@ -205,7 +205,7 @@ public class MidiFile
                 {
                     if (channels.indexOf((item as ChannelItem).channel) < 0)
                     {
-                        _tracks++;
+                        _trackCount++;
                         //If the channel is not recorded, create a new track for that channel
                         channels.push((item as ChannelItem).channel);
                         tempArray[(item as ChannelItem).channel] = new MessageList();
@@ -214,27 +214,26 @@ public class MidiFile
                 }
                 else
                 {
-                    _mainTrack.msgList.push(item);
+                    _mainTrack.messages.push(item);
                 }
             }
             // set the main track;
-            _trackArray[0] = _mainTrack;
+            _tracks[0] = _mainTrack;
 
             for (i = 0; i < tempArray.length; i++)
             {
                 if (tempArray[i])
                 {
                     track = new MidiTrack();
-                    track.msgList = tempArray[i];
-                    _trackArray.push(track);
+                    track.messages = tempArray[i];
+                    _tracks.push(track);
                 }
             }
         }
         else
         {
-            _mainTrack = _trackArray[0];
+            _mainTrack = _tracks[0];
         }
-
     }
 
     /**
@@ -253,13 +252,13 @@ public class MidiFile
 
         //write following midi infos.
         file.writeShort(_format);
-        file.writeShort(_tracks);
+        file.writeShort(_trackCount);
         file.writeShort(_division);
 
         //serialize every tracks.
-        for (var i:int = 0; i < _tracks; i++)
+        for (var i:int = 0; i < _trackCount; i++)
         {
-            _trackArray[i].serialize(file);
+            _tracks[i].serialize(file);
         }
 
         //get a new bytearray contents the midi file data
@@ -272,12 +271,12 @@ public class MidiFile
      * @return MidiTrack
      * @see MidiTrack
      */
-    public function track(num:uint):MidiTrack
+    public function getTrack(num:uint):MidiTrack
     {
-        if (num >= _tracks)
+        if (num >= _trackCount)
             return null;
         else
-            return _trackArray[num];
+            return _tracks[num];
     }
 
     /**
@@ -295,8 +294,8 @@ public class MidiFile
         }
         else
         {
-            _tracks++;
-            return _trackArray.push(track);
+            _trackCount++;
+            return _tracks.push(track);
         }
     }
 
@@ -313,15 +312,15 @@ public class MidiFile
             //track[0] refers to the main track
             throw new InvalidMidiError("Invalid track number. Can't delete main track.");
         }
-        else if (t >= _tracks)
+        else if (t >= _trackCount)
         {
             throw new InvalidMidiError("Invalid track number. There isn't this track");
         }
         else
         {
             //track[t] refers to the t'th track.
-            _tracks--;
-            return _trackArray.splice(t, 1)[0];
+            _trackCount--;
+            return _tracks.splice(t, 1)[0];
         }
     }
 
@@ -336,7 +335,7 @@ public class MidiFile
      */
     public function setTrack(t:int, track:MidiTrack):void
     {
-        if (t >= _tracks || t < 0)
+        if (t >= _trackCount || t < 0)
         {
             throw new InvalidMidiError("Invalid track number. There isn't this track");
         }
@@ -347,7 +346,7 @@ public class MidiFile
         else
         {
             //track[t] refers to the t'th track.
-            _trackArray[t] = track;
+            _tracks[t] = track;
         }
     }
 
@@ -365,15 +364,15 @@ public class MidiFile
             //track[0] refers to the main track
             throw new InvalidMidiError("Invalid track number. Can't swap main track.");
         }
-        else if (t1 >= _tracks || t2 >= _tracks)
+        else if (t1 >= _trackCount || t2 >= _trackCount)
         {
             throw new InvalidMidiError("Invalid track number. There isn't this track");
         }
         else
         {
-            var temp:MidiTrack = _trackArray[t1];
-            _trackArray[t1] = _trackArray[t2];
-            _trackArray[t2] = temp;
+            var temp:MidiTrack = _tracks[t1];
+            _tracks[t1] = _tracks[t2];
+            _tracks[t2] = temp;
             temp = null;
         }
     }
@@ -389,7 +388,7 @@ public class MidiFile
      */
     public function insertTrack(t:int, track:MidiTrack = null):uint
     {
-        if (t >= _tracks || t < 0)
+        if (t >= _trackCount || t < 0)
         {
             throw new InvalidMidiError("Invalid inserting position number.");
         }
@@ -399,9 +398,9 @@ public class MidiFile
         }
         else
         {
-            _tracks++;
-            _trackArray.splice(t, 0, track);
-            return _tracks;
+            _trackCount++;
+            _tracks.splice(t, 0, track);
+            return _trackCount;
         }
     }
 
@@ -410,16 +409,14 @@ public class MidiFile
      */
     public function dispose():void
     {
-        for (var i:uint = 0; i < _trackArray.length; i++)
+        for (var i:uint = 0; i < _tracks.length; i++)
         {
-            _trackArray[i].dispose();
+            _tracks[i].dispose();
 
         }
-        _tracks = 0;
+        _trackCount = 0;
         _division = 0;
-        _trackArray = new Array();
+        _tracks = new <MidiTrack>[];
     }
-
 }
-
 }

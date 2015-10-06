@@ -44,7 +44,7 @@ public dynamic class MessageList extends Array
     public function output():MidiTrack
     {
         var mt:MidiTrack = new MidiTrack();
-        mt.msgList = this.clone();
+        mt.messages = this.clone();
         return mt;
     }
 
@@ -55,7 +55,7 @@ public dynamic class MessageList extends Array
      */
     public function input(mt:MidiTrack):void
     {
-        for each(var item:* in mt.msgList)
+        for each(var item:* in mt.messages)
         {
             this.push(item.clone());
         }

@@ -26,10 +26,12 @@ package com.teotigraphix.frameworks.midi.model
 {
 
 /**
+ * Represents a note on/off command.
  */
 public class NoteItem extends MessageItem
 {
     private static const _pitchName:Array = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"];
+
     private var _pitch:uint;
     private var _velocity:uint;
     private var _duration:uint;
@@ -40,9 +42,9 @@ public class NoteItem extends MessageItem
         return _channel;
     }
 
-    public function set channel(c:uint):void
+    public function set channel(value:uint):void
     {
-        _channel = c;
+        _channel = value;
     }
 
     public function get pitch():uint
@@ -50,16 +52,16 @@ public class NoteItem extends MessageItem
         return _pitch;
     }
 
-    public function set pitch(p:uint):void
+    public function set pitch(value:uint):void
     {
-        _pitch = p;
+        _pitch = value;
     }
 
     public function get pitchName():String
     {
         var level:uint = (_pitch / 12 >> 0);
-        var str:String = _pitchName[_pitch % 12] + (level ? level : "");
-        return str;
+        var result:String = _pitchName[_pitch % 12] + (level ? level : "");
+        return result;
     }
 
     public function get duration():uint
@@ -67,9 +69,9 @@ public class NoteItem extends MessageItem
         return _duration;
     }
 
-    public function set duration(d:uint):void
+    public function set duration(value:uint):void
     {
-        _duration = d;
+        _duration = value;
     }
 
     public function get velocity():uint
@@ -77,18 +79,18 @@ public class NoteItem extends MessageItem
         return _velocity;
     }
 
-    public function set velocity(v:uint):void
+    public function set velocity(value:uint):void
     {
-        _velocity = v;
+        _velocity = value;
     }
 
-    public function NoteItem(c:uint = 0, p:uint = 67, v:uint = 127, d:uint = 120):void
+    public function NoteItem(channel:uint = 0, pitch:uint = 67, velocity:uint = 127, duration:uint = 120):void
     {
         super();
-        _channel = c & 0x0F;
-        _pitch = p & 0x7F;
-        _velocity = v & 0x7F;
-        _duration = d;
+        _channel = _channel & 0x0F;
+        _pitch = pitch & 0x7F;
+        _velocity = velocity & 0x7F;
+        _duration = duration;
     }
 
     override public function clone():MessageItem
@@ -96,10 +98,10 @@ public class NoteItem extends MessageItem
         var item:NoteItem = new NoteItem();
         item.kind = this.kind;
         item.timeline = this.timeline;
-        item.channel = this.channel;
-        item.duration = this.duration;
-        item.pitch = this.pitch;
-        item.velocity = this.velocity;
+        item.channel = _channel;
+        item.duration = _duration;
+        item.pitch = _pitch;
+        item.velocity = _velocity;
         return item;
     }
 }

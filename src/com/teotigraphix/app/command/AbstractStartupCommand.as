@@ -28,7 +28,6 @@ import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepCommand;
 
 import flash.events.Event;
-
 import flash.events.IEventDispatcher;
 
 import org.as3commons.async.command.CompositeCommandKind;
@@ -53,6 +52,8 @@ public class AbstractStartupCommand extends Command
 
     [Inject]
     public var flashDispatcher:IEventDispatcher;
+
+    private var _pendingProject:Project;
 
     public function AbstractStartupCommand()
     {
@@ -115,7 +116,7 @@ public class AbstractStartupCommand extends Command
     protected function loadLastProjectComplete(event:OperationEvent):void
     {
         var project:Project = Project(event.result);
-        projectModel.pendingProject = project;
+        _pendingProject = project;
 
         trace("    ApplicationStartupCommand, loadLastProjectComplete()")
     }
@@ -124,7 +125,7 @@ public class AbstractStartupCommand extends Command
     {
         trace("    ApplicationStartupCommand, startupCompleteHandler()");
 
-        projectModel.project = projectModel.pendingProject;
+        projectModel.project = _pendingProject;
 
         // XXX Subclasses dispatch when app load complete and ready to show UI
         //dispatchApplicationComplete();

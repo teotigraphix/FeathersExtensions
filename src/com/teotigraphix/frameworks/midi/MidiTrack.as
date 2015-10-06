@@ -26,6 +26,7 @@ package com.teotigraphix.frameworks.midi
 {
 
 import com.teotigraphix.frameworks.midi.model.ChannelItem;
+import com.teotigraphix.frameworks.midi.model.MessageItem;
 import com.teotigraphix.frameworks.midi.model.MessageList;
 import com.teotigraphix.frameworks.midi.model.MetaItem;
 import com.teotigraphix.frameworks.midi.model.NoteItem;
@@ -51,35 +52,42 @@ public class MidiTrack
     private static const MTrk:int = 0x4D54726B; //[ 0x4D , 0x54 , 0x72 , 0x6B ];
 
     private var _size:uint;
-    private var _trackChannel:uint;
-    private var _trackPatch:uint;
+    private var _channel:uint;
+    private var _patch:uint;
+    private var _name:String = null;
+
     /**
      * stores midi events as message list, contents each note with a duration value, that is editable convenience.
      */
-    private var _msgList:MessageList;
+    private var _messages:MessageList;
+
+    public function get name():String
+    {
+        return _name;
+    }
 
     /**
      * Stores the midi event messages as list data structure.
      * @see ocean.midi.model.MessageList
      */
-    public function get msgList():MessageList
+    public function get messages():MessageList
     {
-        return _msgList;
+        return _messages;
     }
 
     /**
      * @private
      * setter return reference of stored message list
      */
-    public function set msgList(ml:MessageList):void
+    public function set messages(value:MessageList):void
     {
-        _msgList = ml;
-        for each(var item:* in _msgList)
+        _messages = value;
+        for each(var item:* in _messages)
         {
             if ((item is ChannelItem) && (item.command == MidiEnum.PROGRAM_CHANGE))
             {
-                _trackChannel = item.channel;
-                _trackPatch = item.data1;
+                _channel = item.channel;
+                _patch = item.data1;
                 break;
             }
         }
@@ -88,21 +96,21 @@ public class MidiTrack
     /**
      * Channel number of this track
      */
-    public function get trackChannel():uint
+    public function get channel():uint
     {
-        return _trackChannel;
+        return _channel;
     }
 
     /**
      *
      */
-    public function set trackChannel(ch:uint):void
+    public function set channel(value:uint):void
     {
-        for each(var item:* in _msgList)
+        for each(var item:* in _messages)
         {
             if ((item is ChannelItem) || (item is NoteItem))
             {
-                item.channel = ch;
+                item.channel = value;
             }
         }
     }
@@ -110,21 +118,51 @@ public class MidiTrack
     /**
      * Patch of this track.
      */
-    public function get trackPatch():uint
+    public function get patch():uint
     {
-        return _trackPatch;
+        return _patch;
     }
 
-    public function set trackPatch(ph:uint):void
+    public function set patch(value:uint):void
     {
-        for each(var item:* in _msgList)
+        for each(var item:* in _messages)
         {
             if ((item is ChannelItem) && (item.command == MidiEnum.PROGRAM_CHANGE))
             {
-                item.data1 = ph;
+                item.data1 = value;
                 break;
             }
         }
+    }
+
+    /**
+     * Returns whether the message list contains at least one NoteItem.
+     */
+    public function get hasNotes():Boolean
+    {
+        for each(var item:MessageItem in _messages)
+        {
+            if ((item is NoteItem))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns all the NoteItem instances in the message list.
+     */
+    public function get notes():Vector.<NoteItem>
+    {
+        var result:Vector.<NoteItem> = new <NoteItem>[];
+
+        for each(var item:MessageItem in _messages)
+        {
+            if ((item is NoteItem))
+            {
+                result[result.length] = NoteItem(item);
+            }
+        }
+        return result;
     }
 
     /**
@@ -137,12 +175,34 @@ public class MidiTrack
     {
         if (stream == null)
         {
-            _msgList = new MessageList();
+            _messages = new MessageList();
             _size = 0;
         }
         else if (stream.bytesAvailable)
         {
-            _msgList = createList(stream);
+            _messages = createList(stream);
+        }
+
+        for (var i:int = 0; i < _messages.length; i++)
+        {
+            if (_messages[i] is MetaItem)
+            {
+                var item:MetaItem = MetaItem(_messages[i]);
+                if (item.type == MidiEnum.SEQ_TRK_NAME)
+                {
+                    if (item.text.length == 0)
+                    {
+                        _name = null;
+                        break;
+                    }
+
+                    else
+                    {
+                        _name = item.text.readUTFBytes(item.text.length);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -164,7 +224,7 @@ public class MidiTrack
         var index:uint = 0;
 
         //through the message list
-        for each(var item:* in _msgList)
+        for each(var item:* in _messages)
         {
             //reads active item
             if (!item.mark)
@@ -382,7 +442,7 @@ public class MidiTrack
                 //get track's instrument patch
                 if (char == MidiEnum.PROGRAM_CHANGE)
                 {
-                    _trackPatch = chItem.data1;
+                    _patch = chItem.data1;
                 }
             }
             // note-on message
@@ -519,8 +579,8 @@ public class MidiTrack
                 throw new Error("meet system message, strange");
             }
         }
-        _msgList = list;
-        _trackChannel = channel;
+        _messages = list;
+        _channel = channel;
         return list;
     }
 
@@ -530,7 +590,7 @@ public class MidiTrack
     public function dispose():void
     {
         _size = 0;
-        _msgList = new MessageList();
+        _messages = new MessageList();
     }
 
     /**

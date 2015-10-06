@@ -26,10 +26,13 @@ import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.util.ISerialize;
 
+import flash.errors.IOError;
+
 import flash.filesystem.File;
 
-import org.as3commons.lang.Assert;
+import mx.utils.UIDUtil;
 
+import org.as3commons.lang.Assert;
 import org.as3commons.lang.StringUtils;
 import org.robotlegs.starling.core.IInjector;
 
@@ -253,6 +256,38 @@ public final class Project implements ISerialize
         if (!resource.exists)
             resource.createDirectory();
         return resource;
+    }
+
+    /**
+     * Returns a new project temp file located at AppRoot/ProjectName/.temp/tempName.tmp.
+     *
+     * @param name The name of the temp file with extension, if null a random name is created
+     * and .tmp is the extension.
+     * @param length If name is null and a random name created, this is the length of the file name.
+     * @throws IOError Temp file exists
+     */
+    public function getTempFile(name:String = null, length = -1):File
+    {
+        var directory:File = workingTempDirectory;
+        if (!directory.exists)
+        {
+            directory.createDirectory();
+        }
+        if (name == null)
+        {
+            name = UIDUtil.createUID().substr(0, length);
+            if (length != -1)
+            {
+                name = name.substr(0, length)
+            }
+            name = name + ".tmp";
+        }
+
+        var file:File = directory.resolvePath(name);
+        if (file.exists)
+            throw new IOError("Temp file exists; " + file.nativePath);
+
+        return file;
     }
 
     /**

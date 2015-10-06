@@ -17,11 +17,14 @@ public class MIDILoadResult
     // Private :: Variables
     //--------------------------------------------------------------------------
 
+    private var _manager:MIDIManager;
+
     private var _file:File;
     private var _midi:MidiFile;
-    private var _barCount:int = 1;
 
-    private var _trackNotes:Vector.<Vector.<NoteInfo>> = new Vector.<Vector.<NoteInfo>>(16, true);
+    private var _tracks:Vector.<MidiTrackInfo> = new Vector.<MidiTrackInfo>(16, true);
+
+    //private var _trackNotes:Vector.<Vector.<NoteInfo>> = new Vector.<Vector.<NoteInfo>>(16, true);
 
     //--------------------------------------------------------------------------
     // Public :: Properties
@@ -36,6 +39,10 @@ public class MIDILoadResult
         return _file;
     }
 
+    //----------------------------------
+    // midi
+    //----------------------------------
+
     public function get midi():MidiFile
     {
         return _midi;
@@ -47,41 +54,84 @@ public class MIDILoadResult
 
     public function get trackCount():int
     {
-        return _trackNotes.length;
+        var count:int = 0;
+        for each (var info:MidiTrackInfo in _tracks)
+        {
+            if (info != null)
+                count++;
+        }
+        return count;
     }
 
+    //----------------------------------
+    // barCount
+    //----------------------------------
+
+    /**
+     * Returns the max number of bars of all tracks, should be 1, 2, 4 or 8, -1 if an error.
+     */
     public function get barCount():int
     {
-        return _barCount;
+        var count:int = -1;
+        for each (var info:MidiTrackInfo in _tracks)
+        {
+            if (info != null)
+            {
+                count = Math.max(count, info.barCount);
+            }
+        }
+        return count;
     }
 
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function MIDILoadResult(file:File, midi:MidiFile)
+    public function MIDILoadResult(manager:MIDIManager, file:File, midi:MidiFile)
     {
+        _manager = manager;
         _file = file;
         _midi = midi;
+
+        // skip master track
+        for (var i:int = 1; i < midi.trackCount; i++)
+        {
+            var track:MidiTrack = midi.getTrack(i);
+            if (track != null && track.hasNotes)
+            {
+                var info:MidiTrackInfo = new MidiTrackInfo(midi, track);
+                _tracks[i - 1] = info;
+            }
+        }
     }
 
     //--------------------------------------------------------------------------
     // Public :: Methods
     //--------------------------------------------------------------------------
 
+    /**
+     * Returns the MidiTrackInfo for the channel index, null if the track does not exist.
+     *
+     * @param index The track's channel index.
+     */
+    public function getTrack(index:int):MidiTrackInfo
+    {
+        return _tracks[index];
+    }
+
     public function channelExists(channel:int):Boolean
     {
-        return _trackNotes[channel] != null;
+        return _tracks[channel] != null;
     }
 
     public function getChannelName(channel:int):String
     {
-        var track:MidiTrack = _midi.track(channel + 1); // XXX Remove when you have MidiTrackInfo
-        for (var i:int = 0; i < track.msgList.length; i++)
+        var track:MidiTrack = _midi.getTrack(channel + 1); // XXX Remove when you have MidiTrackInfo
+        for (var i:int = 0; i < track.messages.length; i++)
         {
-            if (track.msgList[i] is MetaItem)
+            if (track.messages[i] is MetaItem)
             {
-                var item:MetaItem = MetaItem(track.msgList[i]);
+                var item:MetaItem = MetaItem(track.messages[i]);
                 if (item.type == MidiEnum.SEQ_TRK_NAME)
                 {
                     if (item.text.length == 0)
@@ -96,40 +146,43 @@ public class MIDILoadResult
 
     public function getNumNotes(channel:int):int
     {
-        var sub:Vector.<NoteInfo> = _trackNotes[channel];
-        if (sub == null)
+        var track:MidiTrackInfo = getTrack(channel);
+        if (track == null)
             return 0;
-        return sub.length;
+        return track.notes.length;
     }
 
     public function getNotes(channel:int):Vector.<NoteInfo>
     {
-        return _trackNotes[channel];
+        var track:MidiTrackInfo = getTrack(channel);
+        if (track == null)
+            return null;
+        return track.notes;
     }
 
-    sdk_internal function addNote(channel:int, start:Number, end:Number, pitch:uint, velocity:int):void
-    {
-        //trace("addNote(" + channel + ") start:" + start + ", end:" + end +
-        //      ", pitch" + pitch + ", velocity:" + velocity);
-        var old:int = _barCount;
-
-        if (start >= 16)
-            old = 8;
-        else if (start >= 8)
-            old = 4;
-        else if (start >= 4)
-            old = 2;
-
-        _barCount = Math.max(old, _barCount);
-
-        var sub:Vector.<NoteInfo> = _trackNotes[channel];
-        if (sub == null)
-        {
-            _trackNotes[channel] = sub = new <NoteInfo>[];
-        }
-
-        sub[sub.length] = new NoteInfo(channel, start, end, pitch, velocity);
-    }
+    //sdk_internal function _addNote(channel:int, start:Number, end:Number, pitch:uint, velocity:int):void
+    //{
+    //    //trace("addNote(" + channel + ") start:" + start + ", end:" + end +
+    //    //      ", pitch" + pitch + ", velocity:" + velocity);
+    //    var old:int = _barCount;
+    //
+    //    if (start >= 16)
+    //        old = 8;
+    //    else if (start >= 8)
+    //        old = 4;
+    //    else if (start >= 4)
+    //        old = 2;
+    //
+    //    _barCount = Math.max(old, _barCount);
+    //
+    //    var sub:Vector.<NoteInfo> = _trackNotes[channel];
+    //    if (sub == null)
+    //    {
+    //        _trackNotes[channel] = sub = new <NoteInfo>[];
+    //    }
+    //
+    //    sub[sub.length] = new NoteInfo(channel, start, end, pitch, velocity);
+    //}
 
 }
 }

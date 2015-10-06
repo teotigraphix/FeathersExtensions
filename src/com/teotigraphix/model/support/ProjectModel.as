@@ -20,10 +20,9 @@
 package com.teotigraphix.model.support
 {
 
-import com.teotigraphix.model.*;
-
 import com.teotigraphix.app.event.ApplicationEventType;
 import com.teotigraphix.frameworks.project.Project;
+import com.teotigraphix.model.*;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IPreferenceService;
 
@@ -33,6 +32,10 @@ public class ProjectModel extends AbstractModel implements IProjectModel
 {
     private const TAG:String = "ProjectModel";
 
+    //--------------------------------------------------------------------------
+    // Inject :: Variables
+    //--------------------------------------------------------------------------
+
     [Inject]
     public var fileService:IFileService;
 
@@ -40,7 +43,14 @@ public class ProjectModel extends AbstractModel implements IProjectModel
     public var preferenceService:IPreferenceService;
 
     private var _project:Project;
-    private var _pendingProject:Project;
+
+    //--------------------------------------------------------------------------
+    // IProjectModel API :: Properties
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // project
+    //----------------------------------
 
     public function get project():Project
     {
@@ -49,7 +59,6 @@ public class ProjectModel extends AbstractModel implements IProjectModel
 
     public function set project(value:Project):void
     {
-        _pendingProject = null;
         var oldProject:Project = _project;
         if (oldProject != null)
         {
@@ -60,30 +69,36 @@ public class ProjectModel extends AbstractModel implements IProjectModel
         projectLoadCompleteHandler();
     }
 
+    //----------------------------------
+    // projectFile
+    //----------------------------------
+
     public function get projectFile():File
     {
         return _project.workingFile;
     }
+
+    //----------------------------------
+    // projectDirectory
+    //----------------------------------
 
     public function get projectDirectory():File
     {
         return _project.workingDirectory;
     }
 
-    public function get pendingProject():Project
-    {
-        return _pendingProject;
-    }
-
-    public function set pendingProject(value:Project):void
-    {
-        _pendingProject = value;
-    }
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
 
     public function ProjectModel()
     {
         super();
     }
+
+    //--------------------------------------------------------------------------
+    // Private :: Methods
+    //--------------------------------------------------------------------------
 
     protected function setProject(project:Project):void
     {

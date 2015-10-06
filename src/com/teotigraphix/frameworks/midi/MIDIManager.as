@@ -5,8 +5,6 @@ package com.teotigraphix.frameworks.midi
 {
 
 import com.teotigraphix.core.sdk_internal;
-import com.teotigraphix.frameworks.midi.model.MessageList;
-import com.teotigraphix.frameworks.midi.model.NoteItem;
 import com.teotigraphix.util.Files;
 
 import flash.filesystem.File;
@@ -19,8 +17,6 @@ public class MIDIManager
     //--------------------------------------------------------------------------
     // Private :: Variables
     //--------------------------------------------------------------------------
-
-    private var _midiLoadResult:MIDILoadResult;
 
     //--------------------------------------------------------------------------
     // Constructor
@@ -39,34 +35,9 @@ public class MIDIManager
         var byteArray:ByteArray = Files.readBinaryFile(file);
         var midiFile:MidiFile = new MidiFile(byteArray);
 
-        _midiLoadResult = new MIDILoadResult(file, midiFile);
+        var result:MIDILoadResult = new MIDILoadResult(this, file, midiFile);
 
-        for (var i:int = 0; i < midiFile.tracks; i++)
-        {
-            var track:MidiTrack = midiFile.track(i);
-            var list:MessageList = track.msgList;
-            for each (var event:Object in list)
-            {
-                if (event is NoteItem)
-                {
-                    var note:NoteItem = NoteItem(event);
-                    var messageName:String = MidiEnum.getMessageName(note.kind);
-
-                    var tick:int = note.timeline;
-                    var start:Number = 0;
-                    var duration:Number = 0;
-                    var end:Number = 0;
-
-                    start = tick / midiFile.division;
-                    duration = note.duration / midiFile.division;
-                    end = start + duration;
-
-                    _midiLoadResult.addNote(track.trackChannel, start, end, note.pitch, note.velocity);
-                }
-            }
-        }
-
-        return _midiLoadResult;
+        return result;
     }
 
     public function getWavFile():void

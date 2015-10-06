@@ -10,9 +10,9 @@ public final class NoteInfo
     public var start:Number;
     public var end:Number;
     public var pitch:uint;
-    public var velocity:int;
+    public var velocity:Number;
 
-    public function NoteInfo(channel:int, start:Number, end:Number, pitch:uint, velocity:int)
+    public function NoteInfo(channel:int, start:Number, end:Number, pitch:uint, velocity:Number)
     {
         this.channel = channel;
         this.start = start;

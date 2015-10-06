@@ -24,22 +24,42 @@ import com.teotigraphix.frameworks.project.Project;
 
 import flash.filesystem.File;
 
+/**
+ * @see IModel
+ */
 public interface IProjectModel
 {
+    //--------------------------------------------------------------------------
+    // Properties
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // project
+    //----------------------------------
+
+    /**
+     * The current Project in the application session.
+     */
     function get project():Project;
 
     function set project(value:Project):void;
 
-    function get projectFile():File;
-
-    function get projectDirectory():File;
+    //----------------------------------
+    // projectFile
+    //----------------------------------
 
     /**
-     * The Project that is loading, will only be pushed to #project, when all operations
-     * have completed successfully.
+     * The native application's Project serialized file state.
      */
-    function get pendingProject():Project;
+    function get projectFile():File;
 
-    function set pendingProject(value:Project):void;
+    //----------------------------------
+    // projectDirectory
+    //----------------------------------
+
+    /**
+     * the Project's native directory that holds all libraries, assets and state binaries.
+     */
+    function get projectDirectory():File;
 }
 }

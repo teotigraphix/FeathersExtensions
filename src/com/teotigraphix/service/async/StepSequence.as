@@ -42,7 +42,7 @@ public class StepSequence extends CompositeCommand implements IStepSequence
     public function StepSequence(data:Object = null)
     {
         super(CompositeCommandKind.SEQUENCE);
-        _data = data;
+        this.data = data;
     }
 
     override public function addCommand(command:ICommand):ICompositeCommand

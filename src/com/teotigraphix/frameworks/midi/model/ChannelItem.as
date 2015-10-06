@@ -39,9 +39,9 @@ public class ChannelItem extends MessageItem
         return _channel;
     }
 
-    public function set channel(c:uint):void
+    public function set channel(result:uint):void
     {
-        _channel = c & 0x0F;
+        _channel = result & 0x0F;
     }
 
     public function get command():uint
@@ -49,9 +49,9 @@ public class ChannelItem extends MessageItem
         return _command;
     }
 
-    public function set command(c:uint):void
+    public function set command(result:uint):void
     {
-        _command = c & 0xF0;
+        _command = result & 0xF0;
         kind = _command;
     }
 
@@ -60,9 +60,9 @@ public class ChannelItem extends MessageItem
         return _data1;
     }
 
-    public function set data1(d:uint):void
+    public function set data1(result:uint):void
     {
-        _data1 = d;
+        _data1 = result;
     }
 
     public function get data2():*
@@ -70,9 +70,9 @@ public class ChannelItem extends MessageItem
         return _data2;
     }
 
-    public function set data2(d:*):void
+    public function set data2(result:*):void
     {
-        _data2 = d;
+        _data2 = result;
     }
 
     public function ChannelItem():void
