@@ -33,25 +33,49 @@ import starling.core.Starling;
 
 public class DeviceModel extends AbstractModel implements IDeviceModel
 {
-    private var _stage:Stage;
+    //--------------------------------------------------------------------------
+    // Variables
+    //--------------------------------------------------------------------------
+
+    private var _stage:Stage = new Stage();
 
     private var _beforeOrientation:String;
     private var _afterOrientation:String;
+
+    //--------------------------------------------------------------------------
+    // Public :: Properties
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // isLandscape
+    //----------------------------------
 
     public function get isLandscape():Boolean
     {
         return _stage.fullScreenWidth > _stage.fullScreenHeight;
     }
 
+    //----------------------------------
+    // isTablet
+    //----------------------------------
+
     public function get isTablet():Boolean
     {
         return DeviceCapabilities.isTablet(_stage);
     }
 
+    //----------------------------------
+    // isPhone
+    //----------------------------------
+
     public function get isPhone():Boolean
     {
         return DeviceCapabilities.isPhone(_stage);
     }
+
+    //----------------------------------
+    // orientation
+    //----------------------------------
 
     /**
      * (default, upsideDown[portrait]) (rotatedRight, rotatedLeft[landscape])
@@ -61,19 +85,35 @@ public class DeviceModel extends AbstractModel implements IDeviceModel
         return _stage.orientation;
     }
 
+    //----------------------------------
+    // supportedOrientations
+    //----------------------------------
+
     public function get supportedOrientations():Vector.<String>
     {
         return _stage.supportedOrientations;
     }
+
+    //----------------------------------
+    // stage
+    //----------------------------------
 
     public function get stage():Stage
     {
         return _stage;
     }
 
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+
     public function DeviceModel()
     {
     }
+
+    //--------------------------------------------------------------------------
+    // Methods
+    //--------------------------------------------------------------------------
 
     override protected function onRegister():void
     {
@@ -86,6 +126,10 @@ public class DeviceModel extends AbstractModel implements IDeviceModel
         _stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGING, stage_orientationChangingHandler);
     }
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    
     private function stage_orientationChangingHandler(event:StageOrientationEvent):void
     {
         //trace("stage_orientationChangingHandler()");

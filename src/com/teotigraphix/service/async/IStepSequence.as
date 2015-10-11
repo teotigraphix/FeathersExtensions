@@ -27,5 +27,7 @@ public interface IStepSequence extends ICompositeCommand
     function get data():Object;
 
     function set data(value:Object):void;
+
+    function commit():*;
 }
 }

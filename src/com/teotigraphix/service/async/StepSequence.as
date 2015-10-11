@@ -55,13 +55,16 @@ public class StepSequence extends CompositeCommand implements IStepSequence
         return this;
     }
 
-    public function commit():void
+    public function commit():*
     {
         for each (var command:ICommand in commands)
         {
             IStepCommand(command).commit();
         }
+
         dispatchCompleteEvent();
+
+        return result;
     }
 }
 }

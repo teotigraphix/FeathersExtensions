@@ -22,6 +22,7 @@ package com.teotigraphix.service.support
 
 import com.teotigraphix.app.config.ApplicationDescriptor;
 import com.teotigraphix.service.IFileService;
+import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.util.Files;
 
 import flash.filesystem.File;
@@ -115,6 +116,14 @@ public class FileService extends AbstractService implements IFileService
         return Files.listFiles(directory, filter, recursive, directoriesOnTop);
     }
 
+    public function downloadFileAsync(url:String, targetFile:File):IStepCommand
+    {
+        var step:DownloadFileStep = injector.instantiate(DownloadFileStep);
+        step.url = url;
+        step.targetFile = targetFile;
+        return step;
+    }
+
     private function writeStringToFile(file:File, data:String):void
     {
         Files.writeUTF8File(file, data);
@@ -178,4 +187,112 @@ public class FileService extends AbstractService implements IFileService
     }
 
 }
+}
+
+import com.teotigraphix.service.async.StepCommand;
+
+import flash.events.Event;
+import flash.events.HTTPStatusEvent;
+import flash.events.IOErrorEvent;
+import flash.events.ProgressEvent;
+import flash.events.SecurityErrorEvent;
+import flash.filesystem.File;
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
+import flash.net.URLRequest;
+import flash.net.URLStream;
+import flash.utils.ByteArray;
+
+class DownloadFileStep extends StepCommand
+{
+    public var targetFile:File;
+    public var url:String; // url or nativePath
+
+    private var _urlStream:URLStream;
+
+    override public function execute():*
+    {
+        if (url.indexOf("file://") == 0)
+        {
+            const file:File = new File(url);
+            if (file.exists)
+            {
+                file.addEventListener(Event.COMPLETE, localFile_copyCompleteHandler);
+                //
+                file.addEventListener(IOErrorEvent.IO_ERROR, localFile_copyIOErrorHandler);
+                file.copyToAsync(targetFile);
+                return;
+            }
+        }
+
+        _urlStream = new URLStream();
+        _urlStream.addEventListener(Event.COMPLETE, request_completeHandler);
+        _urlStream.addEventListener(ProgressEvent.PROGRESS, request_progressHandler);
+
+        _urlStream.addEventListener(HTTPStatusEvent.HTTP_STATUS, request_errorHandler);
+        _urlStream.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, request_errorHandler);
+        _urlStream.addEventListener(IOErrorEvent.IO_ERROR, request_errorHandler);
+        //_urlStream.addEventListener(Event.OPEN, request_errorHandler);
+        _urlStream.addEventListener(SecurityErrorEvent.SECURITY_ERROR, request_errorHandler);
+
+        _urlStream.load(new URLRequest(url));
+
+        return null;
+    }
+
+    private function localFile_copyCompleteHandler(event:Event):void
+    {
+        dispatchCompleteEvent(targetFile);
+    }
+
+    private function localFile_copyIOErrorHandler(event:IOErrorEvent):void
+    {
+        dispatchErrorEvent(event);
+    }
+
+    private function request_completeHandler(event:Event):void
+    {
+        trace("DownloadFileStep.complete");
+        var fileData:ByteArray = new ByteArray();
+        _urlStream.readBytes(fileData, 0, _urlStream.bytesAvailable);
+
+        var fileStream:FileStream = new FileStream();
+        fileStream.open(targetFile, FileMode.WRITE);
+        fileStream.writeBytes(fileData, 0);
+        fileStream.close();
+
+        _urlStream.close();
+        _urlStream = null;
+
+        trace("DownloadFileStep.complete(_localFile)");
+        monitorForComplete(targetFile);
+    }
+
+    override protected function checkComplete():Boolean
+    {
+        return targetFile.exists;
+    }
+
+    private function request_progressHandler(event:ProgressEvent):void
+    {
+        progress = event.bytesLoaded;
+        total = event.bytesTotal;
+
+        trace("DownloadFileStep.progress: " + progress + "/" + total);
+        dispatchProgressEvent();
+    }
+
+    private function request_errorHandler(event:Event):void
+    {
+        if (event.type == HTTPStatusEvent.HTTP_STATUS && HTTPStatusEvent(event).status == 0)
+            return; // local file
+
+        if (event.type == HTTPStatusEvent.HTTP_RESPONSE_STATUS && HTTPStatusEvent(event).status == 200)
+            return;
+        if (event.type == HTTPStatusEvent.HTTP_STATUS && HTTPStatusEvent(event).status == 200)
+            return;
+
+        trace("DownloadFileStep.error " + event.toString());
+        dispatchErrorEvent(event);
+    }
 }

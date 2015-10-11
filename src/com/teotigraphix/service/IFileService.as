@@ -20,6 +20,8 @@
 package com.teotigraphix.service
 {
 
+import com.teotigraphix.service.async.IStepCommand;
+
 import flash.filesystem.File;
 
 public interface IFileService
@@ -64,5 +66,20 @@ public interface IFileService
     function readString(file:File):String;
 
     function writeString(file:File, data:String):void;
+
+    /**
+     * Downloads a file from the url and saves the URLStream to the targetFile location.
+     *
+     * @param url The http:// or file:// url to download.
+     * @param targetFile The target location the url bytes are saved to.
+     * @return A StepCommand that dispatches complete, progress and error OperationEvent,
+     * the result is the targetFile.
+     *
+     * @see org.as3commons.async.operation.event.OperationEvent#COMPLETE
+     * @see org.as3commons.async.operation.event.OperationEvent#PROGRESS
+     * @see org.as3commons.async.operation.event.OperationEvent#ERROR
+     */
+    function downloadFileAsync(url:String, targetFile:File):IStepCommand
+
 }
 }
