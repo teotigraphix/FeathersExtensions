@@ -34,6 +34,9 @@ public class FileService extends AbstractService implements IFileService
     [Inject]
     public var descriptor:ApplicationDescriptor;
 
+    /**
+     * @inheritDoc
+     */
     public function get storageDirectory():File
     {
         return descriptor.storageDirectory;
@@ -111,9 +114,10 @@ public class FileService extends AbstractService implements IFileService
     public function listFiles(directory:File,
                               filter:Array = null,
                               recursive:Boolean = false,
-                              directoriesOnTop:Boolean = true):Vector.<File>
+                              directoriesOnTop:Boolean = true,
+                              excludeDirectories:Boolean = false):Vector.<File>
     {
-        return Files.listFiles(directory, filter, recursive, directoriesOnTop);
+        return Files.listFiles(directory, filter, recursive, directoriesOnTop, excludeDirectories);
     }
 
     public function downloadFileAsync(url:String, targetFile:File):IStepCommand

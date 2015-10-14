@@ -106,7 +106,7 @@ public final class Files
         var result:Vector.<File> = new <File>[];
 
         if (!recursive)
-            result = getDirectoryListing(directory, filter, excludeDirectories);
+            result = getDirectoryListing(directory, filter, false, excludeDirectories);
         else
             recursiveDirectoryListing(directory, result, filter, excludeDirectories);
 

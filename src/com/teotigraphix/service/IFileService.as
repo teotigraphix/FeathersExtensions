@@ -26,6 +26,9 @@ import flash.filesystem.File;
 
 public interface IFileService
 {
+    /**
+     * The private read-only File.applicationStorageDirectory.
+     */
     function get storageDirectory():File;
 
     /**
@@ -53,7 +56,8 @@ public interface IFileService
     function listFiles(directory:File,
                        filter:Array = null,
                        recursive:Boolean = false,
-                       directoriesOnTop:Boolean = true):Vector.<File>;
+                       directoriesOnTop:Boolean = true,
+                       excludeDirectories:Boolean = false):Vector.<File>;
 
     function wakeup(file:File):*;
 

@@ -35,40 +35,66 @@ public class ZipModel extends AbstractModel implements IZipModel
 {
     public static const TAG:String = "ZipModel";
 
+    //--------------------------------------------------------------------------
+    // Private :: Variables
+    //--------------------------------------------------------------------------
+
     private var _zip:FZip;
     private var _targetDirectory:File;
     private var _directories:Vector.<File>;
     private var _files:Vector.<File>;
 
+    //--------------------------------------------------------------------------
+    // API :: Properties
+    //--------------------------------------------------------------------------
+
+    /**
+     * @inheritDoc
+     */
     public function get targetDirectory():File
     {
         return _targetDirectory;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function get fileCount():int
     {
         return _zip.getFileCount();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function get directories():Vector.<File>
     {
         return _directories;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function get files():Vector.<File>
     {
         return _files;
     }
 
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+
     public function ZipModel()
     {
     }
 
-    override protected function onRegister():void
-    {
-        super.onRegister();
-    }
+    //--------------------------------------------------------------------------
+    // API :: Methods
+    //--------------------------------------------------------------------------
 
+    /**
+     * @inheritDoc
+     */
     public function loadFile(file:File, targetDirectory:File):void
     {
         logger.log(TAG, "Loading archive; " + file.nativePath);
@@ -80,27 +106,46 @@ public class ZipModel extends AbstractModel implements IZipModel
 
         var bytes:ByteArray = Files.readBinaryFile(file);
 
+        loadBytes(bytes);
+    }
+
+    public function loadBytes(bytes:ByteArray):void
+    {
+        logger.log(TAG, "Loading archive from ByteArray");
+
         _zip = new FZip();
         _zip.loadBytes(bytes);
 
         updateModel();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getFileAt(index:int):FZipFile
     {
         return _zip.getFileAt(index);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getFileByName(name:String):FZipFile
     {
         return _zip.getFileByName(name);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function writeFiles():IAsyncCommand
     {
         return injector.instantiate(WriteZipFilesToDisk);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function clear():void
     {
         _directories = null;
@@ -114,20 +159,25 @@ public class ZipModel extends AbstractModel implements IZipModel
         _directories = new <File>[];
         _files = new <File>[];
 
-        if (!_targetDirectory.exists)
-            _targetDirectory.createDirectory();
-
-        var len:int = fileCount;
-        for (var i:int = 0; i < len; i++)
+        // will be null with loadBytes() if the directory is not defined because we are
+        // not copying anything, just reading bytes and strings our of the data
+        if (_targetDirectory != null)
         {
-            var file:FZipFile = _zip.getFileAt(i);
-            if (isDirectory(file))
+            if (!_targetDirectory.exists)
+                _targetDirectory.createDirectory();
+
+            var len:int = fileCount;
+            for (var i:int = 0; i < len; i++)
             {
-                _directories[_directories.length] = _targetDirectory.resolvePath(file.filename);
-            }
-            else
-            {
-                _files[_files.length] = _targetDirectory.resolvePath(file.filename);
+                var file:FZipFile = _zip.getFileAt(i);
+                if (isDirectory(file))
+                {
+                    _directories[_directories.length] = _targetDirectory.resolvePath(file.filename);
+                }
+                else
+                {
+                    _files[_files.length] = _targetDirectory.resolvePath(file.filename);
+                }
             }
         }
     }

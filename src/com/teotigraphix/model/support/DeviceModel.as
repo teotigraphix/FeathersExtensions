@@ -37,7 +37,7 @@ public class DeviceModel extends AbstractModel implements IDeviceModel
     // Variables
     //--------------------------------------------------------------------------
 
-    private var _stage:Stage = new Stage();
+    private var _stage:Stage;
 
     private var _beforeOrientation:String;
     private var _afterOrientation:String;
