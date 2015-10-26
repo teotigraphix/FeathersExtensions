@@ -121,9 +121,13 @@ public class DeviceModel extends AbstractModel implements IDeviceModel
 
         var current:Starling = Starling.current;
 
-        _stage = current.nativeStage;
-        _stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGE, stage_orientationChangeHandler);
-        _stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGING, stage_orientationChangingHandler);
+        // unit tests don't use Starling
+        if (current != null)
+        {
+            _stage = current.nativeStage;
+            _stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGE, stage_orientationChangeHandler);
+            _stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGING, stage_orientationChangingHandler);
+        }
     }
 
     //--------------------------------------------------------------------------

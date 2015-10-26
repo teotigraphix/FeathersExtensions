@@ -25,7 +25,7 @@ import org.as3commons.async.command.ICommand;
 import org.as3commons.async.command.ICompositeCommand;
 import org.as3commons.async.command.impl.CompositeCommand;
 
-public class StepSequence extends CompositeCommand implements IStepSequence
+public class StepSequence extends CompositeCommand implements IStepSequence, IStepCommand
 {
     private var _data:Object;
 
@@ -45,12 +45,17 @@ public class StepSequence extends CompositeCommand implements IStepSequence
         this.data = data;
     }
 
+    protected function super_addCommand(command:ICommand):ICompositeCommand
+    {
+        return super.addCommand(command);
+    }
+
     override public function addCommand(command:ICommand):ICompositeCommand
     {
         super.addCommand(command);
-        if (command is IStepCommand)
+        if (command is IStepCommand && !(command is StepSequence))
         {
-            StepCommand(command).data = _data;
+            IStepCommand(command).data = _data;
         }
         return this;
     }
