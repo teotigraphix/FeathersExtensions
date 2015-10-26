@@ -12,7 +12,7 @@ import flash.utils.ByteArray;
 
 use namespace sdk_internal;
 
-public class MIDIManager
+public class MIDIParser
 {
     //--------------------------------------------------------------------------
     // Private :: Variables
@@ -22,7 +22,7 @@ public class MIDIManager
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function MIDIManager()
+    public function MIDIParser()
     {
     }
 
@@ -30,12 +30,20 @@ public class MIDIManager
     // Public :: Methods
     //--------------------------------------------------------------------------
 
-    public function load(file:File):MIDILoadResult
+    /**
+     * Parses a .mid file into a model for use in caustic.
+     *
+     * @param file The midi file to parse.
+     * @return A MIDIParserResult that contains tracks with notes.
+     * @see MIDITrackInfo
+     * @see MIDINoteInfo
+     */
+    public function parse(file:File):MIDIParserResult
     {
-        var byteArray:ByteArray = Files.readBinaryFile(file);
-        var midiFile:MidiFile = new MidiFile(byteArray);
+        const byteArray:ByteArray = Files.readBinaryFile(file);
+        const midiFile:MidiFile = new MidiFile(byteArray);
 
-        var result:MIDILoadResult = new MIDILoadResult(this, file, midiFile);
+        const result:MIDIParserResult = new MIDIParserResult(this, file, midiFile);
 
         return result;
     }

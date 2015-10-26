@@ -11,20 +11,18 @@ import flash.filesystem.File;
 
 use namespace sdk_internal;
 
-public class MIDILoadResult
+public class MIDIParserResult
 {
     //--------------------------------------------------------------------------
     // Private :: Variables
     //--------------------------------------------------------------------------
 
-    private var _manager:MIDIManager;
+    private var _manager:MIDIParser;
 
     private var _file:File;
     private var _midi:MidiFile;
 
-    private var _tracks:Vector.<MidiTrackInfo> = new Vector.<MidiTrackInfo>(16, true);
-
-    //private var _trackNotes:Vector.<Vector.<NoteInfo>> = new Vector.<Vector.<NoteInfo>>(16, true);
+    private var _tracks:Vector.<MIDITrackInfo> = new Vector.<MIDITrackInfo>(16, true);
 
     //--------------------------------------------------------------------------
     // Public :: Properties
@@ -55,7 +53,7 @@ public class MIDILoadResult
     public function get trackCount():int
     {
         var count:int = 0;
-        for each (var info:MidiTrackInfo in _tracks)
+        for each (var info:MIDITrackInfo in _tracks)
         {
             if (info != null)
                 count++;
@@ -73,7 +71,7 @@ public class MIDILoadResult
     public function get barCount():int
     {
         var count:int = -1;
-        for each (var info:MidiTrackInfo in _tracks)
+        for each (var info:MIDITrackInfo in _tracks)
         {
             if (info != null)
             {
@@ -87,20 +85,21 @@ public class MIDILoadResult
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function MIDILoadResult(manager:MIDIManager, file:File, midi:MidiFile)
+    public function MIDIParserResult(manager:MIDIParser, file:File, midi:MidiFile)
     {
         _manager = manager;
         _file = file;
         _midi = midi;
 
-        // skip master track
-        for (var i:int = 1; i < midi.trackCount; i++)
+        var index:int = 0;
+        for (var i:int = 0; i < midi.trackCount; i++)
         {
             var track:MidiTrack = midi.getTrack(i);
             if (track != null && track.hasNotes)
             {
-                var info:MidiTrackInfo = new MidiTrackInfo(midi, track);
-                _tracks[i - 1] = info;
+                var info:MIDITrackInfo = new MIDITrackInfo(midi, track);
+                _tracks[index] = info;
+                index++;
             }
         }
     }
@@ -114,7 +113,7 @@ public class MIDILoadResult
      *
      * @param index The track's channel index.
      */
-    public function getTrack(index:int):MidiTrackInfo
+    public function getTrack(index:int):MIDITrackInfo
     {
         return _tracks[index];
     }
@@ -146,15 +145,15 @@ public class MIDILoadResult
 
     public function getNumNotes(channel:int):int
     {
-        var track:MidiTrackInfo = getTrack(channel);
+        var track:MIDITrackInfo = getTrack(channel);
         if (track == null)
             return 0;
         return track.notes.length;
     }
 
-    public function getNotes(channel:int):Vector.<NoteInfo>
+    public function getNotes(channel:int):Vector.<MIDINoteInfo>
     {
-        var track:MidiTrackInfo = getTrack(channel);
+        var track:MIDITrackInfo = getTrack(channel);
         if (track == null)
             return null;
         return track.notes;

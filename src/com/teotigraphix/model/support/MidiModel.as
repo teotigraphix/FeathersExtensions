@@ -21,8 +21,8 @@ package com.teotigraphix.model.support
 {
 
 import com.teotigraphix.core.sdk_internal;
-import com.teotigraphix.frameworks.midi.MIDILoadResult;
-import com.teotigraphix.frameworks.midi.MIDIManager;
+import com.teotigraphix.frameworks.midi.MIDIParserResult;
+import com.teotigraphix.frameworks.midi.MIDIParser;
 import com.teotigraphix.model.*;
 
 import flash.filesystem.File;
@@ -35,9 +35,9 @@ public class MidiModel extends AbstractModel implements IMidiModel
     // Private :: Variables
     //--------------------------------------------------------------------------
 
-    private var _midiManager:MIDIManager;
+    private var _midiManager:MIDIParser;
 
-    public function get midiManager():MIDIManager
+    public function get midiManager():MIDIParser
     {
         return _midiManager;
     }
@@ -54,7 +54,7 @@ public class MidiModel extends AbstractModel implements IMidiModel
     {
         super.onRegister();
 
-        _midiManager = new MIDIManager();
+        _midiManager = new MIDIParser();
     }
 
     //--------------------------------------------------------------------------
@@ -66,15 +66,15 @@ public class MidiModel extends AbstractModel implements IMidiModel
         return new LoadMidiFileCommand(file, this);
     }
 
-    sdk_internal function load(file:File):MIDILoadResult
+    sdk_internal function load(file:File):MIDIParserResult
     {
-        var result:MIDILoadResult = midiManager.load(file);
+        var result:MIDIParserResult = midiManager.parse(file);
         return result;
     }
 }
 }
 
-import com.teotigraphix.frameworks.midi.MIDILoadResult;
+import com.teotigraphix.frameworks.midi.MIDIParserResult;
 import com.teotigraphix.model.support.MidiModel;
 import com.teotigraphix.service.async.StepCommand;
 
@@ -95,7 +95,7 @@ class LoadMidiFileCommand extends StepCommand implements IAsyncCommand
 
     override public function execute():*
     {
-        var result:MIDILoadResult = _midiModel.midiManager.load(_file);
+        var result:MIDIParserResult = _midiModel.midiManager.parse(_file);
         complete(result);
         return null;
     }

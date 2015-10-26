@@ -21,51 +21,91 @@ package com.teotigraphix.frameworks.midi
 
 import com.teotigraphix.frameworks.midi.model.NoteItem;
 
-public class MidiTrackInfo
+public class MIDITrackInfo
 {
+    //--------------------------------------------------------------------------
+    // Private :: Variables
+    //--------------------------------------------------------------------------
+
     private var _track:MidiTrack;
-    private var _barCount:int = 0;
-    private var _notes:Vector.<NoteInfo> = new <NoteInfo>[];
+    private var _barCount:int = -1;
+    private var _notes:Vector.<MIDINoteInfo> = new <MIDINoteInfo>[];
+
+    //--------------------------------------------------------------------------
+    // API :: Properties
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // name
+    //----------------------------------
 
     public function get name():String
     {
         return _track.name;
     }
 
+    //----------------------------------
+    // name
+    //----------------------------------
+
     public function get channel():uint
     {
         return _track.channel;
     }
+
+    //----------------------------------
+    // name
+    //----------------------------------
 
     public function get patch():uint
     {
         return _track.patch;
     }
 
+    //----------------------------------
+    // name
+    //----------------------------------
+
     public function get hasNotes():Boolean
     {
         return _track.hasNotes;
     }
+
+    //----------------------------------
+    // name
+    //----------------------------------
 
     public function get noteItems():Vector.<NoteItem>
     {
         return _track.notes;
     }
 
+    //----------------------------------
+    // name
+    //----------------------------------
+
     public function get barCount():int
     {
         return _barCount;
     }
 
+    //----------------------------------
+    // name
+    //----------------------------------
+
     /**
      * Returns the NoteInfo items used to add Notes to a caustic Pattern.
      */
-    public function get notes():Vector.<NoteInfo>
+    public function get notes():Vector.<MIDINoteInfo>
     {
         return _notes;
     }
 
-    public function MidiTrackInfo(midiFile:MidiFile, track:MidiTrack)
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+
+    public function MIDITrackInfo(midiFile:MidiFile, track:MidiTrack)
     {
         _track = track;
 
@@ -86,11 +126,19 @@ public class MidiTrackInfo
         }
     }
 
+    //--------------------------------------------------------------------------
+    // Private :: Methods
+    //--------------------------------------------------------------------------
+
     private function addNote(channel:int, start:Number, end:Number, pitch:uint, velocity:Number):void
     {
         //trace("addNote(" + channel + ") start:" + start + ", end:" + end +
         //      ", pitch" + pitch + ", velocity:" + velocity);
         var old:int = _barCount;
+        if (old == -1)
+        {
+            old = 1; // first note added, has to be atleast 1 bar long
+        }
 
         if (start >= 16)
             old = 8;
@@ -99,9 +147,19 @@ public class MidiTrackInfo
         else if (start >= 4)
             old = 2;
 
+        //if (end >= 16)
+        //    old = 8;
+        //else if (start >= 8)
+        //    old = 4;
+        //else if (start >= 4)
+        //    old = 2;
+
+        // TODO need to check the end, some patterns can just be one long note
+        // ie start == 0, end == 7.5 would be 8 bars
+
         _barCount = Math.max(old, _barCount);
 
-        _notes[_notes.length] = new NoteInfo(channel, start, end, pitch, velocity);
+        _notes[_notes.length] = new MIDINoteInfo(channel, start, end, pitch, velocity);
     }
 }
 }

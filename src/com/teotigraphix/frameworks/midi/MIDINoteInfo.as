@@ -4,7 +4,7 @@
 package com.teotigraphix.frameworks.midi
 {
 
-public final class NoteInfo
+public final class MIDINoteInfo
 {
     public var channel:int;
     public var start:Number;
@@ -12,7 +12,7 @@ public final class NoteInfo
     public var pitch:uint;
     public var velocity:Number;
 
-    public function NoteInfo(channel:int, start:Number, end:Number, pitch:uint, velocity:Number)
+    public function MIDINoteInfo(channel:int, start:Number, end:Number, pitch:uint, velocity:Number)
     {
         this.channel = channel;
         this.start = start;
