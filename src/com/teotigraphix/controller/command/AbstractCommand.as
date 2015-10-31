@@ -16,35 +16,16 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.service
+package com.teotigraphix.controller.command
 {
 
-import com.teotigraphix.service.async.IStepCommand;
-import com.teotigraphix.service.async.IStepSequence;
+import org.robotlegs.starling.mvcs.Command;
 
-import flash.filesystem.File;
-
-public interface IProjectService
+public class AbstractCommand extends Command
 {
-    /**
-     * The 'complete' result is a newly created Project or Project loaded from disk.
-     */
-    function loadLastProject():IStepCommand;
 
-    /**
-     * Loads a Project file using the serialize file.
-     * @param file The serialized file that resiseds within the same named directory.
-     */
-    function loadProjectAsync(file:File):IStepCommand;
-
-    /**
-     * @param name The name of the project directory.
-     * @param relativePath The path from the root project directory.
-     */
-    function createProjectAsync(name:String, relativePath:String):IStepCommand;
-
-    function saveAsync():IStepSequence;
-
+    override public function execute():void
+    {
+    }
 }
 }

@@ -56,6 +56,11 @@ import starling.events.Event;
 
  */
 
+/**
+ * Dispatched when the list changes, data is a File instance or null.
+ */
+[Event(name="change",type="starling.events.Event")]
+
 public class FileList extends LayoutGroup
 {
     public static const INVALIDATION_FLAG_SHOW_FILES:String = "showFiles";
@@ -115,6 +120,15 @@ public class FileList extends LayoutGroup
     //--------------------------------------------------------------------------
     // Public API :: Properties
     //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // selectedFile
+    //----------------------------------
+
+    public function get selectedFile():File
+    {
+        return _list.selectedItem as File;
+    }
 
     //----------------------------------
     // showFiles
@@ -602,6 +616,9 @@ public class FileList extends LayoutGroup
 
     private function list_changeHandler(event:Event):void
     {
+        // we dispatch change for any listeners looking for a null File or Directory selection
+        dispatchEventWith(Event.CHANGE, false, _list.selectedItem);
+
         var list:List = List(event.currentTarget);
         if (list.selectedIndex == -1)
             return;

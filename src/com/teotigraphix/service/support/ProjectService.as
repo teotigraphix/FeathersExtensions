@@ -124,6 +124,10 @@ public class ProjectService extends AbstractService implements IProjectService
                            name,
                            descriptor.extension,
                            descriptor.version);
+
+        logger.log(TAG, "### Project.create()");
+        project.create();
+
         return project;
     }
 }
@@ -275,8 +279,6 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
         {
             logger.startup(TAG, "### Using default Project: ");
             project = ProjectService(projectService).sdk_internal::createProject("UntitledProject", "");
-            logger.log(TAG, "### Project.onCreate()");
-            project.create();
         }
 
         complete(project);

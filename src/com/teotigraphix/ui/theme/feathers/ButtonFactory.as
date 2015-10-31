@@ -20,15 +20,16 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
-
 import com.teotigraphix.ui.component.SimpleButton;
 import com.teotigraphix.ui.component.UIToggleButton;
+import com.teotigraphix.ui.theme.*;
 
 import feathers.controls.Button;
 import feathers.controls.ToggleButton;
 import feathers.skins.SmartDisplayObjectStateValueSelector;
 import feathers.textures.Scale9Textures;
+
+import flash.text.engine.ElementFormat;
 
 public class ButtonFactory extends AbstractThemeFactory
 {
@@ -68,13 +69,13 @@ public class ButtonFactory extends AbstractThemeFactory
 
     public function setBaseButtonStyles(button:Button):void
     {
-        button.defaultLabelProperties.elementFormat = theme.fonts.lightElementFormat;
-        button.disabledLabelProperties.elementFormat = theme.fonts.darkUIDisabledElementFormat;
+        button.defaultLabelProperties.elementFormat = getFont();
+        button.disabledLabelProperties.elementFormat = getDisabledFont();
         if (button is ToggleButton)
         {
             //for convenience, this function can style both a regular button
             //and a toggle button
-            ToggleButton(button).selectedDisabledLabelProperties.elementFormat = theme.fonts.defaultButtonDisableElementFormat;
+            ToggleButton(button).selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
         }
 
         button.paddingTop = properties.smallGutterSize;
@@ -107,8 +108,8 @@ public class ButtonFactory extends AbstractThemeFactory
             //and a toggle button
             // ME
             var toggleButton:ToggleButton = ToggleButton(button);
-            toggleButton.defaultSelectedLabelProperties.elementFormat = font.darkUIElementFormat;
-            toggleButton.selectedDisabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
+            toggleButton.defaultSelectedLabelProperties.elementFormat = getSelectedFont();
+            toggleButton.selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
 
             skinSelector.defaultSelectedValue = buttonSelectedUpSkinTextures;
             skinSelector.setValueForState(buttonSelectedDisabledSkinTextures, Button.STATE_DISABLED, true);
@@ -121,6 +122,38 @@ public class ButtonFactory extends AbstractThemeFactory
         };
         button.stateToSkinFunction = skinSelector.updateValue;
         setBaseButtonStyles(button);
+    }
+
+    /**
+     * Regular button font, lightElementFormat.
+     */
+    protected function getFont():ElementFormat
+    {
+        return font.lightElementFormat;
+    }
+
+    /**
+     * Regular disabled button font, darkUIDisabledElementFormat.
+     */
+    protected function getDisabledFont():ElementFormat
+    {
+        return font.darkUIDisabledElementFormat;
+    }
+
+    /**
+     * Selected font, darkUIElementFormat.
+     */
+    protected function getSelectedFont():ElementFormat
+    {
+        return font.darkUIElementFormat;
+    }
+
+    /**
+     * Selected disabled font, darkUIDisabledElementFormat.
+     */
+    protected function getSelectedDisabledFont():ElementFormat
+    {
+        return font.darkUIDisabledElementFormat;
     }
 }
 }

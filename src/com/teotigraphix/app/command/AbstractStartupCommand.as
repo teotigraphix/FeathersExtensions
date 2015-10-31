@@ -27,6 +27,8 @@ import com.teotigraphix.service.IApplicationService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepCommand;
 
+import flash.display3D.Program3D;
+
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 
@@ -117,6 +119,7 @@ public class AbstractStartupCommand extends Command
     {
         var project:Project = Project(event.result);
         _pendingProject = project;
+        injector.mapValue(Project, _pendingProject, "pendingProject");
 
         trace("    ApplicationStartupCommand, loadLastProjectComplete()")
     }
@@ -126,6 +129,7 @@ public class AbstractStartupCommand extends Command
         trace("    ApplicationStartupCommand, startupCompleteHandler()");
 
         projectModel.project = _pendingProject;
+        injector.unmap(Project, "pendingProject");
 
         // XXX Subclasses dispatch when app load complete and ready to show UI
         //dispatchApplicationComplete();

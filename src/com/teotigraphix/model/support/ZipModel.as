@@ -21,6 +21,7 @@ package com.teotigraphix.model.support
 {
 
 import com.teotigraphix.model.*;
+import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.util.Files;
 
 import deng.fzip.FZip;
@@ -28,8 +29,6 @@ import deng.fzip.FZipFile;
 
 import flash.filesystem.File;
 import flash.utils.ByteArray;
-
-import org.as3commons.async.command.IAsyncCommand;
 
 public class ZipModel extends AbstractModel implements IZipModel
 {
@@ -138,9 +137,11 @@ public class ZipModel extends AbstractModel implements IZipModel
     /**
      * @inheritDoc
      */
-    public function writeFiles():IAsyncCommand
+    public function writeFiles():IStepCommand
     {
-        return injector.instantiate(WriteZipFilesToDisk);
+        var step:WriteZipFilesToDisk = injector.instantiate(WriteZipFilesToDisk);
+        step.zipModel = this;
+        return step;
     }
 
     /**
@@ -198,11 +199,8 @@ import deng.fzip.FZipFile;
 
 import flash.filesystem.File;
 
-import org.as3commons.async.command.IAsyncCommand;
-
-class WriteZipFilesToDisk extends StepCommand implements IAsyncCommand
+class WriteZipFilesToDisk extends StepCommand
 {
-    [Inject]
     public var zipModel:IZipModel;
 
     public function WriteZipFilesToDisk()

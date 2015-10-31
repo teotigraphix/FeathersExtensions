@@ -51,8 +51,10 @@ public class FileListData
         list.homeDirectory = homeDirectory;
         list.rootDirectory = rootDirectory;
         list.actionText = actionText;
-        list.iconFunction = iconFunction;
-        list.enabledFunction = enabledFunction;
+        if (iconFunction != null)
+            list.iconFunction = iconFunction;
+        if (enabledFunction != null)
+            list.enabledFunction = enabledFunction;
     }
 }
 }

@@ -26,6 +26,8 @@ import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepSequence;
 import com.teotigraphix.util.ISerialize;
 
+import org.as3commons.lang.Assert;
+
 import org.robotlegs.starling.core.IInjector;
 
 use namespace sdk_internal;
@@ -109,6 +111,7 @@ public class AbstractProjectState implements IProjectState, ISerialize
         if (step1 != null)
             sequence.addCommand(step1);
         var step2:IStepCommand = createSaveStep();
+        Assert.notNull(step2, "AbstractProjectState must implement createSaveStep()");
         sequence.addCommand(step2);
         return sequence;
     }

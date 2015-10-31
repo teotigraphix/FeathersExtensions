@@ -16,35 +16,27 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.service
+package com.teotigraphix.ui.popup
 {
 
-import com.teotigraphix.service.async.IStepCommand;
-import com.teotigraphix.service.async.IStepSequence;
+import feathers.controls.popups.DropDownPopUpContentManager;
+import feathers.core.PopUpManager;
 
-import flash.filesystem.File;
+import starling.events.Event;
 
-public interface IProjectService
+public class CenterPopUpContentManager extends DropDownPopUpContentManager
 {
-    /**
-     * The 'complete' result is a newly created Project or Project loaded from disk.
-     */
-    function loadLastProject():IStepCommand;
+    public function CenterPopUpContentManager()
+    {
+    }
 
-    /**
-     * Loads a Project file using the serialize file.
-     * @param file The serialized file that resiseds within the same named directory.
-     */
-    function loadProjectAsync(file:File):IStepCommand;
+    override protected function content_resizeHandler(event:Event):void
+    {
+    }
 
-    /**
-     * @param name The name of the project directory.
-     * @param relativePath The path from the root project directory.
-     */
-    function createProjectAsync(name:String, relativePath:String):IStepCommand;
-
-    function saveAsync():IStepSequence;
-
+    override protected function layout():void
+    {
+       PopUpManager.centerPopUp(content);
+    }
 }
 }

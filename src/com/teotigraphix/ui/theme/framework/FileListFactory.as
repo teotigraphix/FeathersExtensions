@@ -39,7 +39,7 @@ public class FileListFactory extends AbstractThemeFactory
         //setStyle(FileListPopUp, setPresetSelectorFileListPopUpStyles, "preset-selector");
     }
 
-    private function setFileListPopUpStyles(popup:FileListPopUp):void
+    public function setFileListPopUpStyles(popup:FileListPopUp):void
     {
         popup.backgroundSkin = AssetMap.create9ScaleImage("background-skin", 5, 5, 22, 22);
         //popup.defaultCausticIcon = AssetMap.getTexture("mimetype_caustic");
@@ -47,7 +47,7 @@ public class FileListFactory extends AbstractThemeFactory
         //popup.defaultFileIcon = AssetMap.getTexture("mimetype_misc");
     }
 
-    private function setRootSelectorFileListPopUpStyles(popup:FileListPopUp):void
+    public function setRootSelectorFileListPopUpStyles(popup:FileListPopUp):void
     {
         setFileListPopUpStyles(popup);
 
@@ -76,7 +76,7 @@ public class FileListFactory extends AbstractThemeFactory
     //    fileList.directoryDoubleTapEnabled = false;
     //}
 
-    private function setFileListStyles(list:FileList):void
+    public function setFileListStyles(list:FileList):void
     {
         //list.rootDirectory = file;
         list.directoryDoubleTapEnabled = false;
@@ -118,7 +118,7 @@ public class FileListFactory extends AbstractThemeFactory
         sizeFileListIcon(list.refreshButton.defaultIcon);
     }
 
-    private function sizeFileListIcon(skin:DisplayObject):void
+    public function sizeFileListIcon(skin:DisplayObject):void
     {
         //skin.width = fileListIconWidth * properties.scale;
         //skin.height = fileListIconHeight * properties.scale;

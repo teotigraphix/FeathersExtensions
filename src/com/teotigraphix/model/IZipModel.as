@@ -20,11 +20,11 @@
 package com.teotigraphix.model
 {
 
+import com.teotigraphix.service.async.IStepCommand;
+
 import deng.fzip.FZipFile;
 
 import flash.filesystem.File;
-
-import org.as3commons.async.command.IAsyncCommand;
 
 public interface IZipModel
 {
@@ -56,8 +56,10 @@ public interface IZipModel
 
     /**
      * Writes all files to disk in the targetDirectory async.
+     *
+     * <p>commit() returns Vector of File extracted.</p>
      */
-    function writeFiles():IAsyncCommand;
+    function writeFiles():IStepCommand;
 
     /**
      * Clears all files, directories and targetDirectory references.

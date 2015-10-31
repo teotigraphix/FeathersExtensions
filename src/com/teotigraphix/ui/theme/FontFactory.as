@@ -45,7 +45,7 @@ public class FontFactory extends AbstractThemeFactory
      * The name of the embedded font used by controls in this theme. Comes
      * in normal and bold weights.
      */
-    public static const FONT_NAME:String = "SourceSansPro";
+    public static var FONT_NAME:String = "SourceSansPro";
 
     /**
      * A smaller font size for details.
@@ -66,6 +66,11 @@ public class FontFactory extends AbstractThemeFactory
      * An extra large font size.
      */
     public var extraLargeFontSize:int;
+
+    /**
+     * An extra large font size. (48)
+     */
+    public var extraExtraLargeFontSize:int;
 
     //----------------------------------
     // ElementFormat
@@ -205,6 +210,7 @@ public class FontFactory extends AbstractThemeFactory
         regularFontSize = Math.round(24 * theme.scale);
         largeFontSize = Math.round(28 * theme.scale);
         extraLargeFontSize = Math.round(36 * theme.scale);
+        extraExtraLargeFontSize = Math.round(48 * theme.scale);
 
         //these are for components that don't use FTE
         scrollTextTextFormat = new TextFormat("_sans", regularFontSize, LIGHT_TEXT_COLOR);
