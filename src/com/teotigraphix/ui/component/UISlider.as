@@ -69,6 +69,8 @@ public class UISlider extends Slider
             return;
         }
 
+        event.stopImmediatePropagation();
+
         var track:DisplayObject = DisplayObject(event.currentTarget);
         if (this._touchPointID >= 0)
         {

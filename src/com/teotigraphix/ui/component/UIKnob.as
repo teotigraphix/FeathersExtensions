@@ -21,6 +21,7 @@ package com.teotigraphix.ui.component
 {
 
 import feathers.core.FeathersControl;
+import feathers.skins.IStyleProvider;
 
 import flash.geom.Point;
 
@@ -42,6 +43,13 @@ public class UIKnob extends FeathersControl
     private static const HELPER_POINT:Point = new Point();
 
     private static const TOUCH_POINT:Point = new Point();
+
+    public static var globalStyleProvider:IStyleProvider;
+
+    override protected function get defaultStyleProvider():IStyleProvider
+    {
+        return UIKnob.globalStyleProvider;
+    }
 
     public var backgroundSkin:DisplayObject;
     public var knobThumbSkin:DisplayObject;
@@ -414,6 +422,8 @@ public class UIKnob extends FeathersControl
             touchPointID = -1;
             return;
         }
+
+        event.stopImmediatePropagation();
 
         if (this.touchPointID >= 0)
         {
