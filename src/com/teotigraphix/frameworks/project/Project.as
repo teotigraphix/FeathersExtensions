@@ -259,6 +259,19 @@ public final class Project implements ISerialize
     }
 
     /**
+     * Returns the .temp project directory and creates it if needed.
+     */
+    public function getTempDirectory():File
+    {
+        var directory:File = workingTempDirectory;
+        if (!directory.exists)
+        {
+            directory.createDirectory();
+        }
+        return directory;
+    }
+
+    /**
      * Returns a new project temp file located at AppRoot/ProjectName/.temp/tempName.tmp.
      *
      * @param name The name of the temp file with extension, if null a random name is created
@@ -284,7 +297,7 @@ public final class Project implements ISerialize
         }
 
         var file:File = directory.resolvePath(name);
-        if (file.exists)
+        if (!file.isDirectory && file.exists)
             throw new IOError("Temp file exists; " + file.nativePath);
 
         return file;

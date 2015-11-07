@@ -65,7 +65,7 @@ public class GridGroup extends FeathersControl
     protected static const INVALIDATION_FLAG_SELECTED_INDEX_CHANGE:String = "selectedIndex";
 
     public static var globalStyleProvider:IStyleProvider;
-    ;
+
     public var isActiveElementStyle:ElementFormat;
     public var isNotActiveElementStyle:ElementFormat;
 

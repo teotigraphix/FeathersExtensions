@@ -25,6 +25,8 @@ import feathers.controls.LayoutGroup;
 import feathers.core.PopUpManager;
 import feathers.layout.AnchorLayout;
 import feathers.layout.AnchorLayoutData;
+import feathers.layout.VerticalLayout;
+import feathers.layout.VerticalLayoutData;
 import feathers.skins.IStyleProvider;
 
 import flash.events.TimerEvent;
@@ -56,12 +58,14 @@ public class Toast extends LayoutGroup
 
     override protected function initialize():void
     {
-        layout = new AnchorLayout();
+        layout = new VerticalLayout();
+        VerticalLayout(layout).padding = 10;
         super.initialize();
 
         _label = new Label();
-        _label.layoutData = new AnchorLayoutData(10, 10, 10, 10);
+        _label.layoutData = new VerticalLayoutData(100);
         _label.text = this._message;
+        _label.wordWrap = true;
         addChild(_label);
     }
 
@@ -88,6 +92,7 @@ public class Toast extends LayoutGroup
         var instance:Toast = new Toast();
         instance._message = message;
         instance._duration = duration;
+        instance.maxWidth = 700;
         PopUpManager.addPopUp(instance, false, true);
     }
 

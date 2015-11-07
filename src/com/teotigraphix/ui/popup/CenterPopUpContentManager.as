@@ -22,10 +22,19 @@ package com.teotigraphix.ui.popup
 import feathers.controls.popups.DropDownPopUpContentManager;
 import feathers.core.PopUpManager;
 
+import starling.display.DisplayObject;
+import starling.display.DisplayObjectContainer;
+import starling.display.Stage;
+
 import starling.events.Event;
+import starling.events.Touch;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
 
 public class CenterPopUpContentManager extends DropDownPopUpContentManager
 {
+    public static const EVENT_CANCEL:String = "cancel";
+
     public function CenterPopUpContentManager()
     {
     }
@@ -37,6 +46,40 @@ public class CenterPopUpContentManager extends DropDownPopUpContentManager
     override protected function layout():void
     {
        PopUpManager.centerPopUp(content);
+    }
+
+    override protected function stage_touchHandler(event:TouchEvent):void
+    {
+        // Copied from super
+        var target:DisplayObject = DisplayObject(event.target);
+        if(this.content == target || (this.content is DisplayObjectContainer && DisplayObjectContainer(this.content).contains(target)))
+        {
+            return;
+        }
+        if(this.source == target || (this.source is DisplayObjectContainer && DisplayObjectContainer(this.source).contains(target)))
+        {
+            return;
+        }
+        if(!PopUpManager.isTopLevelPopUp(this.content))
+        {
+            return;
+        }
+        //any began touch is okay here. we don't need to check all touches
+        var stage:Stage = Stage(event.currentTarget);
+        var touch:Touch = event.getTouch(stage, TouchPhase.BEGAN);
+        if(!touch)
+        {
+            return;
+        }
+
+        if (touch.target.parent == stage)
+        {
+            dispatchEventWith(EVENT_CANCEL);
+        }
+
+        this.close();
+
+
     }
 }
 }

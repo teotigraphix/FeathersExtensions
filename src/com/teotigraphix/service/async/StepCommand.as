@@ -26,6 +26,7 @@ import flash.events.TimerEvent;
 import flash.utils.Timer;
 
 import org.as3commons.async.operation.impl.AbstractProgressOperation;
+import org.robotlegs.starling.core.IInjector;
 
 /**
  * An operation that "may" not be async but needs to be treated that way
@@ -37,6 +38,9 @@ public class StepCommand extends AbstractProgressOperation implements IStepComma
 {
     [Inject]
     public var logger:ILogger;
+
+    [Inject]
+    public var injector:IInjector;
 
     private var _data:Object;
     private var timer:Timer;

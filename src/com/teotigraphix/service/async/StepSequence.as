@@ -37,6 +37,7 @@ public class StepSequence extends CompositeCommand implements IStepSequence, ISt
     public function set data(value:Object):void
     {
         _data = value;
+        result = _data;
     }
 
     public function StepSequence(data:Object = null)
@@ -66,8 +67,6 @@ public class StepSequence extends CompositeCommand implements IStepSequence, ISt
         {
             IStepCommand(command).commit();
         }
-
-        dispatchCompleteEvent();
 
         return result;
     }
