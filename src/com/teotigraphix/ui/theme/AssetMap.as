@@ -92,7 +92,7 @@ public final class AssetMap
         return t;
     }
 
-    public static function getSize(size:int):Number
+    public static function size(size:int):Number
     {
         return size * scale;
     }

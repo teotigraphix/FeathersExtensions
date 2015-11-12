@@ -27,7 +27,7 @@ import com.teotigraphix.util.Files;
 
 import flash.filesystem.File;
 
-public class FileService extends AbstractService implements IFileService
+public class FileServiceImpl extends AbstractService implements IFileService
 {
     private static const TAG:String = "FileManager";
 
@@ -67,7 +67,7 @@ public class FileService extends AbstractService implements IFileService
         return descriptor.preferenceBinFile;
     }
 
-    public function FileService()
+    public function FileServiceImpl()
     {
         super();
     }

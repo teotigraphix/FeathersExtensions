@@ -22,9 +22,9 @@ package com.teotigraphix.service.support
 
 import com.teotigraphix.service.ILogger;
 
-public class Logger implements ILogger
+public class LoggerImpl implements ILogger
 {
-    public function Logger()
+    public function LoggerImpl()
     {
     }
 

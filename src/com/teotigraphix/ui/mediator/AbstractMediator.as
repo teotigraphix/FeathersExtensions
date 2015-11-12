@@ -25,9 +25,13 @@ import com.teotigraphix.model.event.DeviceModelEventType;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.ui.IOrientationAware;
 
+import feathers.controls.StackScreenNavigator;
+import feathers.controls.StackScreenNavigatorItem;
+
 import org.robotlegs.starling.core.IInjector;
 import org.robotlegs.starling.mvcs.Mediator;
 
+import starling.display.DisplayObjectContainer;
 import starling.events.Event;
 
 public class AbstractMediator extends Mediator
@@ -40,6 +44,12 @@ public class AbstractMediator extends Mediator
 
     [Inject]
     public var deviceModel:IDeviceModel;
+
+    /**
+     * Usually the MainNavigator stack component.
+     */
+    [Inject]
+    public var root:DisplayObjectContainer;
 
     public function AbstractMediator()
     {
@@ -68,6 +78,42 @@ public class AbstractMediator extends Mediator
     {
         if (viewComponent is IOrientationAware)
             IOrientationAware(viewComponent).orientationChange(isLandscape, isTablet);
+    }
+
+    ///**
+    // * Called once when the mediator is first mapped.
+    // *
+    // * @param mediatorClass The mediator class mapped.
+    // */
+    //protected function onMapView(mediatorClass:*):void
+    //{
+    //}
+
+    /**
+     * Maps a sub screen view to the mediator map once.
+     *
+     * @param viewOrClassName the view class to instantiate.
+     * @param mediatorClass The mediator class to instantiate after a view has been added to the display list.
+     * @param screenID Optonal screenID to add the view as a screen of the main navigator.
+     * @return Whether the view was mapped(true), the first time, code can run that registers other things.
+     */
+    protected final function mapChildView(viewOrClassName:*, mediatorClass:*, screenID:String = null):Boolean
+    {
+        if (!mediatorMap.hasMapping(viewOrClassName))
+        {
+            mediatorMap.mapView(viewOrClassName, mediatorClass);
+            if (screenID != null)
+            {
+                if (root is StackScreenNavigator)
+                {
+                    var item:StackScreenNavigatorItem = new StackScreenNavigatorItem(viewOrClassName);
+                    StackScreenNavigator(root).addScreen(screenID, item);
+                }
+            }
+            //onMapView(mediatorClass);
+            return true;
+        }
+        return false;
     }
 
     private function context_orientationChange(event:Event, model:IDeviceModel):void

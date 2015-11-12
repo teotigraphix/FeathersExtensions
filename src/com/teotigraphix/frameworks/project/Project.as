@@ -244,13 +244,24 @@ public final class Project implements ISerialize
     }
 
     /**
-     * Returns a directory or file from within the project's root directory.
-     * <p>
-     * Create the file or directory if not exists.
+     * Returns a file from within the project's root directory.
      *
      * @param relativePath The resource path.
      */
     public function getResource(relativePath:String):File
+    {
+        var resource:File = findResource(relativePath);
+        return resource;
+    }
+
+    /**
+     * Returns a directory from within the project's root directory.
+     * <p>
+     * Create the directory if not exists.
+     *
+     * @param relativePath The resource path.
+     */
+    public function getDirectoryResource(relativePath:String):File
     {
         var resource:File = findResource(relativePath);
         if (!resource.exists)

@@ -50,6 +50,33 @@ public class SharedFactory extends AbstractThemeFactory
 
     public static const MODAL_OVERLAY_COLOR:uint = 0x29241e;
 
+    // Background colors
+
+    /**
+     * The darkest most distant background.
+     */
+    public static const BACKGROUND_COLOR:uint = 0xF1F1F;
+
+    /**
+     * TextInput etc.
+     */
+    public static const BACKGROUND_COLOR_BLACK:uint = 0x262626;
+
+    /**
+     * Form backgrounds, etc.
+     */
+    public static const BACKGROUND_COLOR_LIGHT_GREY:uint = 0x8E8E8E;
+
+    /**
+     * Form backgrounds, etc.
+     */
+    public static const BACKGROUND_COLOR_MEDIUM_GREY:uint = 0x535353;
+
+    /**
+     * Header, footers etc.
+     */
+    public static const BACKGROUND_COLOR_DARK_GREY:uint = 0x3C3C3C;
+
     // Alert
     public static const MODAL_OVERLAY_ALPHA:Number = 0.8;
     public static const BUTTON_SCALE9_GRID:Rectangle = new Rectangle(5, 5, 50, 50);

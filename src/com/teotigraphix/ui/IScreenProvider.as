@@ -16,14 +16,15 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.app.ui
+package com.teotigraphix.ui
 {
 
-import com.teotigraphix.ui.IScreenNavigator;
-
-public interface IBootstrapNavigator extends IScreenNavigator
+public interface IScreenProvider
 {
+    function get data():*;
 
+    function push(data:*):void;
+
+    function pop():void;
 }
 }

@@ -59,7 +59,7 @@ import starling.events.Event;
 /**
  * Dispatched when the list changes, data is a File instance or null.
  */
-[Event(name="change",type="starling.events.Event")]
+[Event(name="change", type="starling.events.Event")]
 
 public class FileList extends LayoutGroup
 {
@@ -616,9 +616,6 @@ public class FileList extends LayoutGroup
 
     private function list_changeHandler(event:Event):void
     {
-        // we dispatch change for any listeners looking for a null File or Directory selection
-        dispatchEventWith(Event.CHANGE, false, _list.selectedItem);
-
         var list:List = List(event.currentTarget);
         if (list.selectedIndex == -1)
             return;
@@ -631,9 +628,11 @@ public class FileList extends LayoutGroup
             rootDirectory = file;
         }
 
+        // we dispatch change for any listeners looking for a null File or Directory selection
+        dispatchEventWith(Event.CHANGE, false, _list.selectedItem);
+
         dispatchEventWith(file.isDirectory ?
                                   FileListEvent.DIRECTORY_SELECT : FileListEvent.FILE_SELECT, true, file);
-
     }
 }
 }

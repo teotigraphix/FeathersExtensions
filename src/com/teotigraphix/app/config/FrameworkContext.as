@@ -22,8 +22,10 @@ package com.teotigraphix.app.config
 
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
-import com.teotigraphix.service.support.FileService;
-import com.teotigraphix.service.support.Logger;
+import com.teotigraphix.service.support.FileServiceImpl;
+import com.teotigraphix.service.support.LoggerImpl;
+import com.teotigraphix.ui.IScreenProvider;
+import com.teotigraphix.ui.screen.ScreenProviderImpl;
 
 import flash.errors.IllegalOperationError;
 import flash.events.EventDispatcher;
@@ -115,8 +117,10 @@ public class FrameworkContext extends Context
     protected function configureCore():void
     {
         injector.mapValue(Juggler, Starling.juggler);
-        injector.mapSingletonOf(ILogger, Logger);
-        injector.mapSingletonOf(IFileService, FileService);
+        injector.mapSingletonOf(ILogger, LoggerImpl);
+        injector.mapSingletonOf(IFileService, FileServiceImpl);
+        injector.mapSingletonOf(IScreenProvider, ScreenProviderImpl);
+
     }
 
     protected function configureApplication():void

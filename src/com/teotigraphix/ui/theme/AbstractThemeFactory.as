@@ -100,5 +100,10 @@ public class AbstractThemeFactory
         return new SimpleScrollBar();
     }
 
+    protected static function size(dimension:Number):Number
+    {
+        return AssetMap.size(dimension);
+    }
+
 }
 }

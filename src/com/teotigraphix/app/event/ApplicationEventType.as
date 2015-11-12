@@ -62,14 +62,16 @@ public final class ApplicationEventType
      *
      * @data <code>null</code>
      */
-    public static const APPLICATION_COMPLETE:String = "applicationComplete";
+    public static const APPLICATION_COMPLETE:String = "ApplicationEventType/applicationComplete";
 
     /**
      * Dispatched after a Project has been loaded and set on the ProjectModel.
      *
      * @data <code>com.teotigraphix.frameworks.project.Project</code>
      */
-    public static const PROJECT_CHANGED:String = "projectChanged";
+    public static const PROJECT_CHANGED:String = "ApplicationEventType/projectChanged";
 
+    public static const BACK:String = "ApplicationEventType/back";
+    public static const BACK_TO:String = "ApplicationEventType/backTo";
 }
 }

@@ -21,8 +21,12 @@ package com.teotigraphix.controller.command
 
 import org.robotlegs.starling.mvcs.Command;
 
+import starling.events.Event;
+
 public class AbstractCommand extends Command
 {
+    [Inject]
+    public var event:Event;
 
     override public function execute():void
     {

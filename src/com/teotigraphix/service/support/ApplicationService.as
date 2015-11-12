@@ -43,7 +43,7 @@ import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IPreferenceService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.StepCommand;
-import com.teotigraphix.service.support.FileService;
+import com.teotigraphix.service.support.FileServiceImpl;
 import com.teotigraphix.service.support.PreferenceService;
 import com.teotigraphix.service.support.ProjectService;
 
@@ -69,7 +69,7 @@ class StartupCoreServicesCommand extends StepCommand implements IAsyncCommand
         logger.startup("StartupCoreServicesCommand", "execute()");
 
         //
-        FileService(fileService).startup();
+        FileServiceImpl(fileService).startup();
 
         // load binary application preferences map
         PreferenceService(preferenceService).startup();
