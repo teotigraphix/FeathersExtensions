@@ -25,6 +25,8 @@ import com.teotigraphix.service.*;
 import org.robotlegs.starling.core.IInjector;
 import org.robotlegs.starling.mvcs.Actor;
 
+import starling.events.EventDispatcher;
+
 public class AbstractService extends Actor
 {
     [Inject]
@@ -32,5 +34,16 @@ public class AbstractService extends Actor
 
     [Inject]
     public var injector:IInjector;
+
+    [Inject]
+    override public function set eventDispatcher(value:EventDispatcher):void
+    {
+        super.eventDispatcher = value;
+        onRegister();
+    }
+
+    protected function onRegister():void
+    {
+    }
 }
 }

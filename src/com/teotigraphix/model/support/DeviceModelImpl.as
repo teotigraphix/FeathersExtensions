@@ -31,7 +31,7 @@ import flash.events.StageOrientationEvent;
 
 import starling.core.Starling;
 
-public class DeviceModel extends AbstractModel implements IDeviceModel
+public class DeviceModelImpl extends AbstractModel implements IDeviceModel
 {
     //--------------------------------------------------------------------------
     // Variables
@@ -107,7 +107,7 @@ public class DeviceModel extends AbstractModel implements IDeviceModel
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function DeviceModel()
+    public function DeviceModelImpl()
     {
     }
 

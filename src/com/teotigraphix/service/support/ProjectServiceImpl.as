@@ -35,7 +35,7 @@ import flash.filesystem.File;
 
 use namespace sdk_internal;
 
-public class ProjectService extends AbstractService implements IProjectService
+public class ProjectServiceImpl extends AbstractService implements IProjectService
 {
     private static const TAG:String = "ProjectService";
 
@@ -56,7 +56,7 @@ public class ProjectService extends AbstractService implements IProjectService
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function ProjectService()
+    public function ProjectServiceImpl()
     {
     }
 
@@ -142,7 +142,7 @@ import com.teotigraphix.service.IPreferenceService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepCommand;
-import com.teotigraphix.service.support.ProjectService;
+import com.teotigraphix.service.support.ProjectServiceImpl;
 
 import flash.filesystem.File;
 
@@ -172,7 +172,7 @@ class CreateProjectCommand extends StepCommand implements IAsyncCommand
     {
         // previous UI interaction will have already asked to save the old project
         // unload last project
-        projectModel.project = ProjectService(projectService).sdk_internal::createProject(_name, _path);
+        projectModel.project = ProjectServiceImpl(projectService).sdk_internal::createProject(_name, _path);
 
         var command:IStepSequence = projectService.saveAsync();
         command.addCompleteListener(onSaveCompleteHandler);
@@ -278,7 +278,7 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
         else
         {
             logger.startup(TAG, "### Using default Project: ");
-            project = ProjectService(projectService).sdk_internal::createProject("UntitledProject", "");
+            project = ProjectServiceImpl(projectService).sdk_internal::createProject("UntitledProject", "");
         }
 
         complete(project);
@@ -319,7 +319,7 @@ class SaveProjectCommand extends StepCommand implements IAsyncCommand
 
     override public function execute():*
     {
-        ProjectService(projectService).sdk_internal::save();
+        ProjectServiceImpl(projectService).sdk_internal::save();
         monitorForComplete(projectModel.project, 300, 10);
         return null;
     }

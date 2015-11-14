@@ -29,7 +29,7 @@ import flash.filesystem.File;
 
 import org.as3commons.async.command.IAsyncCommand;
 
-public class MidiModel extends AbstractModel implements IMidiModel
+public class MidiModelImpl extends AbstractModel implements IMidiModel
 {
     //--------------------------------------------------------------------------
     // Private :: Variables
@@ -46,7 +46,7 @@ public class MidiModel extends AbstractModel implements IMidiModel
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function MidiModel()
+    public function MidiModelImpl()
     {
     }
 
@@ -75,7 +75,7 @@ public class MidiModel extends AbstractModel implements IMidiModel
 }
 
 import com.teotigraphix.frameworks.midi.MIDIParserResult;
-import com.teotigraphix.model.support.MidiModel;
+import com.teotigraphix.model.support.MidiModelImpl;
 import com.teotigraphix.service.async.StepCommand;
 
 import flash.filesystem.File;
@@ -85,9 +85,9 @@ import org.as3commons.async.command.IAsyncCommand;
 class LoadMidiFileCommand extends StepCommand implements IAsyncCommand
 {
     private var _file:File;
-    private var _midiModel:MidiModel;
+    private var _midiModel:MidiModelImpl;
 
-    public function LoadMidiFileCommand(file:File, midiModel:MidiModel)
+    public function LoadMidiFileCommand(file:File, midiModel:MidiModelImpl)
     {
         _file = file;
         _midiModel = midiModel;

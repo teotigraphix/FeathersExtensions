@@ -28,7 +28,7 @@ import com.teotigraphix.service.IPreferenceService;
 
 import flash.filesystem.File;
 
-public class ProjectModel extends AbstractModel implements IProjectModel
+public class ProjectModelImpl extends AbstractModel implements IProjectModel
 {
     private const TAG:String = "ProjectModel";
 
@@ -91,7 +91,7 @@ public class ProjectModel extends AbstractModel implements IProjectModel
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function ProjectModel()
+    public function ProjectModelImpl()
     {
         super();
     }

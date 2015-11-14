@@ -25,7 +25,7 @@ import com.teotigraphix.service.*;
 
 import flash.filesystem.File;
 
-public class PreferenceService extends AbstractService implements IPreferenceService
+public class PreferenceServiceImpl extends AbstractService implements IPreferenceService
 {
     private const TAG:String = "PreferenceService";
 
@@ -69,7 +69,7 @@ public class PreferenceService extends AbstractService implements IPreferenceSer
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function PreferenceService()
+    public function PreferenceServiceImpl()
     {
     }
 

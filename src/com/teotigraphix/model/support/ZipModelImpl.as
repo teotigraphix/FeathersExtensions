@@ -30,7 +30,7 @@ import deng.fzip.FZipFile;
 import flash.filesystem.File;
 import flash.utils.ByteArray;
 
-public class ZipModel extends AbstractModel implements IZipModel
+public class ZipModelImpl extends AbstractModel implements IZipModel
 {
     public static const TAG:String = "ZipModel";
 
@@ -83,7 +83,7 @@ public class ZipModel extends AbstractModel implements IZipModel
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function ZipModel()
+    public function ZipModelImpl()
     {
     }
 
@@ -191,7 +191,7 @@ public class ZipModel extends AbstractModel implements IZipModel
 }
 
 import com.teotigraphix.model.IZipModel;
-import com.teotigraphix.model.support.ZipModel;
+import com.teotigraphix.model.support.ZipModelImpl;
 import com.teotigraphix.service.async.StepCommand;
 import com.teotigraphix.util.Files;
 
@@ -210,24 +210,24 @@ class WriteZipFilesToDisk extends StepCommand
     override public function commit():*
     {
         var len:int = zipModel.fileCount;
-        logger.log(ZipModel.TAG, "Extracting " + len + " files...");
+        logger.log(ZipModelImpl.TAG, "Extracting " + len + " files...");
         for (var i:int = 0; i < len; i++)
         {
             var target:File;
             var file:FZipFile = zipModel.getFileAt(i);
             var filename:String = file.filename;
 
-            if (ZipModel.isDirectory(file))
+            if (ZipModelImpl.isDirectory(file))
             {
                 target = zipModel.targetDirectory.resolvePath(filename);
                 target.createDirectory();
-                logger.log(ZipModel.TAG, "Created directory; " + target.nativePath);
+                logger.log(ZipModelImpl.TAG, "Created directory; " + target.nativePath);
             }
             else
             {
                 target = zipModel.targetDirectory.resolvePath(file.filename);
                 Files.writeBinaryFile(target, file.content);
-                logger.log(ZipModel.TAG, "Write file to disk; " + target.nativePath);
+                logger.log(ZipModelImpl.TAG, "Write file to disk; " + target.nativePath);
             }
         }
         return zipModel.files;
