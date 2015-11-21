@@ -51,6 +51,18 @@ public class ScreenProviderImpl implements IScreenProvider
         _data = value;
     }
 
+    //----------------------------------
+    // isEmpty
+    //----------------------------------
+
+    /**
+     * @inheritDoc
+     */
+    public function get isEmpty():Boolean
+    {
+        return _dataMap.length == 0;
+    }
+
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------

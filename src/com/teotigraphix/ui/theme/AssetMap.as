@@ -55,6 +55,14 @@ public final class AssetMap
         return new Image(texture);
     }
 
+    public static function createScaledImage(name:String):Image
+    {
+        const image:Image = AssetMap.createImage(name);
+        image.scaleX = image.scaleY = AssetMap.scale;
+        return image;
+    }
+
+
     public static function createScale9Textures(name:String, rectangle:Rectangle):Scale9Textures
     {
         if (_scale9Textures[name] != null)

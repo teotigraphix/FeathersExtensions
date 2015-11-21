@@ -20,6 +20,8 @@
 package com.teotigraphix.ui.component.file
 {
 
+import com.teotigraphix.ui.popup.NamePopUp;
+import com.teotigraphix.ui.theme.AssetMap;
 import com.teotigraphix.util.Files;
 
 import feathers.controls.Button;
@@ -27,6 +29,7 @@ import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.List;
 import feathers.controls.renderers.IListItemRenderer;
+import feathers.core.PopUpManager;
 import feathers.data.ListCollection;
 import feathers.events.FeathersEventType;
 import feathers.layout.HorizontalLayout;
@@ -60,6 +63,7 @@ import starling.events.Event;
  * Dispatched when the list changes, data is a File instance or null.
  */
 [Event(name="change", type="starling.events.Event")]
+[Event(name="rootDirectoryChange", type="starling.events.Event")]
 
 public class FileList extends LayoutGroup
 {
@@ -97,6 +101,7 @@ public class FileList extends LayoutGroup
     private var _actionText:String;
     private var _iconFunction:Function;
     private var _enabledFunction:Function;
+    private var _showLabels:Boolean;
 
     private var actionBar:LayoutGroup;
     private var header:LayoutGroup;
@@ -111,11 +116,7 @@ public class FileList extends LayoutGroup
     private var _nextButton:Button;
 
     private var _listMinHeight:Number;
-
-    override protected function get defaultStyleProvider():IStyleProvider
-    {
-        return FileList.globalStyleProvider;
-    }
+    private var _namePopUp:DirectoryNamePopUp;
 
     //--------------------------------------------------------------------------
     // Public API :: Properties
@@ -125,19 +126,28 @@ public class FileList extends LayoutGroup
     // selectedFile
     //----------------------------------
 
-    public function get selectedFile():File
+    override protected function get defaultStyleProvider():IStyleProvider
     {
-        return _list.selectedItem as File;
+        return FileList.globalStyleProvider;
     }
 
     //----------------------------------
     // showFiles
     //----------------------------------
 
+    public function get selectedFile():File
+    {
+        return _list.selectedItem as File;
+    }
+
     public function get showFiles():Boolean
     {
         return _showFiles;
     }
+
+    //----------------------------------
+    // directoryDoubleTapEnabled
+    //----------------------------------
 
     public function set showFiles(value:Boolean):void
     {
@@ -148,32 +158,24 @@ public class FileList extends LayoutGroup
         invalidate(INVALIDATION_FLAG_SHOW_FILES);
     }
 
-    //----------------------------------
-    // directoryDoubleTapEnabled
-    //----------------------------------
-
     public function get directoryDoubleTapEnabled():Boolean
     {
         return _directoryDoubleTapEnabled;
     }
-
-    //----------------------------------
-    // rootDirectory
-    //----------------------------------
 
     public function set directoryDoubleTapEnabled(value:Boolean):void
     {
         _directoryDoubleTapEnabled = value;
     }
 
+    //----------------------------------
+    // homeDirectory
+    //----------------------------------
+
     public function get extensions():Array
     {
         return _extensions;
     }
-
-    //----------------------------------
-    // homeDirectory
-    //----------------------------------
 
     public function set extensions(value:Array):void
     {
@@ -184,14 +186,14 @@ public class FileList extends LayoutGroup
         invalidate(INVALIDATION_FLAG_EXTENSIONS);
     }
 
+    //----------------------------------
+    // rootDirectory
+    //----------------------------------
+
     public function get homeDirectory():File
     {
         return _homeDirectory;
     }
-
-    //----------------------------------
-    // rootDirectory
-    //----------------------------------
 
     public function set homeDirectory(value:File):void
     {
@@ -202,14 +204,14 @@ public class FileList extends LayoutGroup
         invalidate(INVALIDATION_FLAG_HOME_DIRECTORY);
     }
 
+    //----------------------------------
+    // actionText
+    //----------------------------------
+
     public function get rootDirectory():File
     {
         return _rootDirectory;
     }
-
-    //----------------------------------
-    // actionText
-    //----------------------------------
 
     public function set rootDirectory(value:File):void
     {
@@ -221,14 +223,14 @@ public class FileList extends LayoutGroup
         invalidate(INVALIDATION_FLAG_ROOT_DIRECTORY);
     }
 
+    //----------------------------------
+    // iconFunction
+    //----------------------------------
+
     public function get actionText():String
     {
         return _actionText;
     }
-
-    //----------------------------------
-    // iconFunction
-    //----------------------------------
 
     public function set actionText(value:String):void
     {
@@ -239,14 +241,14 @@ public class FileList extends LayoutGroup
         invalidate(INVALIDATION_FLAG_ACTION_TEXT);
     }
 
+    //----------------------------------
+    // buttons
+    //----------------------------------
+
     public function get iconFunction():Function
     {
         return _iconFunction;
     }
-
-    //----------------------------------
-    // buttons
-    //----------------------------------
 
     public function set iconFunction(value:Function):void
     {
@@ -295,23 +297,23 @@ public class FileList extends LayoutGroup
         return _refreshButton;
     }
 
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+
     public function get list():List
     {
         return _list;
     }
 
     //--------------------------------------------------------------------------
-    // Constructor
+    // Overridden :: Methods
     //--------------------------------------------------------------------------
 
     public function get nextButton():Button
     {
         return _nextButton;
     }
-
-    //--------------------------------------------------------------------------
-    // Overridden :: Methods
-    //--------------------------------------------------------------------------
 
     public function get listMinHeight():Number
     {
@@ -321,6 +323,20 @@ public class FileList extends LayoutGroup
     public function set listMinHeight(value:Number):void
     {
         _listMinHeight = value;
+    }
+
+    //----------------------------------
+    // showLabels
+    //----------------------------------
+
+    public function get showLabels():Boolean
+    {
+        return _showLabels;
+    }
+
+    public function set showLabels(value:Boolean):void
+    {
+        _showLabels = value;
     }
 
     public function FileList()
@@ -336,8 +352,8 @@ public class FileList extends LayoutGroup
         vl.padding = 6;
         layout = vl;
 
-        createActionBar(); // local action bar
         createHeader();
+        createActionBar(); // local action bar
         createBody();
 
         _list.addEventListener(Event.CHANGE, list_changeHandler);
@@ -346,7 +362,7 @@ public class FileList extends LayoutGroup
 
         _backButton.isEnabled = false;
         _nextButton.isEnabled = false;
-        _createButton.isEnabled = false;
+        //_createButton.isEnabled = false;
     }
 
     override protected function draw():void
@@ -395,14 +411,14 @@ public class FileList extends LayoutGroup
         navigate(NAVIGATE_UP);
     }
 
+    //--------------------------------------------------------------------------
+    // Public API :: Methods
+    //--------------------------------------------------------------------------
+
     public function navigateBack():void
     {
         navigate(NAVIGATE_BACK);
     }
-
-    //--------------------------------------------------------------------------
-    // Public API :: Methods
-    //--------------------------------------------------------------------------
 
     public function naviagateNext():void
     {
@@ -415,6 +431,10 @@ public class FileList extends LayoutGroup
         _rootDirectory = null;
         rootDirectory = currentRoot;
     }
+
+    //--------------------------------------------------------------------------
+    // Internal :: Methods
+    //--------------------------------------------------------------------------
 
     public function navigate(direction:int):void
     {
@@ -439,10 +459,6 @@ public class FileList extends LayoutGroup
                 break;
         }
     }
-
-    //--------------------------------------------------------------------------
-    // Internal :: Methods
-    //--------------------------------------------------------------------------
 
     protected function commitRootDirectory():void
     {
@@ -513,9 +529,9 @@ public class FileList extends LayoutGroup
         actionBar = new LayoutGroup();
 
         var hl:HorizontalLayout = new HorizontalLayout();
-        hl.paddingLeft = 6;
-        hl.paddingRight = 6;
-        hl.paddingBottom = 6;
+        hl.paddingLeft = AssetMap.size(10);
+        hl.paddingRight = AssetMap.size(10);
+        hl.paddingBottom = AssetMap.size(10);
         actionBar.layout = hl;
 
         _label = new Label();
@@ -530,9 +546,9 @@ public class FileList extends LayoutGroup
 
         var hl:HorizontalLayout = new HorizontalLayout();
         hl.distributeWidths = true;
-        hl.paddingLeft = 4;
-        hl.paddingRight = 4;
-        hl.paddingBottom = 6;
+        hl.paddingLeft = AssetMap.size(4);
+        hl.paddingRight = AssetMap.size(4);
+        hl.paddingBottom = AssetMap.size(6);
         header.layout = hl;
 
         _homeButton = create("Home", FileListEvent.HOME);
@@ -547,8 +563,12 @@ public class FileList extends LayoutGroup
 
     private function create(label:String, actionType:int):Button
     {
-        var button:Button = new Button();
-        button.label = label;
+        const button:Button = new Button();
+        button.hasLabelTextRenderer = _showLabels;
+        if (_showLabels)
+        {
+            button.label = label;
+        }
         button.addEventListener(Event.TRIGGERED, function (event:Event):void
         {
             actionExecuteHandler(actionType);
@@ -578,7 +598,7 @@ public class FileList extends LayoutGroup
                 break;
 
             case FileListEvent.CREATE:
-
+                this_createHandler();
                 break;
 
             case FileListEvent.HOME:
@@ -593,6 +613,32 @@ public class FileList extends LayoutGroup
                 navigate(NAVIGATE_UP);
                 break;
         }
+    }
+
+    private function this_createHandler():void
+    {
+        _namePopUp = new DirectoryNamePopUp();
+        _namePopUp.title = "Create Directory";
+        _namePopUp.prompt = "Directory name";
+        _namePopUp.addEventListener(NamePopUp.EVENT_OK, namePopUp_okHandler);
+        _namePopUp.addEventListener(NamePopUp.EVENT_CANCEL, namePopUp_cancelHandler);
+        PopUpManager.addPopUp(_namePopUp, true, true);
+    }
+
+    private function namePopUp_okHandler(event:Event, name:String):void
+    {
+        PopUpManager.removePopUp(_namePopUp);
+        var directory:File = _rootDirectory.resolvePath(name);
+        if (!directory.exists)
+        {
+            directory.createDirectory();
+        }
+        refresh();
+    }
+
+    private function namePopUp_cancelHandler(event:Event):void
+    {
+        PopUpManager.removePopUp(_namePopUp);
     }
 
     private function itemRenderer_itemDoubleTapHandler(event:Event):void
@@ -635,4 +681,26 @@ public class FileList extends LayoutGroup
                                   FileListEvent.DIRECTORY_SELECT : FileListEvent.FILE_SELECT, true, file);
     }
 }
+}
+
+import com.teotigraphix.ui.popup.NamePopUp;
+
+import starling.events.Event;
+
+final class DirectoryNamePopUp extends NamePopUp
+{
+
+    public function DirectoryNamePopUp()
+    {
+    }
+
+    override protected function buttonGroup_triggeredHandler(event:Event, data:Object):void
+    {
+        super.buttonGroup_triggeredHandler(event, data);
+    }
+
+    override protected function textInput_changeHandler(event:Event):void
+    {
+
+    }
 }

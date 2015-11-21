@@ -25,8 +25,12 @@ import com.teotigraphix.service.ILogger;
 import flash.events.TimerEvent;
 import flash.utils.Timer;
 
+import org.as3commons.async.operation.ICancelableOperation;
+import org.as3commons.async.operation.event.CancelableOperationEvent;
 import org.as3commons.async.operation.impl.AbstractProgressOperation;
 import org.robotlegs.starling.core.IInjector;
+
+import starling.events.EventDispatcher;
 
 /**
  * An operation that "may" not be async but needs to be treated that way
@@ -34,13 +38,16 @@ import org.robotlegs.starling.core.IInjector;
  *
  * <p>Call #complete() in constructor if there is no async complete/error events.</p>
  */
-public class StepCommand extends AbstractProgressOperation implements IStepCommand
+public class StepCommand extends AbstractProgressOperation implements IStepCommand, ICancelableOperation
 {
     [Inject]
     public var logger:ILogger;
 
     [Inject]
     public var injector:IInjector;
+
+    [Inject]
+    public var eventDispatcher:EventDispatcher;
 
     private var _data:Object;
     private var timer:Timer;
@@ -70,6 +77,24 @@ public class StepCommand extends AbstractProgressOperation implements IStepComma
     public function commit():*
     {
         return null;
+    }
+
+    public function cancel():void
+    {
+        dispatchEvent(new CancelableOperationEvent(CancelableOperationEvent.CANCELED, this));
+    }
+
+    public function addCancelListener(listener:Function,
+                                      useCapture:Boolean = false,
+                                      priority:int = 0,
+                                      useWeakReference:Boolean = false):void
+    {
+        addEventListener(CancelableOperationEvent.CANCELED, listener, useCapture, priority, useWeakReference);
+    }
+
+    public function removeCancelListener(listener:Function, useCapture:Boolean = false):void
+    {
+        removeEventListener(CancelableOperationEvent.CANCELED, listener, useCapture);
     }
 
     protected function complete(result:* = null, delay:Number = 10, repeatCount:int = 1):void
@@ -133,7 +158,7 @@ public class StepCommand extends AbstractProgressOperation implements IStepComma
         timer.stop();
         timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timer_timerCompleteHandler);
         timer = null;
-
+        cleanupComplete();
         dispatchCompleteEvent();
     }
 }

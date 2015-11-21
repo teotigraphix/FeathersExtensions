@@ -75,15 +75,17 @@ public class ThemeProperties
     public function initialize():void
     {
         gridSize = Math.round(88 * theme.scale);
-        smallGutterSize = Math.round(11 * theme.scale);
         gutterSize = Math.round(22 * theme.scale);
+        smallGutterSize = Math.round(11 * theme.scale);
+
         controlSize = Math.round(58 * theme.scale);
         smallControlSize = Math.round(22 * theme.scale);
+        wideControlSize = gridSize * 3 + gutterSize * 2;
+
+
         popUpFillSize = Math.round(552 * theme.scale);
         calloutBackgroundMinSize = Math.round(11 * theme.scale);
         scrollBarGutterSize = Math.round(4 * theme.scale);
-        wideControlSize = gridSize * 3 + gutterSize * 2;
-
-    }
+     }
 }
 }

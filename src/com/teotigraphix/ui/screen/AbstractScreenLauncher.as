@@ -20,6 +20,8 @@ package com.teotigraphix.ui.screen
 {
 
 import com.teotigraphix.controller.AbstractController;
+import com.teotigraphix.core.sdk_internal;
+import com.teotigraphix.service.async.StepSequence;
 import com.teotigraphix.ui.IScreenNavigator;
 import com.teotigraphix.ui.IScreenProvider;
 
@@ -72,24 +74,6 @@ public class AbstractScreenLauncher extends AbstractController
         configure(_navigator);
     }
 
-    /**
-     * Sets the current screenID for the application and passes the optional screen data to be
-     * set int he IScreenProvider.
-     *
-     * @param screenID The String screenID.
-     * @param data The optional screen data.
-     */
-    public function setApplicationScreen(screenID:String, data:*):void
-    {
-        setInternalScreenID(screenID);
-
-        _screenProvider.push(data);
-
-        var screen:IScreen = IScreen(_navigator.pushScreen(_applicationScreenID));
-
-        //dispatchWith(ApplicationModelEventType.APPLICATION_SCREEN_CHANGE, false, data);
-    }
-
     public function backTo(screenID:String):void
     {
         for (var i:int = 0; i < 10; i++)
@@ -108,11 +92,20 @@ public class AbstractScreenLauncher extends AbstractController
 
     public function back():void
     {
-        _screenProvider.pop();
+        if (_screenProvider.isEmpty)
+        {
+            var sequence:StepSequence = new StepSequence();
+            sequence.addCommand(injector.instantiate(ShowAlertExitStep));
+            sequence.execute();
+        }
+        else
+        {
+            _screenProvider.pop();
 
-        var lastScreen:IScreen = IScreen(_navigator.popScreen());
+            var lastScreen:IScreen = IScreen(_navigator.popScreen());
 
-        setInternalScreenID(_navigator.activeScreenID);
+            setInternalScreenID(_navigator.activeScreenID);
+        }
     }
 
     protected function configure(navigator:IScreenNavigator):void
@@ -125,7 +118,10 @@ public class AbstractScreenLauncher extends AbstractController
                               popEvent:String = null,
                               properties:Object = null):StackScreenNavigatorItem
     {
-        _mediatorMap.mapView(screen, mediatorClass);
+        if (mediatorClass != null)
+        {
+            _mediatorMap.mapView(screen, mediatorClass);
+        }
 
         var item:StackScreenNavigatorItem = new StackScreenNavigatorItem(screen, pushEvents, popEvent, properties);
         return item;
@@ -140,5 +136,58 @@ public class AbstractScreenLauncher extends AbstractController
     {
         _applicationScreenID = screenID;
     }
+
+    /**
+     * Sets the current screenID for the application and passes the optional screen data to be
+     * set int he IScreenProvider.
+     *
+     * @param screenID The String screenID.
+     * @param data The optional screen data.
+     */
+    sdk_internal function setApplicationScreen(screenID:String, data:*):IScreen
+    {
+        setInternalScreenID(screenID);
+
+        _screenProvider.push(data);
+
+        var screen:IScreen = IScreen(_navigator.pushScreen(_applicationScreenID));
+        injector.injectInto(screen);
+
+        //dispatchWith(ApplicationModelEventType.APPLICATION_SCREEN_CHANGE, false, data);
+        return screen;
+    }
 }
+}
+
+import com.teotigraphix.service.async.StepCommand;
+
+import feathers.controls.Alert;
+import feathers.data.ListCollection;
+
+import flash.desktop.NativeApplication;
+
+import starling.events.Event;
+
+final class ShowAlertExitStep extends StepCommand
+{
+
+    override public function execute():*
+    {
+        var alert:Alert = Alert.show("Are you sure you want to exit application?",
+                                     "Exit Caustic Guide",
+                                     new ListCollection([
+                                         {label: "Yes"}, {label: "No"}
+                                     ]));
+        alert.addEventListener(Event.CLOSE, alert_closeHandler);
+        return super.execute();
+    }
+
+    private function alert_closeHandler(event:Event):void
+    {
+        if (event.data.label == "Yes")
+        {
+            NativeApplication.nativeApplication.exit();
+        }
+        complete();
+    }
 }

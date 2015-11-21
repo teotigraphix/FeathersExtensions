@@ -16,17 +16,13 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.ui
+package com.teotigraphix.controller.command
 {
 
-public interface IScreenProvider
+public class AbstractAction extends AbstractCommand
 {
-    function get data():*;
-
-    function get isEmpty():Boolean;
-
-    function push(data:*):void;
-
-    function pop():void;
+    public function AbstractAction()
+    {
+    }
 }
 }

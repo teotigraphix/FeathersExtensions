@@ -149,8 +149,6 @@ import flash.filesystem.File;
 import org.as3commons.async.command.IAsyncCommand;
 import org.as3commons.async.operation.event.OperationEvent;
 
-import starling.events.EventDispatcher;
-
 class CreateProjectCommand extends StepCommand implements IAsyncCommand
 {
     [Inject]
@@ -289,9 +287,6 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
 
 class SaveProjectCommand extends StepCommand implements IAsyncCommand
 {
-    [Inject]
-    public var eventDispatcher:EventDispatcher;
-
     [Inject]
     public var fileService:IFileService;
 

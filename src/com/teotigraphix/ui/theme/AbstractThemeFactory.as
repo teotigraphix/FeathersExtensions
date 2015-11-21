@@ -21,7 +21,13 @@ package com.teotigraphix.ui.theme
 {
 
 import feathers.controls.SimpleScrollBar;
+import feathers.display.Scale9Image;
+import feathers.textures.Scale9Textures;
 
+import flash.geom.Rectangle;
+
+import starling.display.Image;
+import starling.textures.Texture;
 import starling.textures.TextureAtlas;
 
 public class AbstractThemeFactory
@@ -95,6 +101,11 @@ public class AbstractThemeFactory
         }
     }
 
+    public static function createScale9Textures(name:String, rectangle:Rectangle):Scale9Textures
+    {
+        return AssetMap.createScale9Textures(name, rectangle);
+    }
+
     protected static function scrollBarFactory():SimpleScrollBar
     {
         return new SimpleScrollBar();
@@ -105,5 +116,24 @@ public class AbstractThemeFactory
         return AssetMap.size(dimension);
     }
 
+    protected static function createScaledImage(name:String):Image
+    {
+        return AssetMap.createScaledImage(name);
+    }
+
+    protected static function createImage(name:String):Image
+    {
+        return AssetMap.createImage(name);
+    }
+
+    protected static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int):Scale9Image
+    {
+        return AssetMap.create9ScaleImage(name, x, y, width, height);
+    }
+
+    protected static function getTexture(name:String):Texture
+    {
+        return AssetMap.getTexture(name);
+    }
 }
 }

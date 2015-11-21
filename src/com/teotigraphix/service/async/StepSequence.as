@@ -46,11 +46,6 @@ public class StepSequence extends CompositeCommand implements IStepSequence, ISt
         this.data = data;
     }
 
-    protected function super_addCommand(command:ICommand):ICompositeCommand
-    {
-        return super.addCommand(command);
-    }
-
     override public function addCommand(command:ICommand):ICompositeCommand
     {
         super.addCommand(command);
@@ -69,6 +64,11 @@ public class StepSequence extends CompositeCommand implements IStepSequence, ISt
         }
 
         return result;
+    }
+
+    protected function super_addCommand(command:ICommand):ICompositeCommand
+    {
+        return super.addCommand(command);
     }
 }
 }

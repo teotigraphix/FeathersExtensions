@@ -85,21 +85,21 @@ public class FileListFactory extends AbstractThemeFactory
         list.showFiles = true;
         //list.iconFunction = iconFunction;
 
-        list.homeButton.defaultIcon = AssetMap.createImage("filesystem_folder_home2");
+        list.homeButton.defaultIcon = AssetMap.createScaledImage("filesystem_folder_home2");
 
-        list.upButton.defaultIcon = AssetMap.createImage("action_up");
-        list.upButton.disabledIcon = AssetMap.createImage("action_up_disabled");
+        list.upButton.defaultIcon = AssetMap.createScaledImage("action_up");
+        list.upButton.disabledIcon = AssetMap.createScaledImage("action_up_disabled");
 
-        list.backButton.defaultIcon = AssetMap.createImage("action_back");
-        list.backButton.disabledIcon = AssetMap.createImage("action_back_disabled");
+        list.backButton.defaultIcon = AssetMap.createScaledImage("action_back");
+        list.backButton.disabledIcon = AssetMap.createScaledImage("action_back_disabled");
 
-        list.nextButton.defaultIcon = AssetMap.createImage("action_forward");
-        list.nextButton.disabledIcon = AssetMap.createImage("action_forward_disabled");
+        list.nextButton.defaultIcon = AssetMap.createScaledImage("action_forward");
+        list.nextButton.disabledIcon = AssetMap.createScaledImage("action_forward_disabled");
 
-        list.createButton.defaultIcon = AssetMap.createImage("filesystem_folder_create");
-        list.createButton.disabledIcon = AssetMap.createImage("filesystem_folder_create_disabled");
+        list.createButton.defaultIcon = AssetMap.createScaledImage("filesystem_folder_create");
+        list.createButton.disabledIcon = AssetMap.createScaledImage("filesystem_folder_create_disabled");
 
-        list.refreshButton.defaultIcon = AssetMap.createImage("quick_restart");
+        list.refreshButton.defaultIcon = AssetMap.createScaledImage("quick_restart");
 
         sizeFileListIcon(list.homeButton.defaultIcon);
 
