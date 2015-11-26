@@ -699,8 +699,4 @@ final class DirectoryNamePopUp extends NamePopUp
         super.buttonGroup_triggeredHandler(event, data);
     }
 
-    override protected function textInput_changeHandler(event:Event):void
-    {
-
-    }
 }

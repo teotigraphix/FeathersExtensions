@@ -90,7 +90,7 @@ public class NamePopUp extends Panel
 
         _buttonGroup = new ButtonGroup();
         _buttonGroup.direction = ButtonGroup.DIRECTION_HORIZONTAL;
-        _buttonGroup.dataProvider = new ListCollection([{label: "OK", isEnabled:false}, {label: "Cancel"}]);
+        _buttonGroup.dataProvider = new ListCollection([{label: "OK", isEnabled: false}, {label: "Cancel"}]);
         _buttonGroup.addEventListener(Event.TRIGGERED, buttonGroup_triggeredHandler);
 
         footerFactory = function ():Header
@@ -128,9 +128,8 @@ public class NamePopUp extends Panel
     protected function textInput_changeHandler(event:Event):void
     {
         var dp:ListCollection = _buttonGroup.dataProvider;
-        _buttonGroup.dataProvider.getItemAt(0).isEnabled = (_text != null && _text != "");
-        _buttonGroup.dataProvider.updateItemAt(0);
-        _buttonGroup.dataProvider = dp;
+        _buttonGroup.dataProvider.getItemAt(0).isEnabled = (_textInput.text != null && _textInput.text != "");
+        _buttonGroup.dataProvider.dispatchEventWith(Event.CHANGE);
     }
 }
 }

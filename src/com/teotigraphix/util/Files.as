@@ -52,6 +52,9 @@ public final class Files
                     files[files.length] = current;
             }
 
+            directories = directories.sortOn("name");
+            files = files.sortOn("name");
+
             for (var j:int = 0; j < directories.length; j++)
             {
                 result[result.length] = directories[j];
@@ -85,6 +88,9 @@ public final class Files
             if (file.isDirectory)
                 r.push(file);
         }
+
+        r = sort(r, true);
+
         return r;
     }
 

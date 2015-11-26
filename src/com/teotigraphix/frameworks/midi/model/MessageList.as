@@ -43,7 +43,7 @@ public dynamic class MessageList extends Array
      */
     public function output():MidiTrack
     {
-        var mt:MidiTrack = new MidiTrack();
+        var mt:MidiTrack = new MidiTrack(null);
         mt.messages = this.clone();
         return mt;
     }

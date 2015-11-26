@@ -19,6 +19,7 @@
 package com.teotigraphix.frameworks.midi
 {
 
+import com.teotigraphix.frameworks.midi.model.MessageList;
 import com.teotigraphix.frameworks.midi.model.NoteItem;
 
 public class MIDITrackInfo
@@ -108,6 +109,8 @@ public class MIDITrackInfo
     public function MIDITrackInfo(midiFile:MidiFile, track:MidiTrack)
     {
         _track = track;
+        if (_track == null)
+            return;
 
         for each (var note:NoteItem in noteItems)
         {
@@ -118,13 +121,28 @@ public class MIDITrackInfo
             var duration:Number = 0;
             var end:Number = 0;
 
-            start = tick / midiFile.division;
+            start = tick / midiFile.division; // 960
             duration = note.duration / midiFile.division;
             end = start + duration;
 
             addNote(_track.channel, start, end, note.pitch, note.velocity / 127);
         }
     }
+
+    //public function createFrom(notes:Vector.<MIDINoteInfo>):MidiTrack
+    //{
+    //    var track:MidiTrack = new MidiTrack(this);
+    //    track.messages = new MessageList();
+    //
+    //    for each (var note:MIDINoteInfo in notes)
+    //    {
+    //        var noteItem:NoteItem = new NoteItem(0, note.pitch, note.velocity * 127, 960 * (note.end - note.start));
+    //        noteItem.timeline = 960 * note.start;
+    //        track.messages.push(noteItem);
+    //    }
+    //
+    //    return track;
+    //}
 
     //--------------------------------------------------------------------------
     // Private :: Methods

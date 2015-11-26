@@ -51,6 +51,7 @@ public class MidiTrack
      */
     private static const MTrk:int = 0x4D54726B; //[ 0x4D , 0x54 , 0x72 , 0x6B ];
 
+    private var _midiFile:MidiFile;
     private var _size:uint;
     private var _channel:uint;
     private var _patch:uint;
@@ -60,6 +61,11 @@ public class MidiTrack
      * stores midi events as message list, contents each note with a duration value, that is editable convenience.
      */
     private var _messages:MessageList;
+
+    public function get midiFile():MidiFile
+    {
+        return _midiFile;
+    }
 
     public function get name():String
     {
@@ -171,8 +177,10 @@ public class MidiTrack
      * @param stream A track data comes from midi file.
      * Creates empty midi track when this param is null by default.
      */
-    public function MidiTrack(stream:ByteArray = null):void
+    public function MidiTrack(midiFile:MidiFile, stream:ByteArray = null):void
     {
+        _midiFile = midiFile;
+
         if (stream == null)
         {
             _messages = new MessageList();

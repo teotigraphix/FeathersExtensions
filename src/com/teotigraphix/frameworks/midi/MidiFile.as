@@ -52,7 +52,7 @@ public class MidiFile
      * 0x0000=sigle;  0x0001=multi syn; 0x0002=multi asyn;
      * Indicates the track format of midi
      */
-    private var _format:uint;
+    private var _format:uint; // 1
 
     /**
      * 16bits
@@ -64,7 +64,7 @@ public class MidiFile
      * 16bits
      * Ticks per minute
      */
-    private var _division:uint;
+    private var _division:uint; // 960
 
     /**
      * Main track in midi file
@@ -175,7 +175,7 @@ public class MidiFile
         for (var i:uint = 0; i < _trackCount; i++)
         {
             //unserialize a track data
-            track = new MidiTrack(fileStream);
+            track = new MidiTrack(this, fileStream);
             _tracks[i] = track;
         }
 
@@ -184,7 +184,7 @@ public class MidiFile
         {
             _format = 1;
             //points the main track
-            _mainTrack = new MidiTrack();
+            _mainTrack = new MidiTrack(this, fileStream);
             var tempArray:Array = [];
             var channels:Array = [];
 
@@ -224,7 +224,7 @@ public class MidiFile
             {
                 if (tempArray[i])
                 {
-                    track = new MidiTrack();
+                    track = new MidiTrack(this);
                     track.messages = tempArray[i];
                     _tracks.push(track);
                 }
@@ -290,7 +290,7 @@ public class MidiFile
 
         if (null == track)
         {
-            return addTrack(new MidiTrack());
+            return addTrack(new MidiTrack(this));
         }
         else
         {
@@ -394,7 +394,7 @@ public class MidiFile
         }
         if (null == track)
         {
-            return insertTrack(t, new MidiTrack());
+            return insertTrack(t, new MidiTrack(this));
         }
         else
         {
