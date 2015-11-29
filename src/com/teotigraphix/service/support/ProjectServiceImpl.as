@@ -300,22 +300,12 @@ class SaveProjectCommand extends StepCommand implements IAsyncCommand
     {
     }
 
-    override protected function checkComplete():Boolean
-    {
-        return projectModel.projectFile.exists;
-    }
-
-    override protected function cleanupComplete():void
-    {
-        super.cleanupComplete();
-        eventDispatcher.dispatchEventWith(ProjectModelEventType.PROJECT_SAVE_COMPLETE, false, projectModel.project);
-        logger.log("SaveProjectCommand", "Save project " + projectModel.projectFile.nativePath);
-    }
-
     override public function execute():*
     {
+        logger.log("SaveProjectCommand", "Save project " + projectModel.projectFile.nativePath);
         ProjectServiceImpl(projectService).sdk_internal::save();
-        monitorForComplete(projectModel.project, 300, 10);
+        eventDispatcher.dispatchEventWith(ProjectModelEventType.PROJECT_SAVE_COMPLETE, false, projectModel.project);
+        complete(null, 200);
         return null;
     }
 }

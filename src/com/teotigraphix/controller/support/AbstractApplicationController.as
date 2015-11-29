@@ -50,7 +50,14 @@ public class AbstractApplicationController extends AbstractController
     {
         super.onRegister();
 
+        logger.startup("AbstractApplicationController", "onRegister()");
+
         addContextListener(ApplicationEventType.PROJECT_CHANGED, context_projectChanged);
+        addContextListener(ApplicationEventType.APPLICATION_COMPLETE, context_appCompleteHandler);
+    }
+
+    private function context_appCompleteHandler(event:Event):void
+    {
     }
 
     protected final function addListener(listener:Object):void
@@ -63,8 +70,10 @@ public class AbstractApplicationController extends AbstractController
         _listeners.removeItem(listener);
     }
 
-    private function context_projectChanged(event:Event, project:Project):void
+    protected function context_projectChanged(event:Event, project:Project):void
     {
+        logger.startup("AbstractApplicationController", "context_projectChanged()");
+
         var i:int;
         var listener:Object;
         const len:int = _listeners.length;

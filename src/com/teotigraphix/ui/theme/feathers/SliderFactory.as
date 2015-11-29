@@ -141,7 +141,7 @@ public class SliderFactory extends AbstractThemeFactory
         track.hasLabelTextRenderer = false;
     }
 
-    protected function setSliderStyles(slider:Slider):void
+    public function setSliderStyles(slider:Slider):void
     {
         slider.trackLayoutMode = Slider.TRACK_LAYOUT_MODE_MIN_MAX;
         if (slider.direction == Slider.DIRECTION_VERTICAL)

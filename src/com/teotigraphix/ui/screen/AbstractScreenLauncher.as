@@ -22,15 +22,18 @@ package com.teotigraphix.ui.screen
 import com.teotigraphix.controller.AbstractController;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.async.StepSequence;
+import com.teotigraphix.ui.IScreenLauncher;
 import com.teotigraphix.ui.IScreenNavigator;
 import com.teotigraphix.ui.IScreenProvider;
+import com.teotigraphix.ui.component.file.FileListData;
+import com.teotigraphix.ui.screen.data.AlertScreenData;
 
 import feathers.controls.IScreen;
 import feathers.controls.StackScreenNavigatorItem;
 
 import org.robotlegs.starling.core.IMediatorMap;
 
-public class AbstractScreenLauncher extends AbstractController
+public class AbstractScreenLauncher extends AbstractController implements IScreenLauncher
 {
     //--------------------------------------------------------------------------
     // Private :: Inject
@@ -71,6 +74,7 @@ public class AbstractScreenLauncher extends AbstractController
     override protected function onRegister():void
     {
         super.onRegister();
+        configureFramework(_navigator);
         configure(_navigator);
     }
 
@@ -106,6 +110,31 @@ public class AbstractScreenLauncher extends AbstractController
 
             setInternalScreenID(_navigator.activeScreenID);
         }
+    }
+
+    public function goToAlert(message:String, title:String):AlertScreen
+    {
+        var screen:AlertScreen = AlertScreen(
+                sdk_internal::setApplicationScreen(FrameworkScreens.ALERT, null));
+        screen.data = new AlertScreenData(message, title);
+        return screen;
+    }
+
+    public function goToFileExplorer(data:FileListData):FileExplorerScreen
+    {
+        var screen:FileExplorerScreen = FileExplorerScreen(
+                sdk_internal::setApplicationScreen(FrameworkScreens.FILE_EXPLORER, data));
+        screen.data = data;
+        return screen;
+    }
+
+    protected function configureFramework(navigator:IScreenNavigator):void
+    {
+        navigator.addScreen(FrameworkScreens.ALERT,
+                            create(AlertScreen, null));
+
+        navigator.addScreen(FrameworkScreens.FILE_EXPLORER,
+                            create(FileExplorerScreen, null));
     }
 
     protected function configure(navigator:IScreenNavigator):void
@@ -146,6 +175,9 @@ public class AbstractScreenLauncher extends AbstractController
      */
     sdk_internal function setApplicationScreen(screenID:String, data:*):IScreen
     {
+        if (_applicationScreenID == screenID)
+            return null;
+
         setInternalScreenID(screenID);
 
         _screenProvider.push(data);

@@ -53,6 +53,7 @@ import com.teotigraphix.ui.theme.feathers.TextInputFactory;
 import com.teotigraphix.ui.theme.feathers.ToggleButtonFactory;
 import com.teotigraphix.ui.theme.feathers.ToggleSwitchFactory;
 import com.teotigraphix.ui.theme.framework.FormLabelFactory;
+import com.teotigraphix.ui.theme.framework.FrameworkDefaultsFactory;
 import com.teotigraphix.ui.theme.framework.GridGroupFactory;
 import com.teotigraphix.ui.theme.framework.LedFactory;
 import com.teotigraphix.ui.theme.framework.ToastFactory;
@@ -105,6 +106,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
     public var toggleSwitch:ToggleSwitchFactory;
 
     // Framework
+    public var framework:FrameworkDefaultsFactory;
     public var led:LedFactory;
     public var gridGroup:GridGroupFactory;
     public var toast:ToastFactory;
@@ -221,6 +223,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         toggleSwitch = new ToggleSwitchFactory(this);
 
         // Framework
+        framework = new FrameworkDefaultsFactory(this);
         led = new LedFactory(this);
         toast = new ToastFactory(this);
         gridGroup = new GridGroupFactory(this);
@@ -265,6 +268,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         _factories.push(toggleSwitch);
 
         // Framework
+        _factories.push(framework);
         _factories.push(led);
         _factories.push(gridGroup);
         _factories.push(toast);

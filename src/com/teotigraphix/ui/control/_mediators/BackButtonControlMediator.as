@@ -16,49 +16,47 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.model
+package com.teotigraphix.ui.control._mediators
 {
 
-import com.teotigraphix.service.ILogger;
+import com.teotigraphix.ui.IScreenLauncher;
+import com.teotigraphix.ui.control.*;
+import com.teotigraphix.ui.mediator.AbstractMediator;
 
-import flash.events.Event;
-import flash.events.IEventDispatcher;
+import starling.events.Event;
 
-import org.robotlegs.starling.core.IInjector;
-import org.robotlegs.starling.mvcs.Actor;
-
-import starling.events.EventDispatcher;
-
-public class AbstractModel extends Actor
+public class BackButtonControlMediator extends AbstractMediator
 {
     [Inject]
-    public var logger:ILogger;
+    public var control:BackButtonControl;
 
     [Inject]
-    public var injector:IInjector;
+    public var screenLauncher:IScreenLauncher;
 
-    [Inject]
-    public var flashDispatcher:IEventDispatcher;
-
-    [Inject]
-    override public function set eventDispatcher(value:EventDispatcher):void
+    public function BackButtonControlMediator()
     {
-        super.eventDispatcher = value;
-        onRegister();
     }
 
-    override protected function dispatchWith(type:String, bubbles:Boolean = false, data:Object = null):void
+    override public function onRegister():void
     {
-        super.dispatchWith(type, bubbles, data);
-        flashDispatcher.dispatchEvent(new Event(type, bubbles));
+        super.onRegister();
+
+        addViewListener(Event.TRIGGERED, view_triggeredHandler);
     }
 
-    /**
-     * Register context events with the #eventMap.
-     */
-    protected function onRegister():void
+    override public function onRemove():void
     {
+        super.onRemove();
+    }
+
+    override protected function onOrientationChange(isLandscape:Boolean, isTablet:Boolean):void
+    {
+        super.onOrientationChange(isLandscape, isTablet);
+    }
+
+    private function view_triggeredHandler(event:Event):void
+    {
+        screenLauncher.back();
     }
 }
 }

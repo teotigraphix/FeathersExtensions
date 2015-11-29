@@ -160,7 +160,7 @@ public final class Files
                             result[result.length] = file;
                             break;
                         }
-                        else if (file.extension != null && file.extension.lastIndexOf(filter[j]) != -1)
+                        else if (file.extension != null && file.extension == filter[j])
                         {
                             result[result.length] = file;
                             break;

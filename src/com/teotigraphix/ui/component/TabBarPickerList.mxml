@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2015 Michael Schmalle - Teoti Graphix, LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License
+//
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+-->
+<f:LayoutGroup xmlns:f="library://ns.feathersui.com/mxml"
+               xmlns:fx="http://ns.adobe.com/mxml/2009">
+
+    <fx:Metadata>
+        [Event(name="change", type="starling.events.Event")]
+    </fx:Metadata>
+
+    <f:layout>
+        <f:HorizontalLayout/>
+    </f:layout>
+
+    <f:TabBar id="tabBar"
+              change="this_changeHandler()">
+        <f:layoutData>
+            <f:HorizontalLayoutData percentWidth="100"/>
+        </f:layoutData>
+    </f:TabBar>
+
+    <f:PickerList id="pickerList"
+                  change="this_changeHandler()">
+        <f:layoutData>
+            <f:HorizontalLayoutData percentWidth="100"/>
+        </f:layoutData>
+    </f:PickerList>
+
+    <fx:Script><![CDATA[
+        import feathers.data.ListCollection;
+        import feathers.skins.IStyleProvider;
+
+        import starling.events.Event;
+
+        public static var globalStyleProvider:IStyleProvider;
+
+        override protected function get defaultStyleProvider():IStyleProvider
+        {
+            return TabBarPickerList.globalStyleProvider;
+        }
+
+        private var _isLandscape:Boolean;
+        private var _dataProvider:ListCollection;
+        private var _selectedIndex:int = -1;
+        private var _selectedItem:Object;
+
+        //----------------------------------
+        // selectedIndex
+        //----------------------------------
+
+        public function get selectedIndex():int
+        {
+            return _selectedIndex;
+        }
+
+        public function set selectedIndex(value:int):void
+        {
+            if (_selectedIndex == value)
+                return;
+            _selectedIndex = value;
+            invalidate("selectedIndex");
+        }
+
+        //----------------------------------
+        // selectedItem
+        //----------------------------------
+
+        public function get selectedItem():Object
+        {
+            return _selectedItem;
+        }
+
+        public function set selectedItem(value:Object):void
+        {
+            if (_selectedItem == value)
+                return;
+            _selectedItem = value;
+            invalidate("selectedItem");
+        }
+
+        //----------------------------------
+        // dataProvider
+        //----------------------------------
+
+        public function get dataProvider():ListCollection
+        {
+            return _dataProvider;
+        }
+
+        public function set dataProvider(value:ListCollection):void
+        {
+            _dataProvider = value;
+            invalidate("dataProvider");
+        }
+
+        //----------------------------------
+        // isLandscape
+        //----------------------------------
+
+        public function get isLandscape():Boolean
+        {
+            return _isLandscape;
+        }
+
+        public function set isLandscape(value:Boolean):void
+        {
+            _isLandscape = value;
+            invalidate("landscape");
+            invalidate("selectedIndex");
+            invalidate("selectedItem");
+        }
+
+        override protected function draw():void
+        {
+            super.draw();
+
+            if (isInvalid("landscape"))
+            {
+                tabBar.includeInLayout = tabBar.visible = _isLandscape;
+                pickerList.includeInLayout = pickerList.visible = !_isLandscape;
+            }
+
+            if (isInvalid("dataProvider"))
+            {
+                tabBar.dataProvider = _dataProvider;
+                pickerList.dataProvider = _dataProvider;
+            }
+
+            if (isInvalid("selectedIndex"))
+            {
+                tabBar.selectedIndex = _selectedIndex;
+                pickerList.selectedIndex = _selectedIndex;
+            }
+
+            if (isInvalid("selectedItem"))
+            {
+                tabBar.selectedItem = _selectedItem;
+                pickerList.selectedItem = _selectedItem;
+            }
+        }
+
+        private function this_changeHandler():void
+        {
+            if (_isValidating)
+                return;
+
+            _selectedIndex = _isLandscape ? tabBar.selectedIndex : pickerList.selectedIndex;
+            _selectedItem = _isLandscape ? tabBar.selectedItem : pickerList.selectedItem;
+            dispatchEventWith(starling.events.Event.CHANGE, false,
+                              _isLandscape ? tabBar.selectedItem : pickerList.selectedItem);
+        }
+        ]]></fx:Script>
+
+</f:LayoutGroup>
