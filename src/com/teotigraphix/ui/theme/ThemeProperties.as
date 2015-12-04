@@ -26,6 +26,10 @@ public class ThemeProperties
 {
     public static const DEFAULT_SCALE9_GRID:Rectangle = new Rectangle(5, 5, 22, 22);
 
+    public static var gap:Number;
+    public static var gapx2:Number;
+    public static var padding:Number;
+
     public var scale:Number;
 
     /**
@@ -64,7 +68,7 @@ public class ThemeProperties
     public var popUpFillSize:int;
     public var calloutBackgroundMinSize:int;
     public var scrollBarGutterSize:int;
-    
+
     private var theme:AbstractTheme;
 
     public function ThemeProperties(theme:AbstractTheme)
@@ -74,6 +78,10 @@ public class ThemeProperties
 
     public function initialize():void
     {
+        gap = Math.round(6 * theme.scale);
+        gapx2 = Math.round(11 * theme.scale);
+        padding = Math.round(11 * theme.scale);
+
         gridSize = Math.round(88 * theme.scale);
         gutterSize = Math.round(22 * theme.scale);
         smallGutterSize = Math.round(11 * theme.scale);
@@ -82,10 +90,9 @@ public class ThemeProperties
         smallControlSize = Math.round(22 * theme.scale);
         wideControlSize = gridSize * 3 + gutterSize * 2;
 
-
         popUpFillSize = Math.round(552 * theme.scale);
         calloutBackgroundMinSize = Math.round(11 * theme.scale);
         scrollBarGutterSize = Math.round(4 * theme.scale);
-     }
+    }
 }
 }

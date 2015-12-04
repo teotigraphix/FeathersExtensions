@@ -24,7 +24,10 @@ import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.support.FileServiceImpl;
 import com.teotigraphix.service.support.LoggerImpl;
+import com.teotigraphix.ui.IScreenLauncher;
 import com.teotigraphix.ui.IScreenProvider;
+import com.teotigraphix.ui.screen.AbstractScreenLauncher;
+import com.teotigraphix.ui.screen.NullScreenLauncher;
 import com.teotigraphix.ui.screen.ScreenProviderImpl;
 
 import flash.errors.IllegalOperationError;
@@ -120,7 +123,7 @@ public class FrameworkContext extends Context
         injector.mapSingletonOf(ILogger, LoggerImpl);
         injector.mapSingletonOf(IFileService, FileServiceImpl);
         injector.mapSingletonOf(IScreenProvider, ScreenProviderImpl);
-
+        injector.mapSingletonOf(IScreenLauncher, NullScreenLauncher);
     }
 
     protected function configureApplication():void

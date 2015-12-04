@@ -33,6 +33,7 @@ import starling.textures.TextureAtlas;
 
 public final class AssetMap
 {
+
     public static var atlas:TextureAtlas;
 
     public static var scale:Number;
@@ -42,6 +43,7 @@ public final class AssetMap
     private static var _textures:Dictionary = new Dictionary();
 
     private static var _scale9Textures:Dictionary = new Dictionary();
+
     //
     //public static function getDebugBackgroundImage():Scale9Image
     //{
@@ -61,7 +63,6 @@ public final class AssetMap
         image.scaleX = image.scaleY = AssetMap.scale;
         return image;
     }
-
 
     public static function createScale9Textures(name:String, rectangle:Rectangle):Scale9Textures
     {

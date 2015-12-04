@@ -16,32 +16,34 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.controller
+package com.teotigraphix.ui.screen
 {
 
-import com.teotigraphix.frameworks.project.Project;
+import com.teotigraphix.ui.IScreenLauncher;
+import com.teotigraphix.ui.component.file.FileListData;
 
-/**
- * @see com.teotigraphix.controller.impl.AbstractApplicationController
- */
-public interface IProjectChangeListener
+public class NullScreenLauncher implements IScreenLauncher
 {
-    /**
-     * Called when a Project changes in the IProjectModel.
-     *
-     * @param project The new Project with IProjectState.
-     * @param old The old Project.
-     * @see com.teotigraphix.app.event.ApplicationEventType.PROJECT_CHANGED
-     */
-    function projectChanged(project:Project, old:Project):void;
+    public function NullScreenLauncher()
+    {
+    }
 
-    /**
-     * Safe for models to access full application state, #projectChanged() has been called on
-     * all listeners.
-     *
-     * @param project the current project.
-     */
-    function projectChangeComplete(project:Project):void;
+    public function goToAlert(message:String, title:String):AlertScreen
+    {
+        return null;
+    }
+
+    public function goToFileExplorer(data:FileListData):FileExplorerScreen
+    {
+        return null;
+    }
+
+    public function backTo(screenID:String):void
+    {
+    }
+
+    public function back():void
+    {
+    }
 }
 }

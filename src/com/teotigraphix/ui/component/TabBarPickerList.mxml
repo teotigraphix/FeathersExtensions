@@ -24,6 +24,8 @@
 
     <fx:Metadata>
         [Event(name="change", type="starling.events.Event")]
+        [Event(name="open", type="starling.events.Event")]
+        [Event(name="close", type="starling.events.Event")]
     </fx:Metadata>
 
     <f:layout>
@@ -31,6 +33,7 @@
     </f:layout>
 
     <f:TabBar id="tabBar"
+              styleName="{tabBarStyleName}"
               change="this_changeHandler()">
         <f:layoutData>
             <f:HorizontalLayoutData percentWidth="100"/>
@@ -38,6 +41,8 @@
     </f:TabBar>
 
     <f:PickerList id="pickerList"
+                  open="pickerList_openHandler()"
+                  close="pickerList_closeHandler()"
                   change="this_changeHandler()">
         <f:layoutData>
             <f:HorizontalLayoutData percentWidth="100"/>
@@ -56,6 +61,9 @@
         {
             return TabBarPickerList.globalStyleProvider;
         }
+
+        [Bindable]
+        public var tabBarStyleName:String;
 
         private var _isLandscape:Boolean;
         private var _dataProvider:ListCollection;
@@ -166,6 +174,16 @@
             _selectedItem = _isLandscape ? tabBar.selectedItem : pickerList.selectedItem;
             dispatchEventWith(starling.events.Event.CHANGE, false,
                               _isLandscape ? tabBar.selectedItem : pickerList.selectedItem);
+        }
+
+        private function pickerList_openHandler():void
+        {
+            dispatchEventWith(starling.events.Event.OPEN);
+        }
+
+        private function pickerList_closeHandler():void
+        {
+            dispatchEventWith(starling.events.Event.CLOSE);
         }
         ]]></fx:Script>
 

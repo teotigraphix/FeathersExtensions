@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.controller
+package com.teotigraphix.controller.impl
 {
 
 import com.teotigraphix.service.ILogger;

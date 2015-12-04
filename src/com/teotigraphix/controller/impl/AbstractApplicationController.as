@@ -17,11 +17,11 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.controller.support
+package com.teotigraphix.controller.impl
 {
 
 import com.teotigraphix.app.event.ApplicationEventType;
-import com.teotigraphix.controller.AbstractController;
+import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.controller.IProjectChangeListener;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IDeviceModel;

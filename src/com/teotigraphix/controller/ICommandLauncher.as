@@ -16,32 +16,11 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
 package com.teotigraphix.controller
 {
 
-import com.teotigraphix.frameworks.project.Project;
-
-/**
- * @see com.teotigraphix.controller.impl.AbstractApplicationController
- */
-public interface IProjectChangeListener
+public interface ICommandLauncher
 {
-    /**
-     * Called when a Project changes in the IProjectModel.
-     *
-     * @param project The new Project with IProjectState.
-     * @param old The old Project.
-     * @see com.teotigraphix.app.event.ApplicationEventType.PROJECT_CHANGED
-     */
-    function projectChanged(project:Project, old:Project):void;
 
-    /**
-     * Safe for models to access full application state, #projectChanged() has been called on
-     * all listeners.
-     *
-     * @param project the current project.
-     */
-    function projectChangeComplete(project:Project):void;
 }
 }

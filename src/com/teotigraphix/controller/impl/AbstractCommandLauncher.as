@@ -16,32 +16,40 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.controller
+package com.teotigraphix.controller.impl
 {
 
-import com.teotigraphix.frameworks.project.Project;
+import com.teotigraphix.controller.*;
 
-/**
- * @see com.teotigraphix.controller.impl.AbstractApplicationController
- */
-public interface IProjectChangeListener
+import org.robotlegs.starling.core.ICommandMap;
+
+public class AbstractCommandLauncher extends AbstractController implements ICommandLauncher
 {
-    /**
-     * Called when a Project changes in the IProjectModel.
-     *
-     * @param project The new Project with IProjectState.
-     * @param old The old Project.
-     * @see com.teotigraphix.app.event.ApplicationEventType.PROJECT_CHANGED
-     */
-    function projectChanged(project:Project, old:Project):void;
+    [Inject]
+    public var commandMap:ICommandMap;
 
-    /**
-     * Safe for models to access full application state, #projectChanged() has been called on
-     * all listeners.
-     *
-     * @param project the current project.
-     */
-    function projectChangeComplete(project:Project):void;
+    public function AbstractCommandLauncher()
+    {
+    }
+
+    override protected function onRegister():void
+    {
+        super.onRegister();
+    }
+
+    public function execute(commandID:String, data:Object = null):void
+    {
+        if (data == null)
+        {
+            data = {};
+        }
+
+        dispatchWith(commandID, false, data);
+    }
+
+    protected function map(commandClazz:Class):void
+    {
+        commandMap.mapEvent(commandClazz["ID"], commandClazz);
+    }
 }
 }

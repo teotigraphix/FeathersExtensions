@@ -19,7 +19,7 @@
 package com.teotigraphix.ui.screen
 {
 
-import com.teotigraphix.controller.AbstractController;
+import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.async.StepSequence;
 import com.teotigraphix.ui.IScreenLauncher;
