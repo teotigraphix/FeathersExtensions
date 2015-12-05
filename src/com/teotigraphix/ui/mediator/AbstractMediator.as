@@ -28,6 +28,8 @@ import com.teotigraphix.ui.IOrientationAware;
 import feathers.controls.StackScreenNavigator;
 import feathers.controls.StackScreenNavigatorItem;
 
+import org.robotlegs.starling.core.ICommandMap;
+
 import org.robotlegs.starling.core.IInjector;
 import org.robotlegs.starling.mvcs.Mediator;
 
@@ -38,6 +40,9 @@ public class AbstractMediator extends Mediator
 {
     [Inject]
     public var injector:IInjector;
+
+    [Inject]
+    public var commandMap:ICommandMap;
 
     [Inject]
     public var logger:ILogger;

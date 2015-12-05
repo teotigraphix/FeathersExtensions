@@ -146,15 +146,15 @@ public class __FindFileLocationStep extends StepCommand
 
     protected function view_rootDirectoryChangeHandler(event:Event, directory:File):void
     {
-        updateTitle();
+        selectedFileChanged();
     }
 
     protected function view_fileOrDirectoryChangeHandler(event:Event, file:File):void
     {
-        updateTitle();
+        selectedFileChanged();
     }
 
-    protected function updateTitle():void
+    protected function selectedFileChanged():void
     {
     }
 }
