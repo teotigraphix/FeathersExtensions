@@ -19,7 +19,7 @@
 package com.teotigraphix.ui.control._mediators
 {
 
-import com.teotigraphix.ui.IScreenLauncher;
+import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.control.*;
 import com.teotigraphix.ui.mediator.AbstractMediator;
 

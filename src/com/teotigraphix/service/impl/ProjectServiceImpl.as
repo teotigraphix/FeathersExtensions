@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.service.support
+package com.teotigraphix.service.impl
 {
 
 import com.teotigraphix.app.config.ApplicationDescriptor;
@@ -142,7 +142,7 @@ import com.teotigraphix.service.IPreferenceService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepCommand;
-import com.teotigraphix.service.support.ProjectServiceImpl;
+import com.teotigraphix.service.impl.ProjectServiceImpl;
 
 import flash.filesystem.File;
 

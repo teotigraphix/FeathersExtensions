@@ -22,13 +22,13 @@ package com.teotigraphix.app.config
 
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
-import com.teotigraphix.service.support.FileServiceImpl;
-import com.teotigraphix.service.support.LoggerImpl;
-import com.teotigraphix.ui.IScreenLauncher;
-import com.teotigraphix.ui.IScreenProvider;
-import com.teotigraphix.ui.screen.AbstractScreenLauncher;
-import com.teotigraphix.ui.screen.NullScreenLauncher;
-import com.teotigraphix.ui.screen.ScreenProviderImpl;
+import com.teotigraphix.service.impl.FileServiceImpl;
+import com.teotigraphix.service.impl.LoggerImpl;
+import com.teotigraphix.ui.screen.IScreenLauncher;
+import com.teotigraphix.ui.screen.IScreenProvider;
+import com.teotigraphix.ui.screen.core.AbstractScreenLauncher;
+import com.teotigraphix.ui.screen.impl.NullScreenLauncher;
+import com.teotigraphix.ui.screen.impl.ScreenProviderImpl;
 
 import flash.errors.IllegalOperationError;
 import flash.events.EventDispatcher;

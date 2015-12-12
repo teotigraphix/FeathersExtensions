@@ -16,34 +16,29 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.teotigraphix.ui.screen
 {
 
-import com.teotigraphix.ui.IScreenLauncher;
-import com.teotigraphix.ui.component.file.FileListData;
-
-public class NullScreenLauncher implements IScreenLauncher
+/**
+ * A view implemented this API if it needs to know about orientation changes
+ * from portrait to landscape.
+ *
+ * The AbstractMediator listens for the IDeviceModel's change event and
+ * notifies but also sets the isLandscape property of the view if the
+ * view implements it. The view is a FeathersControl.
+ */
+public interface IOrientationAware
 {
-    public function NullScreenLauncher()
-    {
-    }
-
-    public function goToAlert(message:String, title:String):AlertScreen
-    {
-        return null;
-    }
-
-    public function goToFileExplorer(data:FileListData):FileExplorerScreen
-    {
-        return null;
-    }
-
-    public function backTo(screenID:String):void
-    {
-    }
-
-    public function back():void
-    {
-    }
+    /**
+     * Whether the app is in landscape of portrait layout, whether phone or tablet.
+     *
+     * @param isLandscape Landscape or portrait.
+     * @param isTablet A tablet or phone.
+     * @see com.teotigraphix.model.IDeviceModel#isLandscape
+     * @see com.teotigraphix.model.IDeviceModel#isPhone
+     * @see com.teotigraphix.model.IDeviceModel#isTablet
+     */
+    function orientationChange(isLandscape:Boolean, isTablet:Boolean):void;
 }
 }

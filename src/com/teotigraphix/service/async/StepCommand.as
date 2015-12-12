@@ -97,12 +97,23 @@ public class StepCommand extends AbstractProgressOperation implements IStepComma
         removeEventListener(CancelableOperationEvent.CANCELED, listener, useCapture);
     }
 
-    protected function complete(result:* = null, delay:Number = 10, repeatCount:int = 1):void
+    protected function finished(result:* = null):void
     {
         this.result = result;
+        dispatchCompleteEvent();
+    }
+
+    protected function pauseComplete(delay:Number = 10, repeatCount:int = 1):void
+    {
         timer = new Timer(delay, repeatCount);
         timer.addEventListener(TimerEvent.TIMER_COMPLETE, timer_timerCompleteHandler);
         timer.start();
+    }
+
+    protected function complete(result:* = null, delay:Number = 10, repeatCount:int = 1):void
+    {
+        this.result = result;
+        pauseComplete(delay, repeatCount);
     }
 
     protected function monitorForComplete(monitoredData:Object, delay:Number = 0, repeatCount:int = 1):void

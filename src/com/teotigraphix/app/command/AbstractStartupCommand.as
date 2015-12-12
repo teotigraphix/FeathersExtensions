@@ -90,6 +90,7 @@ public class AbstractStartupCommand extends Command
 
         sequence.addCommand(step1);
         sequence.addCommand(step2);
+        sequence.addCommand(injector.instantiate(LoadProjectPreferences));
     }
 
     protected function createStartCoreServicesCommand():IStepCommand
@@ -150,13 +151,20 @@ public class AbstractStartupCommand extends Command
 }
 }
 
+import com.teotigraphix.frameworks.project.IProjectPreferences;
+import com.teotigraphix.frameworks.project.Project;
+import com.teotigraphix.model.IFrameworkModel;
+import com.teotigraphix.model.impl.FrameworkModelImpl;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IPreferenceService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.StepCommand;
-import com.teotigraphix.service.support.FileServiceImpl;
-import com.teotigraphix.service.support.PreferenceServiceImpl;
-import com.teotigraphix.service.support.ProjectServiceImpl;
+import com.teotigraphix.service.impl.FileServiceImpl;
+import com.teotigraphix.service.impl.PreferenceServiceImpl;
+import com.teotigraphix.service.impl.ProjectServiceImpl;
+import com.teotigraphix.util.Files;
+
+import flash.filesystem.File;
 
 class StartupCoreServicesCommand extends StepCommand
 {
@@ -188,6 +196,39 @@ class StartupCoreServicesCommand extends StepCommand
 
         complete(null);
 
+        return null;
+    }
+}
+
+final class LoadProjectPreferences extends StepCommand
+{
+    [Inject]
+    public var model:IFrameworkModel;
+
+    override public function execute():*
+    {
+        logger.startup("LoadProjectPreferences", "execute()");
+
+        var project:Project = model.project;
+        var resource:File = project.findResource(".preferences");
+
+        if (!injector.hasMapping(IProjectPreferences))
+        {
+            logger.startup("LoadProjectPreferences", "IProjectPreferences is not mapped");
+            return;
+        }
+
+        var preferences:IProjectPreferences = injector.getInstance(IProjectPreferences);
+
+        if (resource.exists)
+        {
+            logger.startup("LoadProjectPreferences", "deserialize {0} ", resource.nativePath);
+            preferences = Files.deserialize(resource);
+        }
+
+        FrameworkModelImpl(model)._preferences = preferences;
+
+        finished();
         return null;
     }
 }

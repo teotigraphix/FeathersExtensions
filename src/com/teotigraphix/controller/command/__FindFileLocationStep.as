@@ -20,10 +20,10 @@ package com.teotigraphix.controller.command
 {
 
 import com.teotigraphix.service.async.StepCommand;
-import com.teotigraphix.ui.IScreenLauncher;
+import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.component.file.FileListEvent;
-import com.teotigraphix.ui.screen.FileExplorerScreen;
+import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
 
 import flash.filesystem.File;
 
@@ -92,7 +92,7 @@ public class __FindFileLocationStep extends StepCommand
     {
         if (o.fileOverwrite)
         {
-            complete();
+            finished();
             return;
         }
 
@@ -135,7 +135,7 @@ public class __FindFileLocationStep extends StepCommand
     {
         o.file = file;
         back();
-        complete();
+        finished();
     }
 
     protected function view_cancelHandler(event:Event, file:File):void
@@ -146,15 +146,15 @@ public class __FindFileLocationStep extends StepCommand
 
     protected function view_rootDirectoryChangeHandler(event:Event, directory:File):void
     {
-        selectedFileChanged();
+        selectedFileChanged(selectedFile);
     }
 
     protected function view_fileOrDirectoryChangeHandler(event:Event, file:File):void
     {
-        selectedFileChanged();
+        selectedFileChanged(selectedFile);
     }
 
-    protected function selectedFileChanged():void
+    protected function selectedFileChanged(file:File):void
     {
     }
 }

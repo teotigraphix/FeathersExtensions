@@ -20,7 +20,6 @@
 package com.teotigraphix.ui.theme
 {
 
-import com.teotigraphix.ui.component.FormLabel;
 import com.teotigraphix.ui.theme.feathers.AlertFactory;
 import com.teotigraphix.ui.theme.feathers.AutoCompleteFactory;
 import com.teotigraphix.ui.theme.feathers.ButtonFactory;
@@ -54,6 +53,7 @@ import com.teotigraphix.ui.theme.feathers.ToggleButtonFactory;
 import com.teotigraphix.ui.theme.feathers.ToggleSwitchFactory;
 import com.teotigraphix.ui.theme.framework.FormLabelFactory;
 import com.teotigraphix.ui.theme.framework.FrameworkDefaultsFactory;
+import com.teotigraphix.ui.theme.framework.FrameworkScreenFactory;
 import com.teotigraphix.ui.theme.framework.GridGroupFactory;
 import com.teotigraphix.ui.theme.framework.LedFactory;
 import com.teotigraphix.ui.theme.framework.ToastFactory;
@@ -107,6 +107,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
 
     // Framework
     public var framework:FrameworkDefaultsFactory;
+    public var frameworkScreen:FrameworkScreenFactory;
     public var led:LedFactory;
     public var gridGroup:GridGroupFactory;
     public var toast:ToastFactory;
@@ -224,6 +225,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
 
         // Framework
         framework = new FrameworkDefaultsFactory(this);
+        frameworkScreen = new FrameworkScreenFactory(this);
         led = new LedFactory(this);
         toast = new ToastFactory(this);
         gridGroup = new GridGroupFactory(this);
@@ -269,10 +271,12 @@ public class AbstractTheme extends StyleNameFunctionTheme
 
         // Framework
         _factories.push(framework);
+        _factories.push(frameworkScreen);
         _factories.push(led);
         _factories.push(gridGroup);
         _factories.push(toast);
         _factories.push(formLabel);
+
     }
 
     /**

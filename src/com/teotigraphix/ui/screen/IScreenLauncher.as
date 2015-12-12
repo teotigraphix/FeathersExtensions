@@ -16,42 +16,21 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.model
+package com.teotigraphix.ui.screen
 {
 
-/**
- * Tracks low level device capabilities.
- *
- * @see feathers.system.DeviceCapabilities
- * @see com.teotigraphix.ui.screen.IOrientationAware
- */
-public interface IDeviceModel
+import com.teotigraphix.ui.component.file.FileListData;
+import com.teotigraphix.ui.screen.impl.AlertScreen;
+import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
+
+public interface IScreenLauncher
 {
-    /**
-     * Whether the device is in landscape or portrait mode.
-     */
-    function get isLandscape():Boolean;
+    function goToAlert(message:String, title:String):AlertScreen;
 
-    /**
-     * Whether the device is a tablet.
-     *
-     * @see feathers.system.DeviceCapabilities#isTablet()
-     */
-    function get isTablet():Boolean;
+    function goToFileExplorer(data:FileListData):FileExplorerScreen;
 
-    /**
-     * Whether the device is a phone.
-     *
-     * @see feathers.system.DeviceCapabilities#isPhone()
-     */
-    function get isPhone():Boolean;
+    function backTo(screenID:String):void;
 
-    /**
-     * (default, upsideDown[portrait]) (rotatedRight, rotatedLeft[landscape])
-     */
-    function get orientation():String;
-
-    function get supportedOrientations():Vector.<String>;
+    function back():void
 }
 }

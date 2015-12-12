@@ -20,6 +20,8 @@ package com.teotigraphix.controller.impl
 {
 
 import com.teotigraphix.controller.*;
+import com.teotigraphix.service.async.IStepSequence;
+import com.teotigraphix.service.async.StepSequence;
 
 import org.robotlegs.starling.core.ICommandMap;
 
@@ -41,10 +43,17 @@ public class AbstractCommandLauncher extends AbstractController implements IComm
     {
         if (data == null)
         {
-            data = {};
+            //data = {};
         }
 
         dispatchWith(commandID, false, data);
+    }
+
+    public function instantiateSequence(data:Object):IStepSequence
+    {
+        const sequence:IStepSequence = injector.instantiate(StepSequence);
+        sequence.data = data;
+        return sequence;
     }
 
     protected function map(commandClazz:Class):void

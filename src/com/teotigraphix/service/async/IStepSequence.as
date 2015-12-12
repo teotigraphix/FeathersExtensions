@@ -29,5 +29,7 @@ public interface IStepSequence extends ICompositeCommand
     function set data(value:Object):void;
 
     function commit():*;
+
+    function addStep(clazz:Class):IStepSequence;
 }
 }

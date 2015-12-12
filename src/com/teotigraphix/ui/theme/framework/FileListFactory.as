@@ -116,6 +116,11 @@ public class FileListFactory extends AbstractThemeFactory
         sizeFileListIcon(list.createButton.disabledIcon);
 
         sizeFileListIcon(list.refreshButton.defaultIcon);
+
+        const iconMap:Object = {};
+        iconMap["defaultFolderIcon"] = AssetMap.getTexture("filesystem_folder");
+        iconMap["defaultFileIcon"] = AssetMap.getTexture("mimetype_misc");
+        list.iconMap = iconMap;
     }
 
     public function sizeFileListIcon(skin:DisplayObject):void

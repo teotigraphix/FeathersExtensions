@@ -16,21 +16,17 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.ui
+package com.teotigraphix.ui.screen
 {
 
-import com.teotigraphix.ui.component.file.FileListData;
-import com.teotigraphix.ui.screen.AlertScreen;
-import com.teotigraphix.ui.screen.FileExplorerScreen;
-
-public interface IScreenLauncher
+public interface IScreenProvider
 {
-    function goToAlert(message:String, title:String):AlertScreen;
+    function get data():*;
 
-    function goToFileExplorer(data:FileListData):FileExplorerScreen;
+    function get isEmpty():Boolean;
 
-    function backTo(screenID:String):void;
+    function push(data:*):void;
 
-    function back():void
+    function pop():void;
 }
 }

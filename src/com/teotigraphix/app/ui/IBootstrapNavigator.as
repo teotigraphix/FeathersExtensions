@@ -20,7 +20,7 @@
 package com.teotigraphix.app.ui
 {
 
-import com.teotigraphix.ui.IScreenNavigator;
+import com.teotigraphix.ui.screen.IScreenNavigator;
 
 public interface IBootstrapNavigator extends IScreenNavigator
 {

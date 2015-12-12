@@ -24,9 +24,13 @@ import org.as3commons.async.command.CompositeCommandKind;
 import org.as3commons.async.command.ICommand;
 import org.as3commons.async.command.ICompositeCommand;
 import org.as3commons.async.command.impl.CompositeCommand;
+import org.robotlegs.starling.core.IInjector;
 
 public class StepSequence extends CompositeCommand implements IStepSequence, IStepCommand
 {
+    [Inject]
+    public var injector:IInjector;
+
     private var _data:Object;
 
     public function get data():Object
@@ -53,6 +57,12 @@ public class StepSequence extends CompositeCommand implements IStepSequence, ISt
         {
             IStepCommand(command).data = _data;
         }
+        return this;
+    }
+
+    public function addStep(clazz:Class):IStepSequence
+    {
+        addCommand(injector.instantiate(clazz));
         return this;
     }
 

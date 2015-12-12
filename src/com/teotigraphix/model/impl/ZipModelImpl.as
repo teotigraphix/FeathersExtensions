@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.model.support
+package com.teotigraphix.model.impl
 {
 
 import com.teotigraphix.model.*;
@@ -191,7 +191,7 @@ public class ZipModelImpl extends AbstractModel implements IZipModel
 }
 
 import com.teotigraphix.model.IZipModel;
-import com.teotigraphix.model.support.ZipModelImpl;
+import com.teotigraphix.model.impl.ZipModelImpl;
 import com.teotigraphix.service.async.StepCommand;
 import com.teotigraphix.util.Files;
 

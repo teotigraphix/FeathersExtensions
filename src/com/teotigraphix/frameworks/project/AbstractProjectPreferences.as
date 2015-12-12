@@ -23,7 +23,7 @@ import com.teotigraphix.util.Files;
 
 import flash.filesystem.File;
 
-public class AbstractProjectPreferences
+public class AbstractProjectPreferences implements IProjectPreferences
 {
     public function AbstractProjectPreferences()
     {
@@ -33,6 +33,11 @@ public class AbstractProjectPreferences
     // Private :: Methods
     //--------------------------------------------------------------------------
 
+    /**
+     * Can be used for a quick save.
+     *
+     * @param project
+     */
     public function save(project:Project):void
     {
         var resource:File = project.getResource(".preferences");

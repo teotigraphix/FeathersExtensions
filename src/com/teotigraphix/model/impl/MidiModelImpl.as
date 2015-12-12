@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.model.support
+package com.teotigraphix.model.impl
 {
 
 import com.teotigraphix.core.sdk_internal;
@@ -75,7 +75,7 @@ public class MidiModelImpl extends AbstractModel implements IMidiModel
 }
 
 import com.teotigraphix.frameworks.midi.MIDIParserResult;
-import com.teotigraphix.model.support.MidiModelImpl;
+import com.teotigraphix.model.impl.MidiModelImpl;
 import com.teotigraphix.service.async.StepCommand;
 
 import flash.filesystem.File;

@@ -16,42 +16,47 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
 package com.teotigraphix.model
 {
 
-/**
- * Tracks low level device capabilities.
- *
- * @see feathers.system.DeviceCapabilities
- * @see com.teotigraphix.ui.screen.IOrientationAware
- */
-public interface IDeviceModel
+public interface IFrameworkModel extends IProjectModel, IDeviceModel
 {
     /**
-     * Whether the device is in landscape or portrait mode.
+     * The current data object
      */
-    function get isLandscape():Boolean;
+    function get screenData():*;
+
+    //--------------------------------------------------------------------------
+    // Methods
+    //--------------------------------------------------------------------------
+
+    function saveQuick():void;
+
+    //function saveProjectAsync():IStepSequence;
 
     /**
-     * Whether the device is a tablet.
+     * Retrieves a stateless application runtime property.
      *
-     * @see feathers.system.DeviceCapabilities#isTablet()
+     * @param name The property key.
      */
-    function get isTablet():Boolean;
+    function getProperty(name:String):*;
 
     /**
-     * Whether the device is a phone.
+     * Retrieves a stateless application runtime property and removes it.
      *
-     * @see feathers.system.DeviceCapabilities#isPhone()
+     * @param name The property key.
      */
-    function get isPhone():Boolean;
+    function clearProperty(name:String):*;
 
     /**
-     * (default, upsideDown[portrait]) (rotatedRight, rotatedLeft[landscape])
+     * Sets a stateless application runtime property.
+     *
+     * @param name The property key.
+     * @param value The property value.
      */
-    function get orientation():String;
+    function setProperty(name:String, value:*):void;
 
-    function get supportedOrientations():Vector.<String>;
+    // function back():void;
+    // function backTo(screenID:String):void;
 }
 }

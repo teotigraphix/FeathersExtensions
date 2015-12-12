@@ -38,8 +38,12 @@ import feathers.layout.VerticalLayoutData;
 import feathers.skins.IStyleProvider;
 
 import flash.filesystem.File;
+import flash.utils.Dictionary;
 
+import starling.display.DisplayObject;
+import starling.display.Image;
 import starling.events.Event;
+import starling.textures.Texture;
 
 /*
  TODO Add Back/Next navigation stack support
@@ -102,6 +106,7 @@ public class FileList extends LayoutGroup
     private var _iconFunction:Function;
     private var _enabledFunction:Function;
     private var _showLabels:Boolean;
+    private var _iconMap:Object = {};
 
     private var actionBar:LayoutGroup;
     private var header:LayoutGroup;
@@ -117,14 +122,11 @@ public class FileList extends LayoutGroup
 
     private var _listMinHeight:Number;
     private var _namePopUp:DirectoryNamePopUp;
+    private var cachedIcons:Dictionary = new Dictionary();
 
     //--------------------------------------------------------------------------
     // Public API :: Properties
     //--------------------------------------------------------------------------
-
-    //----------------------------------
-    // selectedFile
-    //----------------------------------
 
     override protected function get defaultStyleProvider():IStyleProvider
     {
@@ -132,7 +134,7 @@ public class FileList extends LayoutGroup
     }
 
     //----------------------------------
-    // showFiles
+    // selectedFile
     //----------------------------------
 
     public function get selectedFile():File
@@ -140,14 +142,14 @@ public class FileList extends LayoutGroup
         return _list.selectedItem as File;
     }
 
+    //----------------------------------
+    // showFiles
+    //----------------------------------
+
     public function get showFiles():Boolean
     {
         return _showFiles;
     }
-
-    //----------------------------------
-    // directoryDoubleTapEnabled
-    //----------------------------------
 
     public function set showFiles(value:Boolean):void
     {
@@ -157,6 +159,10 @@ public class FileList extends LayoutGroup
         _showFiles = value;
         invalidate(INVALIDATION_FLAG_SHOW_FILES);
     }
+
+    //----------------------------------
+    // directoryDoubleTapEnabled
+    //----------------------------------
 
     public function get directoryDoubleTapEnabled():Boolean
     {
@@ -169,7 +175,7 @@ public class FileList extends LayoutGroup
     }
 
     //----------------------------------
-    // homeDirectory
+    // extensions
     //----------------------------------
 
     public function get extensions():Array
@@ -187,7 +193,7 @@ public class FileList extends LayoutGroup
     }
 
     //----------------------------------
-    // rootDirectory
+    // homeDirectory
     //----------------------------------
 
     public function get homeDirectory():File
@@ -205,7 +211,7 @@ public class FileList extends LayoutGroup
     }
 
     //----------------------------------
-    // actionText
+    // rootDirectory
     //----------------------------------
 
     public function get rootDirectory():File
@@ -224,7 +230,7 @@ public class FileList extends LayoutGroup
     }
 
     //----------------------------------
-    // iconFunction
+    // actionText
     //----------------------------------
 
     public function get actionText():String
@@ -242,7 +248,7 @@ public class FileList extends LayoutGroup
     }
 
     //----------------------------------
-    // buttons
+    // iconFunction
     //----------------------------------
 
     public function get iconFunction():Function
@@ -259,6 +265,10 @@ public class FileList extends LayoutGroup
         invalidate(INVALIDATION_FLAG_ICON_FUNCTION);
     }
 
+    //----------------------------------
+    // enabledFunction
+    //----------------------------------
+
     public function get enabledFunction():Function
     {
         return _enabledFunction;
@@ -270,6 +280,16 @@ public class FileList extends LayoutGroup
             return;
         _enabledFunction = value;
         invalidate(INVALIDATION_FLAG_ICON_FUNCTION);
+    }
+
+    public function get iconMap():Object
+    {
+        return _iconMap;
+    }
+
+    public function set iconMap(value:Object):void
+    {
+        _iconMap = value;
     }
 
     public function get homeButton():Button
@@ -363,6 +383,8 @@ public class FileList extends LayoutGroup
         _backButton.isEnabled = false;
         _nextButton.isEnabled = false;
         //_createButton.isEnabled = false;
+
+        iconFunction = defaultIconFunction;
     }
 
     override protected function draw():void
@@ -399,6 +421,12 @@ public class FileList extends LayoutGroup
         _list.removeEventListener(Event.CHANGE, list_changeHandler);
         _list.removeEventListener(FeathersEventType.RENDERER_ADD, list_rendererAddHandler);
         _list.removeEventListener(FeathersEventType.RENDERER_REMOVE, list_rendererRemoveHandler);
+
+        for each (var image:Image in cachedIcons)
+        {
+            image.dispose();
+        }
+        cachedIcons = null;
     }
 
     public function navigateHome():void
@@ -634,6 +662,34 @@ public class FileList extends LayoutGroup
             directory.createDirectory();
         }
         refresh();
+    }
+
+    private function defaultIconFunction(item:Object):DisplayObject
+    {
+        if (item in cachedIcons)
+        {
+            return cachedIcons[item];
+        }
+
+        var file:File = File(item);
+        var icon:Image = new Image(getFileIconName(file));
+
+        cachedIcons[item] = icon;
+        return icon;
+    }
+
+    private function getFileIconName(file:File):Texture
+    {
+        var texture:Texture = _iconMap["defaultFileIcon"];
+        if (file.isDirectory)
+        {
+            texture = _iconMap["defaultFolderIcon"];
+        }
+        else if (_iconMap[file.extension] != null)
+        {
+            texture = _iconMap[file.extension];
+        }
+        return texture;
     }
 
     private function namePopUp_cancelHandler(event:Event):void

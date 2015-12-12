@@ -19,6 +19,11 @@
 package com.teotigraphix.controller.command
 {
 
+import com.teotigraphix.controller.ICommandLauncher;
+import com.teotigraphix.controller.impl.AbstractCommandLauncher;
+import com.teotigraphix.service.async.IStepSequence;
+import com.teotigraphix.service.async.StepSequence;
+
 import org.robotlegs.starling.mvcs.Command;
 
 import starling.events.Event;
@@ -28,8 +33,34 @@ public class AbstractCommand extends Command
     [Inject]
     public var event:Event;
 
+    [Inject]
+    public var commands:ICommandLauncher;
+
     override public function execute():void
     {
+    }
+
+    /**
+     *
+     * @param data Can contain injections.
+     * @return
+     */
+    protected final function sequence(data:Object,
+                                      completeHandler:Function = null,
+                                      cancelHandler:Function = null):IStepSequence
+    {
+
+        injector.injectInto(data);
+        var sequence:IStepSequence = AbstractCommandLauncher(commands).instantiateSequence(data);
+        if (completeHandler != null)
+            sequence.addCompleteListener(completeHandler);
+        if (cancelHandler != null)
+        {
+            StepSequence(sequence).failOnFault = true;
+            //StepSequence(sequence).addCancelListener(completeHandler);
+        }
+
+        return sequence;
     }
 }
 }

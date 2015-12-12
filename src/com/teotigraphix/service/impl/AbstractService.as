@@ -17,28 +17,33 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.ui
+package com.teotigraphix.service.impl
 {
 
-/**
- * A view implemented this API if it needs to know about orientation changes
- * from portrait to landscape.
- *
- * The AbstractMediator listens for the IDeviceModel's change event and
- * notifies but also sets the isLandscape property of the view if the
- * view implements it. The view is a FeathersControl.
- */
-public interface IOrientationAware
+import com.teotigraphix.service.*;
+
+import org.robotlegs.starling.core.IInjector;
+import org.robotlegs.starling.mvcs.Actor;
+
+import starling.events.EventDispatcher;
+
+public class AbstractService extends Actor
 {
-    /**
-     * Whether the app is in landscape of portrait layout, whether phone or tablet.
-     *
-     * @param isLandscape Landscape or portrait.
-     * @param isTablet A tablet or phone.
-     * @see com.teotigraphix.model.IDeviceModel#isLandscape
-     * @see com.teotigraphix.model.IDeviceModel#isPhone
-     * @see com.teotigraphix.model.IDeviceModel#isTablet
-     */
-    function orientationChange(isLandscape:Boolean, isTablet:Boolean):void;
+    [Inject]
+    public var logger:ILogger;
+
+    [Inject]
+    public var injector:IInjector;
+
+    [Inject]
+    override public function set eventDispatcher(value:EventDispatcher):void
+    {
+        super.eventDispatcher = value;
+        onRegister();
+    }
+
+    protected function onRegister():void
+    {
+    }
 }
 }

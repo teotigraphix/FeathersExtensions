@@ -16,10 +16,10 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.ui.screen
+package com.teotigraphix.ui.screen.impl
 {
 
-import com.teotigraphix.ui.IScreenProvider;
+import com.teotigraphix.ui.screen.IScreenProvider;
 
 public class ScreenProviderImpl implements IScreenProvider
 {

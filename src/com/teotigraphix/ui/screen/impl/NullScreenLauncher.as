@@ -16,17 +16,36 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.ui
+package com.teotigraphix.ui.screen.impl
 {
 
-public interface IScreenProvider
+import com.teotigraphix.ui.screen.*;
+
+import com.teotigraphix.ui.screen.IScreenLauncher;
+import com.teotigraphix.ui.component.file.FileListData;
+
+public class NullScreenLauncher implements IScreenLauncher
 {
-    function get data():*;
+    public function NullScreenLauncher()
+    {
+    }
 
-    function get isEmpty():Boolean;
+    public function goToAlert(message:String, title:String):AlertScreen
+    {
+        return null;
+    }
 
-    function push(data:*):void;
+    public function goToFileExplorer(data:FileListData):FileExplorerScreen
+    {
+        return null;
+    }
 
-    function pop():void;
+    public function backTo(screenID:String):void
+    {
+    }
+
+    public function back():void
+    {
+    }
 }
 }

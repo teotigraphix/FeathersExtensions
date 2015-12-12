@@ -23,7 +23,7 @@ package com.teotigraphix.ui.mediator
 import com.teotigraphix.model.IDeviceModel;
 import com.teotigraphix.model.event.DeviceModelEventType;
 import com.teotigraphix.service.ILogger;
-import com.teotigraphix.ui.IOrientationAware;
+import com.teotigraphix.ui.screen.IOrientationAware;
 
 import feathers.controls.StackScreenNavigator;
 import feathers.controls.StackScreenNavigatorItem;

@@ -21,6 +21,8 @@ package com.teotigraphix.ui.screen
 
 public final class FrameworkScreens
 {
+    public static const GET_STRING:String = "get-string";
+
     public static const ALERT:String = "alert";
 
     public static const FILE_EXPLORER:String = "file-explorer";

@@ -16,17 +16,18 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.ui.screen
+package com.teotigraphix.ui.screen.core
 {
 
 import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.async.StepSequence;
-import com.teotigraphix.ui.IScreenLauncher;
-import com.teotigraphix.ui.IScreenNavigator;
-import com.teotigraphix.ui.IScreenProvider;
 import com.teotigraphix.ui.component.file.FileListData;
+import com.teotigraphix.ui.screen.*;
 import com.teotigraphix.ui.screen.data.AlertScreenData;
+import com.teotigraphix.ui.screen.impl.AlertScreen;
+import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
+import com.teotigraphix.ui.screen.impl.dialog.GetStringDialog;
 
 import feathers.controls.IScreen;
 import feathers.controls.StackScreenNavigatorItem;
@@ -76,6 +77,7 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
         super.onRegister();
         configureFramework(_navigator);
         configure(_navigator);
+        configureControls(_mediatorMap);
     }
 
     public function backTo(screenID:String):void
@@ -112,6 +114,28 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
         }
     }
 
+    /**
+     *
+     * @param title
+     * @param prompt
+     * @param okHandler Result {string:String}
+     * @param cancelHandler
+     * @return
+     */
+    public function getString(title:String,
+                              prompt:String,
+                              okHandler:Function,
+                              cancelHandler:Function):GetStringDialog
+    {
+        var screen:GetStringDialog = GetStringDialog(sdk_internal::setApplicationScreen(
+                FrameworkScreens.GET_STRING, {}));
+        screen.title = title;
+        screen.prompt = prompt;
+        screen.addEventListener(GetStringDialog.EVENT_OK, okHandler);
+        screen.addEventListener(GetStringDialog.EVENT_CANCEL, cancelHandler);
+        return screen;
+    }
+
     public function goToAlert(message:String, title:String):AlertScreen
     {
         var screen:AlertScreen = AlertScreen(
@@ -130,6 +154,9 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
 
     protected function configureFramework(navigator:IScreenNavigator):void
     {
+        navigator.addScreen(FrameworkScreens.GET_STRING,
+                            create(GetStringDialog, null));
+
         navigator.addScreen(FrameworkScreens.ALERT,
                             create(AlertScreen, null));
 
@@ -139,6 +166,11 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
 
     protected function configure(navigator:IScreenNavigator):void
     {
+    }
+
+    protected function configureControls(mediatorMap:IMediatorMap):void
+    {
+
     }
 
     protected function create(screen:Object,

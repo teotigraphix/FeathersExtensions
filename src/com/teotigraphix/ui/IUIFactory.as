@@ -16,34 +16,10 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.service.support
+package com.teotigraphix.ui
 {
 
-import com.teotigraphix.service.*;
-
-import org.robotlegs.starling.core.IInjector;
-import org.robotlegs.starling.mvcs.Actor;
-
-import starling.events.EventDispatcher;
-
-public class AbstractService extends Actor
+public interface IUIFactory
 {
-    [Inject]
-    public var logger:ILogger;
-
-    [Inject]
-    public var injector:IInjector;
-
-    [Inject]
-    override public function set eventDispatcher(value:EventDispatcher):void
-    {
-        super.eventDispatcher = value;
-        onRegister();
-    }
-
-    protected function onRegister():void
-    {
-    }
 }
 }

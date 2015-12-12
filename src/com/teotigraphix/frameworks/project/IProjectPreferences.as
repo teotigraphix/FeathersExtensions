@@ -16,42 +16,11 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.model
+package com.teotigraphix.frameworks.project
 {
 
-/**
- * Tracks low level device capabilities.
- *
- * @see feathers.system.DeviceCapabilities
- * @see com.teotigraphix.ui.screen.IOrientationAware
- */
-public interface IDeviceModel
+public interface IProjectPreferences
 {
-    /**
-     * Whether the device is in landscape or portrait mode.
-     */
-    function get isLandscape():Boolean;
 
-    /**
-     * Whether the device is a tablet.
-     *
-     * @see feathers.system.DeviceCapabilities#isTablet()
-     */
-    function get isTablet():Boolean;
-
-    /**
-     * Whether the device is a phone.
-     *
-     * @see feathers.system.DeviceCapabilities#isPhone()
-     */
-    function get isPhone():Boolean;
-
-    /**
-     * (default, upsideDown[portrait]) (rotatedRight, rotatedLeft[landscape])
-     */
-    function get orientation():String;
-
-    function get supportedOrientations():Vector.<String>;
 }
 }

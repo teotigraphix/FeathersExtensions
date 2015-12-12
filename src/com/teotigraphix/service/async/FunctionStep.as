@@ -16,42 +16,34 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-
-package com.teotigraphix.model
+package com.teotigraphix.service.async
 {
 
-/**
- * Tracks low level device capabilities.
- *
- * @see feathers.system.DeviceCapabilities
- * @see com.teotigraphix.ui.screen.IOrientationAware
- */
-public interface IDeviceModel
+public class FunctionStep extends StepCommand
 {
-    /**
-     * Whether the device is in landscape or portrait mode.
-     */
-    function get isLandscape():Boolean;
+    private var _func:Function;
+    private var _delay:Number;
+    private var _object:Object;
 
     /**
-     * Whether the device is a tablet.
+     * Function can return a result that is set in complete().
      *
-     * @see feathers.system.DeviceCapabilities#isTablet()
+     * @param func function foo(data:AbstractResult):void
+     * @param object
+     * @param delay the delay in milliseconds
      */
-    function get isTablet():Boolean;
+    public function FunctionStep(func:Function, object:Object, delay:Number = 10)
+    {
+        _func = func;
+        _object = object;
+        _delay = delay;
+    }
 
-    /**
-     * Whether the device is a phone.
-     *
-     * @see feathers.system.DeviceCapabilities#isPhone()
-     */
-    function get isPhone():Boolean;
-
-    /**
-     * (default, upsideDown[portrait]) (rotatedRight, rotatedLeft[landscape])
-     */
-    function get orientation():String;
-
-    function get supportedOrientations():Vector.<String>;
+    override public function execute():*
+    {
+        var result:* = _func(_object);
+        complete(result, _delay);
+        return result;
+    }
 }
 }

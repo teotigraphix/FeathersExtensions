@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.model.support
+package com.teotigraphix.model.impl
 {
 
 import com.teotigraphix.model.AbstractModel;

@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.service.support
+package com.teotigraphix.service.impl
 {
 
 import com.teotigraphix.app.config.ApplicationDescriptor;

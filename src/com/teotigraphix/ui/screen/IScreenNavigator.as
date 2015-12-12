@@ -16,7 +16,7 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.ui
+package com.teotigraphix.ui.screen
 {
 
 import feathers.controls.StackScreenNavigatorItem;

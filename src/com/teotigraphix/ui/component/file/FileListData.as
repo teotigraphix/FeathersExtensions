@@ -56,5 +56,10 @@ public class FileListData
         if (enabledFunction != null)
             list.enabledFunction = enabledFunction;
     }
+
+    public function hasExtension(extension:String):Boolean
+    {
+        return extensions != null && extensions.indexOf(extension) != -1;
+    }
 }
 }
