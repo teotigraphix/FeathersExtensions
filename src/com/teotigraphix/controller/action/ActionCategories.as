@@ -16,13 +16,15 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.controller.command
+package com.teotigraphix.controller.action
 {
 
-public class AbstractAction extends AbstractCommand
+public class ActionCategories
 {
-    public function AbstractAction()
-    {
-    }
+    // Lists
+    public static const ID_SETTINGS_PROJECT_ACTION:String = "SettingsProjectAction";
+    public static const ID_FILE_ACTION:String = "FileAction";
+    public static const ID_MACHINE_ACTION:String = "MachineAction";
+    public static const ID_MACHINE_CREATE_ACTION:String = "MachineCreateAction";
 }
 }

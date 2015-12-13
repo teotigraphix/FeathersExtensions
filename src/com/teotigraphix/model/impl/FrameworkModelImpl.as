@@ -19,6 +19,7 @@
 package com.teotigraphix.model.impl
 {
 
+import com.teotigraphix.controller.IActionManager;
 import com.teotigraphix.controller.ICommandLauncher;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
 import com.teotigraphix.frameworks.project.Project;
@@ -57,7 +58,10 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
     public var _screens:IScreenLauncher;
 
     [Inject]
-    public var _uiFactory:IUIFactory;
+    public var _actions:IActionManager;
+
+    [Inject]
+    public var _ui:IUIFactory;
 
     private var _data:Dictionary = new Dictionary();
 
@@ -66,6 +70,18 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
     //--------------------------------------------------------------------------
     // Properties
     //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // actions
+    //----------------------------------
+
+    /**
+     * @inheritDoc
+     */
+    public function get actions():IActionManager
+    {
+        return _actions;
+    }
 
     //----------------------------------
     // screenData
