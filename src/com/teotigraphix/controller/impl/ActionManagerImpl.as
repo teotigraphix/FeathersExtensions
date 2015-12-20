@@ -20,6 +20,7 @@ package com.teotigraphix.controller.impl
 {
 
 import com.teotigraphix.controller.IAction;
+import com.teotigraphix.controller.IActionID;
 import com.teotigraphix.controller.IActionManager;
 import com.teotigraphix.controller.command.Action;
 import com.teotigraphix.controller.command.ActionCategory;
@@ -67,9 +68,24 @@ public class ActionManagerImpl extends AbstractController implements IActionMana
         return category;
     }
 
-    public function invoke(action:IAction):void
+    public function findAction(categoryID:String, actionID:String):IAction
     {
-        Action(action).invoke();
+        return findActionCategory(categoryID).findAction(actionID);
+    }
+
+    public function findActionByID(actionID:IActionID):IAction
+    {
+        return findActionCategory(actionID.category).findAction(actionID.id);
+    }
+
+    public function invoke(action:IAction, data:Object = null):void
+    {
+        Action(action).invoke(data);
+    }
+
+    public function fire(actionID:IActionID, data:Object = null):void
+    {
+        invoke(findActionCategory(actionID.category).findAction(actionID.id), data);
     }
 
     private function list_changeHandler(event:Event):void

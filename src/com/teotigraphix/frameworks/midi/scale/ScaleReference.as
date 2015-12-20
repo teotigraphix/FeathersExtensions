@@ -132,6 +132,11 @@ public class ScaleReference
         return _name;
     }
 
+    public function get label():String
+    {
+        return _name;
+    }
+
     public static function get values():Vector.<ScaleReference>
     {
         return _values;

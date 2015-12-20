@@ -136,11 +136,16 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
         return screen;
     }
 
-    public function goToAlert(message:String, title:String):AlertScreen
+    public function goToAlert(message:String,
+                              title:String,
+                              okHandler:Function,
+                              cancelHandler:Function):AlertScreen
     {
         var screen:AlertScreen = AlertScreen(
                 sdk_internal::setApplicationScreen(FrameworkScreens.ALERT, null));
         screen.data = new AlertScreenData(message, title);
+        screen.addEventListener(AlertScreen.EVENT_OK, okHandler);
+        screen.addEventListener(AlertScreen.EVENT_CANCEL, cancelHandler);
         return screen;
     }
 

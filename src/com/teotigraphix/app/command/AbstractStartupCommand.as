@@ -21,10 +21,12 @@ package com.teotigraphix.app.command
 {
 
 import com.teotigraphix.app.event.ApplicationEventType;
+import com.teotigraphix.controller.command.AbstractCommand;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepCommand;
+import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepSequence;
 
 import flash.events.Event;
@@ -38,7 +40,7 @@ import org.robotlegs.starling.mvcs.Command;
 
 import starling.core.Starling;
 
-public class AbstractStartupCommand extends Command
+public class AbstractStartupCommand extends AbstractCommand
 {
     //--------------------------------------------------------------------------
     // Inject
@@ -67,10 +69,10 @@ public class AbstractStartupCommand extends Command
 
     override public function execute():void
     {
-        var sequence:StepSequence = new StepSequence(CompositeCommandKind.SEQUENCE);
-        addCommands(sequence);
-        sequence.addCompleteListener(sequence_completeHandler);
-        sequence.execute();
+        var main:IStepSequence = sequence(null);
+        addCommands(main);
+        main.addCompleteListener(sequence_completeHandler);
+        main.execute();
 
         trace("    ApplicationStartupCommand.dispatchWith(STARTUP_COMPLETE)");
         dispatchWith(ContextEventType.STARTUP_COMPLETE);
@@ -80,7 +82,7 @@ public class AbstractStartupCommand extends Command
     // Protected :: Methods
     //--------------------------------------------------------------------------
 
-    protected function addCommands(sequence:CompositeCommand):void
+    protected function addCommands(main:IStepSequence):void
     {
         var step1:IStepCommand = createStartCoreServicesCommand();
         step1.addCompleteListener(startupCoreServices_completeHandler);
@@ -88,9 +90,15 @@ public class AbstractStartupCommand extends Command
         var step2:IStepCommand = createLoadLastProjectCommand();
         step2.addCompleteListener(loadLastProject_completeHandler);
 
-        sequence.addCommand(step1);
-        sequence.addCommand(step2);
-        sequence.addCommand(injector.instantiate(LoadProjectPreferences));
+        main.addCommand(createDebugSetupCommand());
+        main.addCommand(step1);
+        main.addCommand(step2);
+        main.addCommand(injector.instantiate(LoadProjectPreferences));
+    }
+
+    protected function createDebugSetupCommand():IStepCommand
+    {
+        return injector.instantiate(SetupDebugCommand);
     }
 
     protected function createStartCoreServicesCommand():IStepCommand
@@ -166,6 +174,8 @@ import com.teotigraphix.util.Files;
 
 import flash.filesystem.File;
 
+import starling.core.Starling;
+
 class StartupCoreServicesCommand extends StepCommand
 {
     [Inject]
@@ -230,5 +240,22 @@ final class LoadProjectPreferences extends StepCommand
 
         finished();
         return null;
+    }
+}
+
+final class SetupDebugCommand extends StepCommand
+{
+    [Inject]
+    public var model:IFrameworkModel;
+
+    override public function execute():*
+    {
+        if (model.descriptor.showStats)
+        {
+            Starling.current.showStatsAt();
+        }
+
+        finished();
+        return super.execute();
     }
 }

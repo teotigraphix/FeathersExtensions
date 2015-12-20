@@ -48,6 +48,7 @@ public class ApplicationDescriptor
     private var _extension:String;
     private var _version:Version;
     private var _flushState:Boolean;
+    private var _showStats:Boolean;
 
     public function get appID():String
     {
@@ -100,6 +101,16 @@ public class ApplicationDescriptor
     public function set flushState(value:Boolean):void
     {
         _flushState = value;
+    }
+
+    public function get showStats():Boolean
+    {
+        return _showStats;
+    }
+
+    public function set showStats(value:Boolean):void
+    {
+        _showStats = value;
     }
 
     // /storage/sdcard0

@@ -33,7 +33,7 @@ public class Action implements IAction
 
     protected var _func:Function;
 
-    private var _isEnabled:Boolean = true;
+    private var _isEnabledProvider:Function;
 
     public function get id():String
     {
@@ -57,22 +57,29 @@ public class Action implements IAction
 
     public function get isEnabled():Boolean
     {
-        return _isEnabled;
+        if (_isEnabledProvider == null)
+            return true;
+        return _isEnabledProvider();
     }
 
-    public function Action(id:String, name:String, category:ActionCategory, label:String, func:Function, isEnabled:Boolean = true)
+    public function Action(id:String,
+                           name:String,
+                           category:ActionCategory,
+                           label:String,
+                           func:Function,
+                           isEnabledProvider:Function = null)
     {
         _id = id;
         _name = name;
         _category = category;
         _label = label;
         _func = func;
-        _isEnabled = isEnabled;
+        _isEnabledProvider = isEnabledProvider;
     }
 
-    public function invoke():void
+    public function invoke(data:Object = null):void
     {
-        _func();
+        _func(data);
     }
 
 }

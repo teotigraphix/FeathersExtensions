@@ -20,6 +20,7 @@
 package com.teotigraphix.app.config
 {
 
+import com.teotigraphix.app.ui.IBootstrapApplication;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.impl.FileServiceImpl;
@@ -123,6 +124,7 @@ public class FrameworkContext extends Context
         injector.mapSingletonOf(ILogger, LoggerImpl);
         injector.mapSingletonOf(IFileService, FileServiceImpl);
         injector.mapSingletonOf(IScreenProvider, ScreenProviderImpl);
+        injector.mapValue(IBootstrapApplication, contextView.parent);
         injector.mapSingletonOf(IScreenLauncher, NullScreenLauncher);
     }
 

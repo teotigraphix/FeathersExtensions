@@ -19,25 +19,10 @@
 package com.teotigraphix.controller
 {
 
-import com.teotigraphix.controller.command.ActionCategory;
-
-import feathers.controls.List;
-
-public interface IActionManager
+public interface IActionID
 {
+    function get category():String;
 
-    function registerListListener(list:List):void;
-
-    function findActionCategory(categoryID:String):ActionCategory;
-
-    function getActionCategory(categoryID:String, name:String = null):ActionCategory;
-
-    function findAction(categoryID:String, actionID:String):IAction;
-
-    function findActionByID(actionID:IActionID):IAction;
-
-    function invoke(action:IAction, data:Object = null):void;
-
-    function fire(actionID:IActionID, data:Object = null):void;
+    function get id():String;
 }
 }

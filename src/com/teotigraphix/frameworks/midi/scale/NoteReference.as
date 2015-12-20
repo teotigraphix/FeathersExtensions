@@ -7,8 +7,20 @@ package com.teotigraphix.frameworks.midi.scale
 public class NoteReference
 {
     // Has to be on TOP!
-    private static var _values:Vector.<NoteReference> = new Vector.<NoteReference>();
-
+    {
+        _values.push(C);
+        _values.push(Dflat);
+        _values.push(D);
+        _values.push(Eflat);
+        _values.push(E);
+        _values.push(F);
+        _values.push(Gflat);
+        _values.push(G);
+        _values.push(Aflat);
+        _values.push(A);
+        _values.push(Bflat);
+        _values.push(B);
+    }
     public static const C:NoteReference = new NoteReference(0, "C");
 
     //public static const Csharp:NoteReference = new NoteReference(1, "C#");
@@ -42,21 +54,7 @@ public class NoteReference
     public static const Bflat:NoteReference = new NoteReference(10, "Bb");
 
     public static const B:NoteReference = new NoteReference(11, "B");
-
-    {
-        _values.push(C);
-        _values.push(Dflat);
-        _values.push(D);
-        _values.push(Eflat);
-        _values.push(E);
-        _values.push(F);
-        _values.push(Gflat);
-        _values.push(G);
-        _values.push(Aflat);
-        _values.push(A);
-        _values.push(Bflat);
-        _values.push(B);
-    }
+    private static var _values:Vector.<NoteReference> = new Vector.<NoteReference>();
 
     public static function get values():Vector.<NoteReference>
     {
@@ -88,7 +86,6 @@ public class NoteReference
         return _baseName;
     }
 
-
     public function NoteReference(baseNumber:int, baseName:String)
     {
         _baseNumber = baseNumber;
@@ -108,6 +105,53 @@ public class NoteReference
     public static function getNoteIndex(note:NoteReference):int
     {
         return _values.indexOf(note);
+    }
+
+    public static function getNoteFromString(noteName:String):NoteReference
+    {
+        var note:String;
+        var result:NoteReference;
+        var split:Array = noteName.split("");
+        if (split.length == 2)
+        {
+            note = split[0];
+        }
+        else if (split.length == 3)
+        {
+            // flat
+            note = split[0] + split[1];
+        }
+
+        for each (var noteReference:NoteReference in _values)
+        {
+            if (noteReference.baseName == note)
+                return noteReference;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param noteName C4, Bb5 etc.
+     */
+    public static function getMidiNoteFromString(noteName:String):int
+    {
+        var note:NoteReference = getNoteFromString(noteName);
+        var octave:int;
+        var split:Array = noteName.split("");
+
+        if (split.length == 2)
+        {
+            octave = int(split[1]);
+        }
+        else if (split.length == 3)
+        {
+            // flat
+            octave = int(split[1]);
+        }
+
+        // C0 == 12
+        return 12 + (note.baseNumber + (octave * 12));
     }
 }
 }

@@ -19,10 +19,13 @@
 package com.teotigraphix.model
 {
 
+import com.teotigraphix.app.config.ApplicationDescriptor;
 import com.teotigraphix.controller.IActionManager;
 
 public interface IFrameworkModel extends IProjectModel, IDeviceModel
 {
+    function get descriptor():ApplicationDescriptor;
+
     function get actions():IActionManager;
 
     /**

@@ -57,11 +57,21 @@ public class ActionCategory
         _actions = new <IAction>[];
     }
 
-    public function addAction(id:String, label:String, func:Function, isEnabled:Boolean = true):IAction
+    public function addAction(id:String, label:String, func:Function, isEnabledFunction:Function = null):IAction
     {
-        var action:IAction = new Action(id, null, this, label, func, isEnabled);
+        var action:IAction = new Action(id, null, this, label, func, isEnabledFunction);
         actions.push(action);
         return action;
+    }
+
+    public function findAction(actionID:String):IAction
+    {
+        for each (var action:IAction in _actions)
+        {
+            if (action.id == actionID)
+                return action;
+        }
+        return null;
     }
 
     public function toDataProvider():ListCollection

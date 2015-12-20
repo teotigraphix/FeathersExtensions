@@ -19,6 +19,7 @@
 package com.teotigraphix.model.impl
 {
 
+import com.teotigraphix.app.config.ApplicationDescriptor;
 import com.teotigraphix.controller.IActionManager;
 import com.teotigraphix.controller.ICommandLauncher;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
@@ -39,6 +40,9 @@ import flash.utils.Dictionary;
 
 public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
 {
+    [Inject]
+    public var _descriptor:ApplicationDescriptor;
+
     [Inject]
     public var _screenProvider:IScreenProvider;
 
@@ -70,6 +74,18 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
     //--------------------------------------------------------------------------
     // Properties
     //--------------------------------------------------------------------------
+
+    //----------------------------------
+    // descriptor
+    //----------------------------------
+
+    /**
+     * @inheritDoc
+     */
+    public function get descriptor():ApplicationDescriptor
+    {
+        return _descriptor;
+    }
 
     //----------------------------------
     // actions
