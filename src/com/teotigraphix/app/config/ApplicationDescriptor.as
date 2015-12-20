@@ -48,7 +48,7 @@ public class ApplicationDescriptor
     private var _extension:String;
     private var _version:Version;
     private var _flushState:Boolean;
-    private var _showStats:Boolean;
+    private var _isDebug:Boolean;
 
     public function get appID():String
     {
@@ -103,14 +103,14 @@ public class ApplicationDescriptor
         _flushState = value;
     }
 
-    public function get showStats():Boolean
+    public function get isDebug():Boolean
     {
-        return _showStats;
+        return _isDebug;
     }
 
-    public function set showStats(value:Boolean):void
+    public function set isDebug(value:Boolean):void
     {
-        _showStats = value;
+        _isDebug = value;
     }
 
     // /storage/sdcard0

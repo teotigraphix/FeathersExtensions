@@ -113,18 +113,24 @@ public class AbstractUIFactory extends AbstractController implements IUIFactory
         PopUpManager.removePopUp(popUp, dispose);
     }
 
-    public function showCenteredPopUp(content:DisplayObject, closeEvent:String):void
+    public function showCenteredPopUp(content:DisplayObject, closeEvent:String, closedHandler:Function = null):void
     {
         _contentManager = new CenterPopUpContentManager();
+        if (closedHandler != null)
+        {
+            _contentManager.addEventListener(CenterPopUpContentManager.EVENT_CANCEL, closedHandler);
+        }
         _contentManager.addEventListener(CenterPopUpContentManager.EVENT_CANCEL, contentManager_cancelHandler);
-        content.addEventListener(closeEvent, list_closeHandler);
+        if (closeEvent != null)
+        {
+            content.addEventListener(closeEvent, list_closeHandler);
+        }
         _contentManager.isModal = true;
         _contentManager.open(content, DisplayObject(root));
     }
 
     private function contentManager_cancelHandler(event:Event):void
     {
-        //uiModel.pendingMachineIndex = -1;
     }
 
     private function list_closeHandler(event:Event):void

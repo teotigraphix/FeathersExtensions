@@ -27,16 +27,12 @@ import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.service.async.IStepSequence;
-import com.teotigraphix.service.async.StepSequence;
 
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 
-import org.as3commons.async.command.CompositeCommandKind;
-import org.as3commons.async.command.impl.CompositeCommand;
 import org.as3commons.async.operation.event.OperationEvent;
 import org.robotlegs.starling.base.ContextEventType;
-import org.robotlegs.starling.mvcs.Command;
 
 import starling.core.Starling;
 
@@ -69,8 +65,8 @@ public class AbstractStartupCommand extends AbstractCommand
 
     override public function execute():void
     {
-        var main:IStepSequence = sequence(null);
-        addCommands(main);
+        var main:IStepSequence = sequence(createResult());
+        addSteps(main);
         main.addCompleteListener(sequence_completeHandler);
         main.execute();
 
@@ -82,7 +78,7 @@ public class AbstractStartupCommand extends AbstractCommand
     // Protected :: Methods
     //--------------------------------------------------------------------------
 
-    protected function addCommands(main:IStepSequence):void
+    protected function addSteps(main:IStepSequence):void
     {
         var step1:IStepCommand = createStartCoreServicesCommand();
         step1.addCompleteListener(startupCoreServices_completeHandler);
@@ -93,7 +89,15 @@ public class AbstractStartupCommand extends AbstractCommand
         main.addCommand(createDebugSetupCommand());
         main.addCommand(step1);
         main.addCommand(step2);
-        main.addCommand(injector.instantiate(LoadProjectPreferences));
+        main.addStep(LoadProjectPreferences);
+    }
+
+    /**
+     * Can override to add properties to the startup result.
+     */
+    protected function createResult():StartupResult
+    {
+        return new StartupResult();
     }
 
     protected function createDebugSetupCommand():IStepCommand
@@ -250,9 +254,14 @@ final class SetupDebugCommand extends StepCommand
 
     override public function execute():*
     {
-        if (model.descriptor.showStats)
+        if (model.descriptor.isDebug)
         {
+            logger.log("SetupDebugCommand", "Debug mode on");
             Starling.current.showStatsAt();
+        }
+        else
+        {
+            logger.log("SetupDebugCommand", "Debug mode off");
         }
 
         finished();
