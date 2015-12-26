@@ -103,6 +103,7 @@ public class FontFactory extends AbstractThemeFactory
      * An ElementFormat used for Header components.
      */
     public var headerElementFormat:ElementFormat;
+    public var headerDarkElementFormat:ElementFormat;
 
     /**
      * An ElementFormat with a dark tint meant for UI controls.
@@ -222,6 +223,7 @@ public class FontFactory extends AbstractThemeFactory
                                                   FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
 
         headerElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, LIGHT_TEXT_COLOR);
+        headerDarkElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, DARK_TEXT_COLOR);
 
         darkUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_TEXT_COLOR);
         lightUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, LIGHT_TEXT_COLOR);

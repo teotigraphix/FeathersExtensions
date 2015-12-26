@@ -48,7 +48,12 @@ public class ApplicationDescriptor
     private var _extension:String;
     private var _version:Version;
     private var _flushState:Boolean;
+    private var _fps:int;
     private var _isDebug:Boolean;
+
+    //----------------------------------
+    // appID
+    //----------------------------------
 
     public function get appID():String
     {
@@ -60,6 +65,10 @@ public class ApplicationDescriptor
         _appID = value;
     }
 
+    //----------------------------------
+    // name
+    //----------------------------------
+
     public function get name():String
     {
         return _name;
@@ -69,6 +78,10 @@ public class ApplicationDescriptor
     {
         _name = value;
     }
+
+    //----------------------------------
+    // extension
+    //----------------------------------
 
     public function get extension():String
     {
@@ -80,6 +93,10 @@ public class ApplicationDescriptor
         _extension = value;
     }
 
+    //----------------------------------
+    // version
+    //----------------------------------
+
     public function get version():Version
     {
         return _version;
@@ -89,6 +106,10 @@ public class ApplicationDescriptor
     {
         _version = value;
     }
+
+    //----------------------------------
+    // flushState
+    //----------------------------------
 
     /**
      * Whether to flush application state each startup.
@@ -103,6 +124,24 @@ public class ApplicationDescriptor
         _flushState = value;
     }
 
+    //----------------------------------
+    // fps
+    //----------------------------------
+
+    public function get fps():int
+    {
+        return _fps;
+    }
+
+    public function set fps(value:int):void
+    {
+        _fps = value;
+    }
+
+    //----------------------------------
+    // isDebug
+    //----------------------------------
+
     public function get isDebug():Boolean
     {
         return _isDebug;
@@ -112,6 +151,10 @@ public class ApplicationDescriptor
     {
         _isDebug = value;
     }
+
+    //----------------------------------
+    // documentsDirectory
+    //----------------------------------
 
     // /storage/sdcard0
     public function get documentsDirectory():File

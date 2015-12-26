@@ -49,24 +49,37 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     [Inject]
     public var _navigator:IScreenNavigator;
 
+    private var _applicationScreenID:String;
+
     //--------------------------------------------------------------------------
     // Private :: Variables
     //--------------------------------------------------------------------------
 
-    private var _applicationScreenID:String;
+    /**
+     * Returns whether the Back button is enabled for a screen or certain UI state such as
+     * a popup etc.
+     */
+    public function get isBackEnabled():Boolean
+    {
+        return false;
+    }
 
     //--------------------------------------------------------------------------
     // API :: Properties
     //--------------------------------------------------------------------------
 
     //----------------------------------
-    // applicationScreen
+    // isBackEnabled
     //----------------------------------
 
     public function get applicationScreenID():String
     {
         return _applicationScreenID;
     }
+
+    //----------------------------------
+    // applicationScreen
+    //----------------------------------
 
     public function AbstractScreenLauncher()
     {
@@ -98,7 +111,7 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
 
     public function back():void
     {
-        if (_screenProvider.isEmpty)
+        if (_screenProvider.isEmpty && !sdk_internal::inExitAlert)
         {
             var sequence:StepSequence = new StepSequence();
             sequence.addCommand(injector.instantiate(ShowAlertExitStep));
@@ -203,6 +216,8 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
         _applicationScreenID = screenID;
     }
 
+    sdk_internal var inExitAlert:Boolean = false;
+
     /**
      * Sets the current screenID for the application and passes the optional screen data to be
      * set int he IScreenProvider.
@@ -228,7 +243,10 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
 }
 }
 
+import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.async.StepCommand;
+import com.teotigraphix.ui.screen.IScreenLauncher;
+import com.teotigraphix.ui.screen.core.AbstractScreenLauncher;
 
 import feathers.controls.Alert;
 import feathers.data.ListCollection;
@@ -237,11 +255,17 @@ import flash.desktop.NativeApplication;
 
 import starling.events.Event;
 
+use namespace sdk_internal;
+
 final class ShowAlertExitStep extends StepCommand
 {
+    [Inject]
+    public var screenLauncher:IScreenLauncher;
 
     override public function execute():*
     {
+        AbstractScreenLauncher(screenLauncher).sdk_internal::inExitAlert = true;
+
         var alert:Alert = Alert.show("Are you sure you want to exit application?",
                                      "Exit Caustic Guide",
                                      new ListCollection([
@@ -253,6 +277,8 @@ final class ShowAlertExitStep extends StepCommand
 
     private function alert_closeHandler(event:Event):void
     {
+        AbstractScreenLauncher(screenLauncher).sdk_internal::inExitAlert = false;
+
         if (event.data.label == "Yes")
         {
             NativeApplication.nativeApplication.exit();

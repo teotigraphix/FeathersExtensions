@@ -25,6 +25,7 @@ import com.teotigraphix.controller.ICommandLauncher;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.AbstractModel;
+import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.IDeviceModel;
 import com.teotigraphix.model.IFrameworkModel;
 import com.teotigraphix.model.IProjectModel;
@@ -44,22 +45,25 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
     public var _descriptor:ApplicationDescriptor;
 
     [Inject]
+    public var _applicationSettings:IApplicationSettings; // override
+
+    [Inject]
     public var _screenProvider:IScreenProvider;
 
     [Inject]
-    public var projectService:IProjectService;
+    public var _projectService:IProjectService;
 
     [Inject]
-    public var projectModel:IProjectModel;
+    public var _projectModel:IProjectModel;
 
     [Inject]
-    public var deviceModel:IDeviceModel;
+    public var _deviceModel:IDeviceModel;
 
     [Inject]
-    public var _commands:ICommandLauncher;
+    public var _commands:ICommandLauncher; // override
 
     [Inject]
-    public var _screens:IScreenLauncher;
+    public var _screens:IScreenLauncher; // override
 
     [Inject]
     public var _actions:IActionManager;
@@ -120,7 +124,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function get project():Project
     {
-        return projectModel.project;
+        return _projectModel.project;
     }
 
     /**
@@ -128,7 +132,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function set project(value:Project):void
     {
-        projectModel.project = value;
+        _projectModel.project = value;
     }
 
     /**
@@ -136,7 +140,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function get projectDirectory():File
     {
-        return projectModel.projectDirectory;
+        return _projectModel.projectDirectory;
     }
 
     /**
@@ -144,7 +148,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function get projectFile():File
     {
-        return projectModel.projectFile;
+        return _projectModel.projectFile;
     }
 
     //----------------------------------
@@ -156,7 +160,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function get isLandscape():Boolean
     {
-        return deviceModel.isLandscape;
+        return _deviceModel.isLandscape;
     }
 
     /**
@@ -164,7 +168,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function get isTablet():Boolean
     {
-        return deviceModel.isTablet;
+        return _deviceModel.isTablet;
     }
 
     /**
@@ -172,7 +176,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function get isPhone():Boolean
     {
-        return deviceModel.isPhone;
+        return _deviceModel.isPhone;
     }
 
     /**
@@ -180,7 +184,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function get orientation():String
     {
-        return deviceModel.orientation;
+        return _deviceModel.orientation;
     }
 
     /**
@@ -188,7 +192,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
      */
     public function get supportedOrientations():Vector.<String>
     {
-        return deviceModel.supportedOrientations;
+        return _deviceModel.supportedOrientations;
     }
 
     public function FrameworkModelImpl()
@@ -203,23 +207,41 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
     // IProjectService
     //----------------------------------
 
+    /**
+     * @inheritDoc
+     */
     public function saveQuick():void
     {
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getApplicationSettings():IApplicationSettings
+    {
+        return _applicationSettings;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getUI():IUIFactory
+    {
+        return _ui;
+    }
+
     public function saveProjectAsync():IStepSequence
     {
-        return projectService.saveAsync();
+        return _projectService.saveAsync();
     }
 
     public function createProjectAsync(name:String, path:String):IStepCommand
     {
-        return projectService.createProjectAsync(name, path);
+        return _projectService.createProjectAsync(name, path);
     }
 
     public function loadProjectAsync(file:File):IStepCommand
     {
-        return projectService.loadProjectAsync(file);
+        return _projectService.loadProjectAsync(file);
     }
 
     /**

@@ -138,7 +138,7 @@ import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.model.event.ProjectModelEventType;
 import com.teotigraphix.service.IFileService;
-import com.teotigraphix.service.IPreferenceService;
+import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepCommand;
@@ -194,7 +194,7 @@ class LoadProjectCommand extends StepCommand implements IAsyncCommand
     public var projectModel:IProjectModel;
 
     [Inject]
-    public var preferenceService:IPreferenceService;
+    public var preferenceService:IApplicationSettings;
 
     [Inject]
     public var fileService:IFileService;
@@ -246,7 +246,7 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
     private static const TAG:String = "LoadLastProjectCommand";
 
     [Inject]
-    public var preferenceService:IPreferenceService;
+    public var preferenceService:IApplicationSettings;
 
     [Inject]
     public var fileService:IFileService;

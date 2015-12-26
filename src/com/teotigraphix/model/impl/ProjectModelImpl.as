@@ -24,7 +24,7 @@ import com.teotigraphix.app.event.ApplicationEventType;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.*;
 import com.teotigraphix.service.IFileService;
-import com.teotigraphix.service.IPreferenceService;
+import com.teotigraphix.model.IApplicationSettings;
 
 import flash.filesystem.File;
 
@@ -40,7 +40,7 @@ public class ProjectModelImpl extends AbstractModel implements IProjectModel
     public var fileService:IFileService;
 
     [Inject]
-    public var preferenceService:IPreferenceService;
+    public var preferenceService:IApplicationSettings;
 
     private var _project:Project;
 

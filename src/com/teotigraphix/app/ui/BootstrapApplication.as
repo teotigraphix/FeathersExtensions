@@ -26,6 +26,8 @@ import feathers.events.FeathersEventType;
 import flash.desktop.NativeApplication;
 import flash.events.Event;
 
+import org.robotlegs.starling.mvcs.Context;
+
 import starling.events.Event;
 
 /*
@@ -92,8 +94,22 @@ private function activated(event:flash.events.Event):void
 
 public class BootstrapApplication extends DrawersApplication implements IBootstrapApplication
 {
+    private var _context:Context;
+
+    public function get context():Context
+    {
+        return _context;
+    }
+
+    public function set context(value:Context):void
+    {
+        _context = value;
+        _context.contextView = this;
+    }
+
     public function BootstrapApplication()
     {
+        addEventListener(starling.events.Event.ADDED, this_addedHandler);
         addEventListener(FeathersEventType.INITIALIZE, this_initializeHandler);
         addEventListener(FeathersEventType.CREATION_COMPLETE, this_creationCompleteHandler);
         addEventListener(starling.events.Event.ADDED_TO_STAGE, this_addedToStageHandler);
@@ -101,7 +117,14 @@ public class BootstrapApplication extends DrawersApplication implements IBootstr
 
         var application:NativeApplication = NativeApplication.nativeApplication;
         application.addEventListener(/*flash.events.Event.EXITING*/"exiting", closingHandler);
+    }
 
+    private function this_addedHandler(event:starling.events.Event):void
+    {
+        if (event.target != this)
+            return;
+
+        context.startup();
     }
 
     private function this_initializeHandler(event:starling.events.Event):void

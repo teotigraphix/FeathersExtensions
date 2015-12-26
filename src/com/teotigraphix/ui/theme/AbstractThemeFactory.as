@@ -27,10 +27,11 @@ import feathers.textures.Scale9Textures;
 import flash.geom.Rectangle;
 
 import starling.display.Image;
+import starling.events.EventDispatcher;
 import starling.textures.Texture;
 import starling.textures.TextureAtlas;
 
-public class AbstractThemeFactory
+public class AbstractThemeFactory extends EventDispatcher
 {
     public var theme:AbstractTheme;
     public var properties:ThemeProperties;

@@ -17,10 +17,10 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.service
+package com.teotigraphix.model
 {
 
-public interface IPreferenceService
+public interface IApplicationSettings
 {
     // Global preferences shared by all applications
 

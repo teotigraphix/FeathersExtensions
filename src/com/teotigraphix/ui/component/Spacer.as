@@ -16,16 +16,12 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.app.command
+package com.teotigraphix.ui.component
 {
 
-import com.teotigraphix.frameworks.project.Project;
-
-public class StartupResult
+public class Spacer extends HGroup
 {
-    public var project:Project;
-
-    public function StartupResult()
+    public function Spacer()
     {
     }
 }

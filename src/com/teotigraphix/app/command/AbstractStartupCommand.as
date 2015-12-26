@@ -22,10 +22,6 @@ package com.teotigraphix.app.command
 
 import com.teotigraphix.app.event.ApplicationEventType;
 import com.teotigraphix.controller.command.AbstractCommand;
-import com.teotigraphix.frameworks.project.Project;
-import com.teotigraphix.model.IProjectModel;
-import com.teotigraphix.service.IProjectService;
-import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.service.async.IStepSequence;
 
 import flash.events.Event;
@@ -43,13 +39,10 @@ public class AbstractStartupCommand extends AbstractCommand
     //--------------------------------------------------------------------------
 
     [Inject]
-    public var projectService:IProjectService;
-
-    [Inject]
-    public var projectModel:IProjectModel;
-
-    [Inject]
     public var flashDispatcher:IEventDispatcher;
+
+    [Inject]
+    public var startupFactory:StartupFactory;
 
     //--------------------------------------------------------------------------
     // Constructor
@@ -65,12 +58,13 @@ public class AbstractStartupCommand extends AbstractCommand
 
     override public function execute():void
     {
-        var main:IStepSequence = sequence(createResult());
+        var main:IStepSequence = sequence(startupFactory.createResult());
         addSteps(main);
         main.addCompleteListener(sequence_completeHandler);
         main.execute();
 
-        trace("    ApplicationStartupCommand.dispatchWith(STARTUP_COMPLETE)");
+        // XXX, This STARTUP_COMPLETE seems to do nothing right now, check to see
+        logger.startup("AbstractStartupCommand", "dispatchWith(STARTUP_COMPLETE)");
         dispatchWith(ContextEventType.STARTUP_COMPLETE);
     }
 
@@ -80,39 +74,10 @@ public class AbstractStartupCommand extends AbstractCommand
 
     protected function addSteps(main:IStepSequence):void
     {
-        var step1:IStepCommand = createStartCoreServicesCommand();
-        step1.addCompleteListener(startupCoreServices_completeHandler);
-
-        var step2:IStepCommand = createLoadLastProjectCommand();
-        step2.addCompleteListener(loadLastProject_completeHandler);
-
-        main.addCommand(createDebugSetupCommand());
-        main.addCommand(step1);
-        main.addCommand(step2);
-        main.addStep(LoadProjectPreferences);
-    }
-
-    /**
-     * Can override to add properties to the startup result.
-     */
-    protected function createResult():StartupResult
-    {
-        return new StartupResult();
-    }
-
-    protected function createDebugSetupCommand():IStepCommand
-    {
-        return injector.instantiate(SetupDebugCommand);
-    }
-
-    protected function createStartCoreServicesCommand():IStepCommand
-    {
-        return injector.instantiate(StartupCoreServicesCommand);
-    }
-
-    protected function createLoadLastProjectCommand():IStepCommand
-    {
-        return projectService.loadLastProject();
+        main.addCommand(startupFactory.createDebugSetupCommand());
+        main.addCommand(startupFactory.createStartCoreServicesCommand());
+        main.addCommand(startupFactory.createLoadLastProjectCommand());
+        main.addCommand(startupFactory.createLoadProjectPreferencesCommand());
     }
 
     protected function dispatchApplicationComplete():void
@@ -123,7 +88,7 @@ public class AbstractStartupCommand extends AbstractCommand
         }
         else
         {
-            trace("    ApplicationStartupCommand.dispatchEventWith(APPLICATION_COMPLETE)");
+            logger.startup("AbstractStartupCommand", "dispatchWith(APPLICATION_COMPLETE)");
             dispatchWith(ApplicationEventType.APPLICATION_COMPLETE);
             flashDispatcher.dispatchEvent(new Event(ApplicationEventType.APPLICATION_COMPLETE));
         }
@@ -131,140 +96,17 @@ public class AbstractStartupCommand extends AbstractCommand
 
     protected function delayedComplete():void
     {
-        trace("");
-        trace("============================================================");
-        trace("    [Next Frame] ApplicationStartupCommand.dispatchEventWith(APPLICATION_COMPLETE)");
+        logger.startup("", "");
+        logger.startup("", "============================================================");
+        logger.startup("AbstractStartupCommand", "[Next Frame]");
         dispatchWith(ApplicationEventType.APPLICATION_COMPLETE);
     }
 
-    protected function startupCoreServices_completeHandler(event:OperationEvent):void
+    private function sequence_completeHandler(event:OperationEvent):void
     {
-        trace("    ApplicationStartupCommand, startupCoreServices_completeHandler()")
-    }
-
-    protected function loadLastProject_completeHandler(event:OperationEvent):void
-    {
-        var project:Project = Project(event.result);
-        trace("    ApplicationStartupCommand, setting current Project");
-        projectModel.project = project;
-
-        trace("    ApplicationStartupCommand, loadLastProjectComplete()")
-    }
-
-    protected function sequence_completeHandler(event:OperationEvent):void
-    {
-        trace("    ApplicationStartupCommand, sequence_completeHandler()");
-
-        // XXX Subclasses dispatch when app load complete and ready to show UI
-        //dispatchApplicationComplete();
-
-        trace("    ApplicationStartupCommand, EXIT()")
+        logger.startup("AbstractStartupCommand", "sequence_completeHandler()");
+        dispatchApplicationComplete();
+        logger.startup("AbstractStartupCommand", "EXIT");
     }
 }
-}
-
-import com.teotigraphix.frameworks.project.IProjectPreferences;
-import com.teotigraphix.frameworks.project.Project;
-import com.teotigraphix.model.IFrameworkModel;
-import com.teotigraphix.model.impl.FrameworkModelImpl;
-import com.teotigraphix.service.IFileService;
-import com.teotigraphix.service.IPreferenceService;
-import com.teotigraphix.service.IProjectService;
-import com.teotigraphix.service.async.StepCommand;
-import com.teotigraphix.service.impl.FileServiceImpl;
-import com.teotigraphix.service.impl.PreferenceServiceImpl;
-import com.teotigraphix.service.impl.ProjectServiceImpl;
-import com.teotigraphix.util.Files;
-
-import flash.filesystem.File;
-
-import starling.core.Starling;
-
-class StartupCoreServicesCommand extends StepCommand
-{
-    [Inject]
-    public var fileService:IFileService;
-
-    [Inject]
-    public var preferenceService:IPreferenceService;
-
-    [Inject]
-    public var projectService:IProjectService;
-
-    public function StartupCoreServicesCommand()
-    {
-    }
-
-    override public function execute():*
-    {
-        logger.startup("StartupCoreServicesCommand", "execute()");
-
-        // Creates the Documents/Application directory
-        FileServiceImpl(fileService).startup();
-
-        // Loads/creates binary application preferences map from fileService.preferenceBinFile
-        PreferenceServiceImpl(preferenceService).startup();
-
-        // Nothing yet
-        ProjectServiceImpl(projectService).startup();
-
-        complete(null);
-
-        return null;
-    }
-}
-
-final class LoadProjectPreferences extends StepCommand
-{
-    [Inject]
-    public var model:IFrameworkModel;
-
-    override public function execute():*
-    {
-        logger.startup("LoadProjectPreferences", "execute()");
-
-        var project:Project = model.project;
-        var resource:File = project.findResource(".preferences");
-
-        if (!injector.hasMapping(IProjectPreferences))
-        {
-            logger.startup("LoadProjectPreferences", "IProjectPreferences is not mapped");
-            return;
-        }
-
-        var preferences:IProjectPreferences = injector.getInstance(IProjectPreferences);
-
-        if (resource.exists)
-        {
-            logger.startup("LoadProjectPreferences", "deserialize {0} ", resource.nativePath);
-            preferences = Files.deserialize(resource);
-        }
-
-        FrameworkModelImpl(model)._preferences = preferences;
-
-        finished();
-        return null;
-    }
-}
-
-final class SetupDebugCommand extends StepCommand
-{
-    [Inject]
-    public var model:IFrameworkModel;
-
-    override public function execute():*
-    {
-        if (model.descriptor.isDebug)
-        {
-            logger.log("SetupDebugCommand", "Debug mode on");
-            Starling.current.showStatsAt();
-        }
-        else
-        {
-            logger.log("SetupDebugCommand", "Debug mode off");
-        }
-
-        finished();
-        return super.execute();
-    }
 }

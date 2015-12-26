@@ -17,17 +17,21 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.service.impl
+package com.teotigraphix.model.impl
 {
 
 import com.teotigraphix.app.config.ApplicationDescriptor;
+import com.teotigraphix.model.AbstractModel;
+import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.service.*;
 
 import flash.filesystem.File;
 
-public class PreferenceServiceImpl extends AbstractService implements IPreferenceService
+import starling.core.Starling;
+
+public class AbstractApplicationSettings extends AbstractModel implements IApplicationSettings
 {
-    private const TAG:String = "PreferenceService";
+    private const TAG:String = "AbstractApplicationSettings";
 
     private static const GLOBAL_LAST_PROJECT:String = "Application/lastProject";
 
@@ -65,11 +69,26 @@ public class PreferenceServiceImpl extends AbstractService implements IPreferenc
         put(GLOBAL_LAST_PROJECT, value);
     }
 
+    //----------------------------------
+    // fps
+    //----------------------------------
+
+    public function get fps():int
+    {
+        return getInt("fps", descriptor.fps);
+    }
+
+    public function set fps(value:int):void
+    {
+        put("fps", value);
+        Starling.current.nativeStage.frameRate = value;
+    }
+
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------
 
-    public function PreferenceServiceImpl()
+    public function AbstractApplicationSettings()
     {
     }
 
@@ -102,6 +121,9 @@ public class PreferenceServiceImpl extends AbstractService implements IPreferenc
             logger.startup(TAG, "    Created binary application preferences " + binFile.nativePath);
             flush();
         }
+
+        logger.startup(TAG, "Setting FPS to {0}", fps);
+        Starling.current.nativeStage.frameRate = fps;
     }
 
     //--------------------------------------------------------------------------

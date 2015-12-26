@@ -20,18 +20,21 @@
 package com.teotigraphix.app.config
 {
 
+import com.teotigraphix.app.command.StartupFactory;
 import com.teotigraphix.app.ui.IBootstrapApplication;
+import com.teotigraphix.controller.ICommandLauncher;
+import com.teotigraphix.model.IApplicationSettings;
+import com.teotigraphix.model.impl.AbstractApplicationSettings;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.impl.FileServiceImpl;
 import com.teotigraphix.service.impl.LoggerImpl;
+import com.teotigraphix.ui.IUIFactory;
 import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.screen.IScreenProvider;
-import com.teotigraphix.ui.screen.core.AbstractScreenLauncher;
 import com.teotigraphix.ui.screen.impl.NullScreenLauncher;
 import com.teotigraphix.ui.screen.impl.ScreenProviderImpl;
 
-import flash.errors.IllegalOperationError;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
 
@@ -48,6 +51,18 @@ import starling.display.DisplayObjectContainer;
 
 public class FrameworkContext extends Context
 {
+    public var applicationDescriptorClass:Class = ApplicationDescriptor;
+    public var applicationSettingsClass:Class = AbstractApplicationSettings;
+
+    public var applicationClass:Class;
+    public var applicationMediatorClass:Class;
+
+    public var startupFactoryClass:Class = StartupFactory;
+
+    public var screenLauncherClass:Class = NullScreenLauncher;
+    public var commandLauncherClass:Class;
+    public var uiFactoryClass:Class;
+
     private var _flashDispatcher:IEventDispatcher;
 
     public function get flashDispatcher():IEventDispatcher
@@ -84,11 +99,15 @@ public class FrameworkContext extends Context
         injector.mapValue(IEventDispatcher, flashDispatcher);
 
         trace("    FrameworkContext.configureDescriptor()");
-        configureDescriptor();
+        injector.mapSingletonOf(ApplicationDescriptor, applicationDescriptorClass);
+
         trace("    FrameworkContext.configureCore()");
         configureCore();
         trace("    FrameworkContext.configureApplication()");
+
         configureApplication();
+        mediatorMap.mapView(applicationClass, applicationMediatorClass);
+
         trace("    FrameworkContext.startupComplete()");
         startupComplete();
     }
@@ -115,22 +134,29 @@ public class FrameworkContext extends Context
 
     protected function configureDescriptor():void
     {
-        throw new IllegalOperationError("Implement FrameworkContext.configureDescriptor()");
+
     }
 
     protected function configureCore():void
     {
+        injector.mapValue(IBootstrapApplication, contextView);
+
         injector.mapValue(Juggler, Starling.juggler);
+
         injector.mapSingletonOf(ILogger, LoggerImpl);
         injector.mapSingletonOf(IFileService, FileServiceImpl);
         injector.mapSingletonOf(IScreenProvider, ScreenProviderImpl);
-        injector.mapValue(IBootstrapApplication, contextView.parent);
-        injector.mapSingletonOf(IScreenLauncher, NullScreenLauncher);
+
+        injector.mapSingletonOf(StartupFactory, startupFactoryClass);
+        injector.mapSingletonOf(IApplicationSettings, applicationSettingsClass);
+        injector.mapSingletonOf(IScreenLauncher, screenLauncherClass);
+        injector.mapSingletonOf(ICommandLauncher, commandLauncherClass);
+        injector.mapSingletonOf(IUIFactory, uiFactoryClass);
     }
 
     protected function configureApplication():void
     {
-        throw new IllegalOperationError("Implement FrameworkContext.configureApplication()");
+        //throw new IllegalOperationError("Implement FrameworkContext.configureApplication()");
     }
 
     protected function startupComplete():void

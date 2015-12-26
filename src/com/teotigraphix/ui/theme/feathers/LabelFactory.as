@@ -45,18 +45,50 @@ public class LabelFactory extends AbstractThemeFactory
         setStyle(Label, setDetailLabelStyles, Label.ALTERNATE_STYLE_NAME_DETAIL);
     }
 
+    /**
+     * lightElementFormat
+     * @param label
+     */
     public function setLabelStyles(label:Label):void
     {
         label.textRendererProperties.elementFormat = theme.fonts.lightElementFormat;
         label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
     }
 
+    /**
+     * largeLightElementFormat
+     * @param label
+     */
     public function setHeadingLabelStyles(label:Label):void
     {
         label.textRendererProperties.elementFormat = theme.fonts.largeLightElementFormat;
         label.textRendererProperties.disabledElementFormat = theme.fonts.largeDisabledElementFormat;
     }
 
+    /**
+     * headerElementFormat
+     * @param label
+     */
+    public function setHeading1LabelStyles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = theme.fonts.headerElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.headerElementFormat;
+    }
+
+    /**
+     * headerElementFormat
+     * @param label
+     */
+    public function setHeading1DarkLabelStyles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = theme.fonts.headerDarkElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.headerDarkElementFormat;
+    }
+
+    /**
+     * smallLightElementFormat
+     * @param label
+     */
     public function setDetailLabelStyles(label:Label):void
     {
         label.textRendererProperties.elementFormat = theme.fonts.smallLightElementFormat;

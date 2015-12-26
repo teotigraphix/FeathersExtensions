@@ -29,7 +29,6 @@ import feathers.controls.StackScreenNavigator;
 import feathers.controls.StackScreenNavigatorItem;
 
 import org.robotlegs.starling.core.ICommandMap;
-
 import org.robotlegs.starling.core.IInjector;
 import org.robotlegs.starling.mvcs.Mediator;
 
@@ -56,6 +55,8 @@ public class AbstractMediator extends Mediator
     [Inject]
     public var root:DisplayObjectContainer;
 
+    private var _commands:Vector.<Class>;
+
     public function AbstractMediator()
     {
     }
@@ -69,6 +70,11 @@ public class AbstractMediator extends Mediator
     {
         super.onRegister();
 
+        mapCommands();
+        initializeView();
+        setupViewListeners();
+        setupContextListeners();
+
         addContextListener(DeviceModelEventType.ORIENTATION_CHANGE, context_orientationChange);
 
         onOrientationChange(deviceModel.isLandscape, deviceModel.isTablet);
@@ -77,12 +83,50 @@ public class AbstractMediator extends Mediator
     override public function onRemove():void
     {
         super.onRemove();
+
+        for each (var command:Class in _commands)
+        {
+            commandMap.unmapEvent(command["ID"], command);
+        }
+
+        _commands = null;
+    }
+
+    /**
+     * Maps mediator specific commands.
+     *
+     * @see #mapCommand()
+     */
+    protected function mapCommands():void
+    {
+    }
+
+    protected function initializeView():void
+    {
+    }
+
+    protected function setupViewListeners():void
+    {
+    }
+
+    protected function setupContextListeners():void
+    {
     }
 
     protected function onOrientationChange(isLandscape:Boolean, isTablet:Boolean):void
     {
         if (viewComponent is IOrientationAware)
             IOrientationAware(viewComponent).orientationChange(isLandscape, isTablet);
+    }
+
+    protected function mapCommand(command:Class):void
+    {
+        if (_commands == null)
+            _commands = new <Class>[];
+
+        _commands.push(command);
+
+        commandMap.mapEvent(command["ID"], command);
     }
 
     ///**

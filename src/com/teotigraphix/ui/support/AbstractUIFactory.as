@@ -39,6 +39,7 @@ public class AbstractUIFactory extends AbstractController implements IUIFactory
 {
     [Inject]
     public var root:DisplayObjectContainer;
+
     private var _contentManager:CenterPopUpContentManager;
 
     public function AbstractUIFactory()
