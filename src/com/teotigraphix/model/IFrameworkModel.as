@@ -21,7 +21,7 @@ package com.teotigraphix.model
 
 import com.teotigraphix.app.config.ApplicationDescriptor;
 import com.teotigraphix.controller.IActionManager;
-import com.teotigraphix.ui.IUIFactory;
+import com.teotigraphix.ui.IUIController;
 
 public interface IFrameworkModel extends IProjectModel, IDeviceModel
 {
@@ -44,7 +44,7 @@ public interface IFrameworkModel extends IProjectModel, IDeviceModel
 
     function getApplicationSettings():IApplicationSettings;
 
-    function getUI():IUIFactory;
+    function getUI():IUIController;
 
     /**
      * Retrieves a stateless application runtime property.

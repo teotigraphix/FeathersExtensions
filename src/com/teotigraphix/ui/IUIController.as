@@ -19,7 +19,7 @@
 package com.teotigraphix.ui
 {
 
-public interface IUIFactory
+public interface IUIController
 {
     function notifyToast(message:String, icon:String = null, duration:Number = 3000):void;
 }

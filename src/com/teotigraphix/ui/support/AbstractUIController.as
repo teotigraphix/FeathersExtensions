@@ -20,7 +20,7 @@ package com.teotigraphix.ui.support
 {
 
 import com.teotigraphix.controller.impl.AbstractController;
-import com.teotigraphix.ui.IUIFactory;
+import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.component.Toast;
 import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.popup.CenterPopUpContentManager;
@@ -35,14 +35,14 @@ import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
 import starling.events.Event;
 
-public class AbstractUIFactory extends AbstractController implements IUIFactory
+public class AbstractUIController extends AbstractController implements IUIController
 {
     [Inject]
     public var root:DisplayObjectContainer;
 
     private var _contentManager:CenterPopUpContentManager;
 
-    public function AbstractUIFactory()
+    public function AbstractUIController()
     {
     }
 

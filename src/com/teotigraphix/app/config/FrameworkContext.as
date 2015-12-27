@@ -24,13 +24,15 @@ import com.teotigraphix.app.command.StartupFactory;
 import com.teotigraphix.app.ui.IBootstrapApplication;
 import com.teotigraphix.controller.ICommandLauncher;
 import com.teotigraphix.model.IApplicationSettings;
+import com.teotigraphix.model.IFrameworkModel;
 import com.teotigraphix.model.impl.AbstractApplicationSettings;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.impl.FileServiceImpl;
 import com.teotigraphix.service.impl.LoggerImpl;
-import com.teotigraphix.ui.IUIFactory;
+import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.screen.IScreenLauncher;
+import com.teotigraphix.ui.screen.IScreenNavigator;
 import com.teotigraphix.ui.screen.IScreenProvider;
 import com.teotigraphix.ui.screen.impl.NullScreenLauncher;
 import com.teotigraphix.ui.screen.impl.ScreenProviderImpl;
@@ -51,17 +53,47 @@ import starling.display.DisplayObjectContainer;
 
 public class FrameworkContext extends Context
 {
+    //----------------------------------
+    // Framework
+    //----------------------------------
+
+    public var $loggerClass:Class = LoggerImpl;
+    public var $fileServiceClass:Class = FileServiceImpl;
+    public var $screenProviderClass:Class = ScreenProviderImpl;
+
+    //----------------------------------
+    // App Config
+    //----------------------------------
+
     public var applicationDescriptorClass:Class = ApplicationDescriptor;
     public var applicationSettingsClass:Class = AbstractApplicationSettings;
+
+    public var startupFactoryClass:Class = StartupFactory;
+    public var startupCommand:Class;
+
+    public var applicationModelAPI:Class;
+    public var applicationModelClass:Class;
+
+    //----------------------------------
+    // App UI
+    //----------------------------------
+
+    public var navigator:IScreenNavigator;
 
     public var applicationClass:Class;
     public var applicationMediatorClass:Class;
 
-    public var startupFactoryClass:Class = StartupFactory;
+    //----------------------------------
+    // App Controller
+    //----------------------------------
 
     public var screenLauncherClass:Class = NullScreenLauncher;
     public var commandLauncherClass:Class;
-    public var uiFactoryClass:Class;
+    public var uiControllerClass:Class;
+
+    //----------------------------------
+    // Tests
+    //----------------------------------
 
     private var _flashDispatcher:IEventDispatcher;
 
@@ -71,6 +103,10 @@ public class FrameworkContext extends Context
             _flashDispatcher = new EventDispatcher();
         return _flashDispatcher;
     }
+
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
 
     public function FrameworkContext(contextView:DisplayObjectContainer = null, autoStartup:Boolean = true)
     {
@@ -105,6 +141,7 @@ public class FrameworkContext extends Context
         configureCore();
         trace("    FrameworkContext.configureApplication()");
 
+        injector.mapValue(IScreenNavigator, navigator);
         configureApplication();
         mediatorMap.mapView(applicationClass, applicationMediatorClass);
 
@@ -132,36 +169,100 @@ public class FrameworkContext extends Context
         return injector;
     }
 
-    protected function configureDescriptor():void
-    {
-
-    }
-
     protected function configureCore():void
     {
-        injector.mapValue(IBootstrapApplication, contextView);
-
         injector.mapValue(Juggler, Starling.juggler);
 
-        injector.mapSingletonOf(ILogger, LoggerImpl);
-        injector.mapSingletonOf(IFileService, FileServiceImpl);
-        injector.mapSingletonOf(IScreenProvider, ScreenProviderImpl);
+        injector.mapValue(IBootstrapApplication, contextView);
+
+        injector.mapSingletonOf(ILogger, $loggerClass);
+        injector.mapSingletonOf(IFileService, $fileServiceClass);
+        injector.mapSingletonOf(IScreenProvider, $screenProviderClass);
 
         injector.mapSingletonOf(StartupFactory, startupFactoryClass);
         injector.mapSingletonOf(IApplicationSettings, applicationSettingsClass);
         injector.mapSingletonOf(IScreenLauncher, screenLauncherClass);
         injector.mapSingletonOf(ICommandLauncher, commandLauncherClass);
-        injector.mapSingletonOf(IUIFactory, uiFactoryClass);
+        injector.mapSingletonOf(IUIController, uiControllerClass);
     }
 
     protected function configureApplication():void
     {
-        //throw new IllegalOperationError("Implement FrameworkContext.configureApplication()");
+        trace("    FrameworkContext.configureService()");
+        configureService();
+
+        trace("    FrameworkContext.configureModel()");
+        configureModel();
+
+        trace("    FrameworkContext Configure StartupCommand Class");
+        commandMap.mapEvent(ContextEventType.STARTUP, startupCommand);
+
+        trace("    FrameworkContext.configureController()");
+        configureController();
+
+        trace("    FrameworkContext.configureApplicationModel()");
+        var model:IFrameworkModel = injector.instantiate(applicationModelClass);
+        mapApplicationModel(model);
+
+        trace("    FrameworkContext.configureView()");
+        configureView();
+    }
+
+    protected function mapApplicationModel(model:IFrameworkModel):void
+    {
+        injector.mapValue(IFrameworkModel, model);
+        injector.mapValue(applicationModelAPI, model);
+    }
+
+    /**
+     * Map all services.
+     *
+     * Services only listen to their own operation/external service events.
+     *
+     * Return values should always be IStepCommand or IStepSequence so clients can chain calls.
+     */
+    protected function configureService():void
+    {
+    }
+
+    /**
+     * Map all models.
+     *
+     * Models never listen to outside events, only to their internal operations.
+     *
+     * Models dispatch context level events for global application messaging.
+     *
+     * Models generally act as a proxy to internal state that could be serialized and deserialized
+     * during the application's runtime.
+     */
+    protected function configureModel():void
+    {
+    }
+
+    /**
+     * Map all controllers and executable Commands in the application.
+     *
+     * Controllers handle context events that may be sent by UI, model or service operations.
+     *
+     * Controllers are the mediator to non-view/screen model changes.
+     *
+     * Controllers also can call commands and/or have public API that set off app actions.
+     */
+    protected function configureController():void
+    {
+    }
+
+    /**
+     * Map all UI view/mediator relationships.
+     */
+    protected function configureView():void
+    {
     }
 
     protected function startupComplete():void
     {
         trace("    FrameworkContext.dispatchEventWith(STARTUP)");
+        // launches the startupCommandClass
         dispatchEventWith(ContextEventType.STARTUP);
     }
 }

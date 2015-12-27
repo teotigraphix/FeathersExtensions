@@ -32,7 +32,7 @@ import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.service.async.IStepSequence;
-import com.teotigraphix.ui.IUIFactory;
+import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.screen.IScreenProvider;
 
@@ -69,7 +69,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
     public var _actions:IActionManager;
 
     [Inject]
-    public var _ui:IUIFactory;
+    public var _ui:IUIController;
 
     private var _data:Dictionary = new Dictionary();
 
@@ -224,7 +224,7 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
     /**
      * @inheritDoc
      */
-    public function getUI():IUIFactory
+    public function getUI():IUIController
     {
         return _ui;
     }
