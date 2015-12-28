@@ -32,7 +32,11 @@ import com.teotigraphix.ui.screen.impl.dialog.GetStringDialog;
 import feathers.controls.IScreen;
 import feathers.controls.StackScreenNavigatorItem;
 
+import org.robotlegs.starling.base.MediatorMap;
 import org.robotlegs.starling.core.IMediatorMap;
+import org.robotlegs.starling.core.IReflector;
+
+import starling.display.DisplayObjectContainer;
 
 public class AbstractScreenLauncher extends AbstractController implements IScreenLauncher
 {
@@ -48,6 +52,14 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
 
     [Inject]
     public var _navigator:IScreenNavigator;
+
+    [Inject]
+    public var root:DisplayObjectContainer;
+
+    [Inject]
+    public var reflector:IReflector;
+
+    private var _popupMediatorMap:IMediatorMap;
 
     private var _applicationScreenID:String;
 
@@ -88,9 +100,13 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     override protected function onRegister():void
     {
         super.onRegister();
+
+        _popupMediatorMap = new MediatorMap(root.stage, injector, reflector);
+
         configureFramework(_navigator);
         configure(_navigator);
         configureControls(_mediatorMap);
+        configurePopUpControls(_popupMediatorMap);
     }
 
     public function backTo(screenID:String):void
@@ -188,7 +204,10 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
 
     protected function configureControls(mediatorMap:IMediatorMap):void
     {
+    }
 
+    protected function configurePopUpControls(mediatorMap:IMediatorMap):void
+    {
     }
 
     protected function create(screen:Object,

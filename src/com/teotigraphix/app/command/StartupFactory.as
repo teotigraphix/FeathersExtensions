@@ -40,6 +40,11 @@ public class StartupFactory
         return new StartupResult();
     }
 
+    public function createPrintAppVersionCommand():IStepCommand
+    {
+        return injector.instantiate(PrintAppVersionStep);
+    }
+
     public function createDebugSetupCommand():IStepCommand
     {
         return injector.instantiate(SetupDebugCommand);
@@ -63,6 +68,7 @@ public class StartupFactory
 }
 
 import com.teotigraphix.app.command.StartupResult;
+import com.teotigraphix.app.config.ApplicationDescriptor;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IApplicationSettings;
@@ -83,6 +89,23 @@ import flash.filesystem.File;
 import org.as3commons.async.operation.event.OperationEvent;
 
 import starling.core.Starling;
+
+class PrintAppVersionStep extends StepCommand
+{
+    [Inject]
+    public var descriptor:ApplicationDescriptor;
+
+    public function PrintAppVersionStep()
+    {
+    }
+
+    override public function execute():*
+    {
+        logger.startup("App VERSION", "V {0}", descriptor.version.toString());
+        finished();
+        return null;
+    }
+}
 
 class StartupCoreServicesCommand extends StepCommand
 {

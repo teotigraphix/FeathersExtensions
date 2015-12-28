@@ -33,6 +33,7 @@ import flash.filesystem.File;
 
 import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
+import starling.display.Quad;
 import starling.events.Event;
 
 public class AbstractUIController extends AbstractController implements IUIController
@@ -114,9 +115,19 @@ public class AbstractUIController extends AbstractController implements IUIContr
         PopUpManager.removePopUp(popUp, dispose);
     }
 
-    public function showCenteredPopUp(content:DisplayObject, closeEvent:String, closedHandler:Function = null):void
+    public function showCenteredPopUp(content:DisplayObject,
+                                      closeEvent:String,
+                                      closedHandler:Function = null,
+                                      overlayFactory:Function = null):void
     {
         _contentManager = new CenterPopUpContentManager();
+        _contentManager.overlayFactory = function ():DisplayObject
+        {
+            var quad:Quad = new Quad(1, 1, 0xff00ff);
+            quad.alpha = 0;
+            return quad;
+        };
+
         if (closedHandler != null)
         {
             _contentManager.addEventListener(CenterPopUpContentManager.EVENT_CANCEL, closedHandler);

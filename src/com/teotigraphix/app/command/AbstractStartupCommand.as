@@ -74,6 +74,7 @@ public class AbstractStartupCommand extends AbstractCommand
 
     protected function addSteps(main:IStepSequence):void
     {
+        main.addCommand(startupFactory.createPrintAppVersionCommand());
         main.addCommand(startupFactory.createDebugSetupCommand());
         main.addCommand(startupFactory.createStartCoreServicesCommand());
         main.addCommand(startupFactory.createLoadLastProjectCommand());

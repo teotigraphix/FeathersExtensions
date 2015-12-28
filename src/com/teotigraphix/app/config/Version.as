@@ -74,5 +74,9 @@ public class Version
         return compareTo(that) == 0;
     }
 
+    public function toString():String
+    {
+        return _vid;
+    }
 }
 }
