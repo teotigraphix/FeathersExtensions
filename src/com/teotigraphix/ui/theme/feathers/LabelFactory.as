@@ -21,6 +21,7 @@ package com.teotigraphix.ui.theme.feathers
 {
 
 import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 
 import feathers.controls.Label;
 
@@ -43,7 +44,51 @@ public class LabelFactory extends AbstractThemeFactory
         setStyle(Label, setLabelStyles);
         setStyle(Label, setHeadingLabelStyles, Label.ALTERNATE_STYLE_NAME_HEADING);
         setStyle(Label, setDetailLabelStyles, Label.ALTERNATE_STYLE_NAME_DETAIL);
+
+        setStyle(Label, set_Styles, FrameworkStyleNames.THEME_LABEL);
+        setStyle(Label, set_themeHeadingStyles, FrameworkStyleNames.THEME_LABEL_HEADING);
+        setStyle(Label, set_themeActionBarStyles, FrameworkStyleNames.THEME_LABEL_ACTION_BAR);
+        setStyle(Label, set_themeSubHeadingStyles, FrameworkStyleNames.THEME_LABEL_SUB_HEADING);
     }
+
+    //--------------------------------------------------------------------------
+    // Theme
+    //--------------------------------------------------------------------------
+
+    public function set_Styles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = theme.fonts.darkElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
+    }
+
+    /**
+     * Headings for from title dialogs.
+     */
+    public function set_themeHeadingDarkStyles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = theme.fonts.headerDarkElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
+    }
+
+    public function set_themeHeadingStyles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = theme.fonts.darkElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
+    }
+
+    public function set_themeActionBarStyles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = theme.fonts.largeLightElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.largeUILightDisabledElementFormat;
+    }
+
+    public function set_themeSubHeadingStyles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = theme.fonts.smallDarkElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.smallDisabledElementFormat;
+    }
+
+    ///////
 
     /**
      * lightElementFormat
@@ -52,6 +97,12 @@ public class LabelFactory extends AbstractThemeFactory
     public function setLabelStyles(label:Label):void
     {
         label.textRendererProperties.elementFormat = theme.fonts.lightElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
+    }
+
+    public function setLabelDarkStyles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = theme.fonts.darkElementFormat;
         label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
     }
 

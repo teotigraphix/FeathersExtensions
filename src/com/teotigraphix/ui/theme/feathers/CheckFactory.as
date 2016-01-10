@@ -46,13 +46,9 @@ public class CheckFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        var backgroundSkinTexture:Texture = atlas.getTexture("background-skin");
-        var backgroundDownSkinTexture:Texture = atlas.getTexture("background-down-skin");
-        var backgroundDisabledSkinTexture:Texture = atlas.getTexture("background-disabled-skin");
-
-        checkUpIconTexture = backgroundSkinTexture;
-        checkDownIconTexture = backgroundDownSkinTexture;
-        checkDisabledIconTexture = backgroundDisabledSkinTexture;
+        checkUpIconTexture = atlas.getTexture("check-up-icon");
+        checkDownIconTexture = atlas.getTexture("check-up-icon");
+        checkDisabledIconTexture = atlas.getTexture("check-up-disabled-icon");
         checkSelectedUpIconTexture = atlas.getTexture("check-selected-up-icon");
         checkSelectedDownIconTexture = atlas.getTexture("check-selected-down-icon");
         checkSelectedDisabledIconTexture = atlas.getTexture("check-selected-disabled-icon");

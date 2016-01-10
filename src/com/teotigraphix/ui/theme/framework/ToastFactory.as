@@ -20,9 +20,10 @@
 package com.teotigraphix.ui.theme.framework
 {
 
+import com.teotigraphix.ui.component.Toast;
 import com.teotigraphix.ui.theme.*;
 
-import com.teotigraphix.ui.component.Toast;
+import feathers.controls.Label;
 
 public class ToastFactory extends AbstractThemeFactory
 {
@@ -41,12 +42,19 @@ public class ToastFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
-        setStyle(Toast, setToastStyles);
+        setStyle(Toast, setStyles);
+        setStyle(Label, set_messageStyle, Toast.STYLE_MESSAGE);
     }
 
-    private function setToastStyles(toast:Toast):void
+    private function setStyles(toast:Toast):void
     {
         toast.backgroundSkin = AssetMap.create9ScaleImage("background-popup-shadow-skin", 8, 8, 16, 16);
     }
+
+    private function set_messageStyle(label:Label):void
+    {
+        theme.label.setLabelDarkStyles(label);
+    }
+
 }
 }

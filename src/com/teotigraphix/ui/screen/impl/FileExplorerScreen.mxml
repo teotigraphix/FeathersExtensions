@@ -24,21 +24,17 @@
           xmlns:component="com.teotigraphix.ui.component.*"
           xmlns:file="com.teotigraphix.ui.component.file.*">
 
-
     <f:layout>
         <f:VerticalLayout/>
     </f:layout>
 
-    <component:HGroup percentWidth="100" padding="{AssetMap.size(20)}">
-        <f:Label id="titleLabel" styleName="{FrameworkStyleNames.FILE_EXPLORER_TITLE_LABEL}"/>
-    </component:HGroup>
+    <component:HGroup percentWidth="100"
+                      styleName="{STYLE_HEADER}">
 
-    <!--<file:CausticFileList id="fileList"-->
-    <!--change="fileList_changeHandler()">-->
-    <!--<file:layoutData>-->
-    <!--<f:VerticalLayoutData percentWidth="100" percentHeight="100"/>-->
-    <!--</file:layoutData>-->
-    <!--</file:CausticFileList>-->
+        <f:Label id="titleLabel"
+                 styleName="{FrameworkStyleNames.THEME_LABEL_ACTION_BAR}"/>
+
+    </component:HGroup>
 
     <file:FileList id="fileList"
                    change="fileList_changeHandler()">
@@ -47,10 +43,12 @@
         </file:layoutData>
     </file:FileList>
 
+    <component:HDivider/>
+
     <!-- Footer -->
-    <component:HGroup padding="{AssetMap.size(15)}" gap="{AssetMap.size(8)}"
-                      horizontalAlign="center" verticalAlign="middle"
-                      percentWidth="100">
+    <component:HGroup id="footer"
+                      styleName="{FrameworkStyleNames.DIALOG_BUTTON_FOOTER}">
+
         <f:Button id="okButton"
                   isEnabled="false"
                   styleName="{FrameworkStyleNames.FORM_OK_BUTTON}"
@@ -64,7 +62,6 @@
 
     <fx:Script><![CDATA[
         import com.teotigraphix.ui.component.file.FileListData;
-        import com.teotigraphix.ui.theme.AssetMap;
         import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 
         import feathers.skins.IStyleProvider;
@@ -76,6 +73,7 @@
          * Dispatches when a file or directory has changed.
          */
         public static const EVENT_FILE_OR_DIRECTORY_CHANGE:String = "fileOrDirectoryChange";
+        public static const STYLE_HEADER:String = "file-screen-header";
 
         public static var globalStyleProvider:IStyleProvider;
 
@@ -149,6 +147,7 @@
             {
                 if (_data != null)
                 {
+                    title = _data.title;
                     _data.copyTo(fileList);
                 }
             }

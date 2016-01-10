@@ -33,6 +33,8 @@ import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 import starling.utils.deg2rad;
 
+[Event(type="starling.events.Event", name="change")]
+
 public class UIKnob extends FeathersControl
 {
     public static const EVENT_DOUBLE_TAP:String = "doubleTap";
@@ -46,36 +48,30 @@ public class UIKnob extends FeathersControl
 
     public static var globalStyleProvider:IStyleProvider;
 
-    override protected function get defaultStyleProvider():IStyleProvider
-    {
-        return UIKnob.globalStyleProvider;
-    }
-
     public var backgroundSkin:DisplayObject;
     public var knobThumbSkin:DisplayObject;
-
     protected var clickOffset:Point;
-
     private var touchPointID:int = -1;
     private var _value:Number;
-    private var _stepSize:Number = 0.01;
-    private var _maxValue:Number = 2;
-    private var _minValue:Number = 0;
+    private var _step:Number = 0.01;
+    private var _maximum:Number = 2;
+    private var _minimum:Number = 0;
+    private var originalAngle:Number = 0;
 
     //----------------------------------
     // Knob logic
     //----------------------------------
-
-    private var originalAngle:Number = 0;
     private var lastAngle:Number = NaN;
     private var currentAngle:Number = NaN;
-
     private var minimumAngle:Number = 40;
-
     private var disabled:Boolean = false;
-
     private var draggingPointer:int = -1;
     private var _sprite:Sprite;
+
+    override protected function get defaultStyleProvider():IStyleProvider
+    {
+        return UIKnob.globalStyleProvider;
+    }
 
     public function get value():Number
     {
@@ -87,38 +83,38 @@ public class UIKnob extends FeathersControl
         if (_value == value)
             return;
         //_value = value;
-        setValue(nearestValidValue(value, _stepSize));
+        setValue(nearestValidValue(value, _step));
         invalidate(INVALIDATE_FLAG_VALUE);
     }
 
-    public function get maxValue():Number
+    public function get maximum():Number
     {
-        return _maxValue;
+        return _maximum;
     }
 
-    public function set maxValue(value:Number):void
+    public function set maximum(value:Number):void
     {
-        _maxValue = value;
+        _maximum = value;
     }
 
-    public function get minValue():Number
+    public function get minimum():Number
     {
-        return _minValue;
+        return _minimum;
     }
 
-    public function set minValue(value:Number):void
+    public function set minimum(value:Number):void
     {
-        _minValue = value;
+        _minimum = value;
     }
 
-    public function get stepSize():Number
+    public function get step():Number
     {
-        return _stepSize;
+        return _step;
     }
 
-    public function set stepSize(value:Number):void
+    public function set step(value:Number):void
     {
-        _stepSize = value;
+        _step = value;
     }
 
     public function UIKnob()
@@ -159,7 +155,7 @@ public class UIKnob extends FeathersControl
         //trace("actualWidth:" + actualWidth);
         //trace("actualHeight:" + actualHeight);
 
-        if (sizeInvalid)
+        if (backgroundSkin != null && sizeInvalid)
         {
             backgroundSkin.width = actualWidth;
             backgroundSkin.height = actualWidth;
@@ -173,7 +169,11 @@ public class UIKnob extends FeathersControl
             knobThumbSkin.y = actualWidth / 2;
         }
 
-        knobThumbSkin.rotation = deg2rad(currentAngle);
+        if (knobThumbSkin != null)
+        {
+            knobThumbSkin.rotation = deg2rad(currentAngle);
+        }
+
     }
 
     public function setValue(value:Number, noEvent:Boolean = false):Boolean
@@ -237,7 +237,7 @@ public class UIKnob extends FeathersControl
         var p:Point = new Point(x, y);
 
         var newValue:Number = pointToValue(p.x - clickOffset.x, p.y - clickOffset.y);
-        var valueSet:Boolean = setValue(nearestValidValue(newValue, _stepSize));
+        var valueSet:Boolean = setValue(nearestValidValue(newValue, _step));
         invalidate();
 
         return valueSet;
@@ -245,7 +245,7 @@ public class UIKnob extends FeathersControl
 
     protected function pointToValue(x:Number, y:Number):Number
     {
-        var delta:Number = x;
+        var delta:Number = -(y * 2);
 
         var result:Number;
 
@@ -266,60 +266,39 @@ public class UIKnob extends FeathersControl
         var spanAngle:Number = 360 - (minimumAngle * 2);
         var spanValue:Number = (currentAngle + spanAngle - 140);
 
-        result = _minValue + (spanValue / spanAngle) * (_maxValue - _minValue);
+        result = _minimum + (spanValue / spanAngle) * (_maximum - _minimum);
 
         return result;
     }
 
     protected function getAngleFromValue(value:Number):Number
     {
-        if (value < _minValue || value > _maxValue)
+        if (value < _minimum || value > _maximum)
         {
             throw new Error('Invalid value found when attempting to retrieve angle.');
         }
 
-        var valuePercentage:Number = (value - _minValue) / (_maxValue - _minValue);
+        var valuePercentage:Number = (value - _minimum) / (_maximum - _minimum);
         var maxRotation:Number = 360 - (minimumAngle * 2);
         var angleForValue:Number = valuePercentage * maxRotation;
         return angleForValue - 140;
     }
 
-    private function nearestValidValue(value:Number, interval:Number):Number
+    protected function touchDownHandler(touch:Touch):void
     {
-        if (interval == 0)
-            return Math.max(_minValue, Math.min(_maxValue, value));
+        if (!isEnabled)
+            return;
 
-        var maxValue:Number = _maxValue - _minValue;
-        var scale:Number = 1;
+        if (draggingPointer != -1)
+            return;
 
-        value -= _minValue;
+        dispatchEventWith(EVENT_TOUCH_DOWN_CHANGE, true, true);
 
-        // If interval isn't an integer, there's a possibility that the floating point
-        // approximation of value or value/interval will be slightly larger or smaller
-        // than the real value. This can lead to errors in calculations like
-        // floor(value/interval)*interval, which one might expect to just equal value,
-        // when value is an exact multiple of interval. Not so if value=0.58 and
-        // interval=0.01, in that case the calculation yields 0.57! To avoid problems,
-        // we scale by the implicit precision of the interval and then round. For
-        // example if interval=0.01, then we scale by 100.
+        //  this.touchPointID = touch.id;
+        draggingPointer = touch.id;
 
-        if (interval != Math.round(interval))
-        {
-            var v:String = 1 + "" + interval;
-
-            var parts:Array = v.split(".");
-            scale = Math.pow(10, parts[1].length);
-            maxValue *= scale;
-            value = Math.round(value * scale);
-            interval = Math.round(interval * scale);
-        }
-
-        var lower:Number = Math.max(0, Math.floor(value / interval) * interval);
-        var upper:Number = Math.min(maxValue, Math.floor((value + interval) / interval) * interval);
-        var validValue:Number = ((value - lower) >= ((upper - lower) / 2)) ? upper : lower;
-
-        var rv:Number = (validValue / scale) + _minValue;
-        return rv;
+        originalAngle = lastAngle;
+        clickOffset = new Point(touch.globalX, touch.globalY);
     }
 
     //protected function nearestValidValue(value:Number, interval:Number):Number
@@ -365,11 +344,13 @@ public class UIKnob extends FeathersControl
     //    return (validValue + offset) / scale;
     //}
 
-    private function refreshButtonState(point:Point):void
+    protected function touchDragHandler(touch:Touch):void
     {
+        calculatePositionAndValue(touch.globalX, touch.globalY);
+        currentAngle = getAngleFromValue(value);
     }
 
-    private function touchUpHandler(touch:Touch):void
+    protected function touchUpHandler(touch:Touch):void
     {
         if (touch.id != draggingPointer)
             return;
@@ -392,27 +373,46 @@ public class UIKnob extends FeathersControl
         dispatchEventWith(EVENT_TOUCH_DOWN_CHANGE, true, false);
     }
 
-    private function touchDragHandler(touch:Touch):void
+    private function nearestValidValue(value:Number, interval:Number):Number
     {
-        calculatePositionAndValue(touch.globalX, touch.globalY);
-        currentAngle = getAngleFromValue(value);
+        if (interval == 0)
+            return Math.max(_minimum, Math.min(_maximum, value));
+
+        var maxValue:Number = _maximum - _minimum;
+        var scale:Number = 1;
+
+        value -= _minimum;
+
+        // If interval isn't an integer, there's a possibility that the floating point
+        // approximation of value or value/interval will be slightly larger or smaller
+        // than the real value. This can lead to errors in calculations like
+        // floor(value/interval)*interval, which one might expect to just equal value,
+        // when value is an exact multiple of interval. Not so if value=0.58 and
+        // interval=0.01, in that case the calculation yields 0.57! To avoid problems,
+        // we scale by the implicit precision of the interval and then round. For
+        // example if interval=0.01, then we scale by 100.
+
+        if (interval != Math.round(interval))
+        {
+            var v:String = 1 + "" + interval;
+
+            var parts:Array = v.split(".");
+            scale = Math.pow(10, parts[1].length);
+            maxValue *= scale;
+            value = Math.round(value * scale);
+            interval = Math.round(interval * scale);
+        }
+
+        var lower:Number = Math.max(0, Math.floor(value / interval) * interval);
+        var upper:Number = Math.min(maxValue, Math.floor((value + interval) / interval) * interval);
+        var validValue:Number = ((value - lower) >= ((upper - lower) / 2)) ? upper : lower;
+
+        var rv:Number = (validValue / scale) + _minimum;
+        return rv;
     }
 
-    private function touchDownHandler(touch:Touch):void
+    private function refreshButtonState(point:Point):void
     {
-        if (!isEnabled)
-            return;
-
-        if (draggingPointer != -1)
-            return;
-
-        dispatchEventWith(EVENT_TOUCH_DOWN_CHANGE, true, true);
-
-        //  this.touchPointID = touch.id;
-        draggingPointer = touch.id;
-
-        originalAngle = lastAngle;
-        clickOffset = new Point(touch.globalX, touch.globalY);
     }
 
     private function this_touchHandler(event:TouchEvent):void

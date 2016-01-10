@@ -67,6 +67,36 @@ public class TextInputFactory extends AbstractThemeFactory
         this.setBaseTextInputStyles(input);
     }
 
+    public function setDarkTextInputStyles(input:TextInput):void
+    {
+        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
+        skinSelector.defaultValue = theme.shared.backgroundInsetSkinTextures;
+        skinSelector.setValueForState(theme.shared.backgroundDisabledSkinTextures, TextInput.STATE_DISABLED);
+        skinSelector.setValueForState(theme.shared.backgroundFocusedSkinTextures, TextInput.STATE_FOCUSED);
+        skinSelector.displayObjectProperties =
+        {
+            width: properties.wideControlSize,
+            height: properties.controlSize,
+            textureScale: properties.scale
+        };
+        input.stateToSkinFunction = skinSelector.updateValue;
+
+        input.minWidth = properties.controlSize;
+        input.minHeight = properties.controlSize;
+        input.minTouchWidth = properties.gridSize;
+        input.minTouchHeight = properties.gridSize;
+        input.gap = properties.smallGutterSize;
+        input.padding = properties.smallGutterSize;
+
+        input.textEditorProperties.fontFamily = "Helvetica";
+        input.textEditorProperties.fontSize = theme.fonts.regularFontSize;
+        input.textEditorProperties.color = DARK_TEXT_COLOR;
+        input.textEditorProperties.disabledColor = DISABLED_TEXT_COLOR;
+
+        input.promptProperties.elementFormat = theme.fonts.darkElementFormat;
+        input.promptProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
+    }
+
     public function setBaseTextInputStyles(input:TextInput):void
     {
         var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();

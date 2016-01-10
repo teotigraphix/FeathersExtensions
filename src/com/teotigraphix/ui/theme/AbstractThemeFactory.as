@@ -112,6 +112,11 @@ public class AbstractThemeFactory extends EventDispatcher
         return new SimpleScrollBar();
     }
 
+    protected static function dp(dimension:Number):Number
+    {
+        return AssetMap.dp(dimension);
+    }
+
     protected static function size(dimension:Number):Number
     {
         return AssetMap.size(dimension);

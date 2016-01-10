@@ -5,42 +5,27 @@
   backgroundSkin="{AssetMap.create9ScaleImage('background-popup-shadow-skin', 8, 8, 16, 16)}"
 
 -->
-<f:Screen xmlns:fx="http://ns.adobe.com/mxml/2009"
-          xmlns:f="library://ns.feathersui.com/mxml"
-          xmlns:component="com.teotigraphix.ui.component.*">
+<impl:DialogScreen xmlns:fx="http://ns.adobe.com/mxml/2009"
+                   xmlns:f="library://ns.feathersui.com/mxml"
+                   xmlns:impl="com.teotigraphix.ui.screen.impl.*"
+                   content="{stringInput}">
 
-    <f:layout>
-        <f:VerticalLayout horizontalAlign="center" verticalAlign="middle"
-                          gap="{AssetMap.size(25)}" padding="{AssetMap.size(15)}"/>
-    </f:layout>
+    <fx:Declarations>
 
-    <f:Label id="titleLabel"
-             text="{title}"
-             styleName="{STYLE_TITLE_LABEL}"/>
+        <f:TextInput id="stringInput"
+                     prompt="{prompt}"
+                     maxChars="{maxChars}"
+                     restrict="a-zA-Z0-9\s"
+                     styleName="{FrameworkStyleNames.THEME_TEXT_INPUT_DARK}">
+            <f:layoutData>
+                <f:VerticalLayoutData percentWidth="100"/>
+            </f:layoutData>
+        </f:TextInput>
 
-    <f:TextInput id="stringInput"
-                 prompt="{prompt}"
-                 maxChars="10"
-                 restrict="a-zA-Z0-9\s"
-                 styleName="{STYLE_STRING_TEXT_INPUT}"/>
-
-    <component:HGroup percentWidth="100" horizontalAlign="center" gap="{AssetMap.size(10)}"
-                      padding="{AssetMap.size(10)}">
-
-        <f:Button id="okButton"
-                  label="OK"
-                  width="{AssetMap.size(150)}"
-                  triggered="okButton_triggeredHandler()"/>
-        <f:Button id="cancelButton"
-                  label="Cancel"
-                  width="{AssetMap.size(150)}"
-                  triggered="cancelButton_triggeredHandler()"/>
-
-    </component:HGroup>
-
+    </fx:Declarations>
 
     <fx:Script><![CDATA[
-        import com.teotigraphix.ui.theme.AssetMap;
+        import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 
         import feathers.skins.IStyleProvider;
 
@@ -53,52 +38,19 @@
             return GetStringDialog.globalStyleProvider;
         }
 
-        /**
-         * @data {string:String} The text OR prompt is text is empty.
-         */
-        public static const EVENT_OK:String = "ok";
-        public static const EVENT_CANCEL:String = "cancel";
-
-        public static const STYLE_TITLE_LABEL:String = "get-string-dialog-title";
-
-        public static const STYLE_STRING_TEXT_INPUT:String = "get-string-dialog-string";
-
-        [Bindable]
-        public var title:String = "";
-
         [Bindable]
         public var prompt:String = "";
 
-        private var _buttonsEnabled:Boolean;
+        [Bindable]
+        public var maxChars:int = 10;
 
-        //----------------------------------
-        // buttonsEnabled
-        //----------------------------------
-
-        public function get buttonsEnabled():Boolean
-        {
-            return _buttonsEnabled;
-        }
-
-        public function set buttonsEnabled(value:Boolean):void
-        {
-            _buttonsEnabled = value;
-            okButton.isEnabled = _buttonsEnabled;
-            cancelButton.isEnabled = _buttonsEnabled;
-        }
-
-        private function okButton_triggeredHandler():void
+        override protected function okButton_triggeredHandler():void
         {
             dispatchEventWith(EVENT_OK, false, {
-                string: StringUtils.trimToNull(stringInput.text) == null ?
+                value: StringUtils.trimToNull(stringInput.text) == null ?
                         stringInput.prompt : stringInput.text
             });
         }
-
-        private function cancelButton_triggeredHandler():void
-        {
-            dispatchEventWith(EVENT_CANCEL);
-        }
         ]]></fx:Script>
 
-</f:Screen>
+</impl:DialogScreen>

@@ -19,8 +19,6 @@
 package com.teotigraphix.controller.command
 {
 
-import com.teotigraphix.controller.ICommandLauncher;
-import com.teotigraphix.controller.impl.AbstractCommandLauncher;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepSequence;
@@ -33,9 +31,6 @@ public class AbstractCommand extends Command
 {
     [Inject]
     public var event:Event;
-
-    [Inject]
-    public var commands:ICommandLauncher;
 
     [Inject]
     public var logger:ILogger;
@@ -55,9 +50,13 @@ public class AbstractCommand extends Command
     {
 
         injector.injectInto(data);
-        var sequence:IStepSequence = AbstractCommandLauncher(commands).instantiateSequence(data);
+
+        const sequence:IStepSequence = injector.instantiate(StepSequence);
+        sequence.data = data;
+
         if (completeHandler != null)
             sequence.addCompleteListener(completeHandler);
+
         if (cancelHandler != null)
         {
             StepSequence(sequence).failOnFault = true;
@@ -66,5 +65,6 @@ public class AbstractCommand extends Command
 
         return sequence;
     }
+
 }
 }

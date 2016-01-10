@@ -29,6 +29,7 @@ public class FileListData
 
     public var styleName:String;
 
+    public var title:String;
     public var showFiles:Boolean = true;
     public var directoryDoubleTapEnabled:Boolean;
     public var extensions:Array = [];

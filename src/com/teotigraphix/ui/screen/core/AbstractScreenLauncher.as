@@ -26,6 +26,7 @@ import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.screen.*;
 import com.teotigraphix.ui.screen.data.AlertScreenData;
 import com.teotigraphix.ui.screen.impl.AlertScreen;
+import com.teotigraphix.ui.screen.impl.DialogScreen;
 import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
 import com.teotigraphix.ui.screen.impl.dialog.GetStringDialog;
 
@@ -160,8 +161,8 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
                 FrameworkScreens.GET_STRING, {}));
         screen.title = title;
         screen.prompt = prompt;
-        screen.addEventListener(GetStringDialog.EVENT_OK, okHandler);
-        screen.addEventListener(GetStringDialog.EVENT_CANCEL, cancelHandler);
+        screen.addEventListener(DialogScreen.EVENT_OK, okHandler);
+        screen.addEventListener(DialogScreen.EVENT_CANCEL, cancelHandler);
         return screen;
     }
 

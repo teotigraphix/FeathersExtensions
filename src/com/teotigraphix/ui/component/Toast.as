@@ -40,6 +40,9 @@ public class Toast extends LayoutGroup
     public static const SHORT:Number = 1000;
     public static const LONG:Number = 3000;
     public static var globalStyleProvider:IStyleProvider;
+
+    public static const STYLE_MESSAGE:String = "toast-message";
+
     private var _message:String;
     private var _duration:Number = DEFAULT_DELAY;
     private var _label:Label;
@@ -63,6 +66,7 @@ public class Toast extends LayoutGroup
         super.initialize();
 
         _label = new Label();
+        _label.styleName = Toast.STYLE_MESSAGE;
         _label.layoutData = new VerticalLayoutData(100);
         _label.text = this._message;
         _label.wordWrap = true;

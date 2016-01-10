@@ -88,9 +88,15 @@ public class ListFactory extends AbstractThemeFactory
         };
         renderer.stateToSkinFunction = skinSelector.updateValue;
 
-        renderer.defaultLabelProperties.elementFormat = theme.fonts.largeLightElementFormat;
+        // DARK
+        //renderer.defaultLabelProperties.elementFormat = theme.fonts.largeLightElementFormat;
+        //renderer.downLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
+        //renderer.defaultSelectedLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
+        //renderer.disabledLabelProperties.elementFormat = theme.fonts.largeDisabledElementFormat;
+
+        renderer.defaultLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
         renderer.downLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
-        renderer.defaultSelectedLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
+        renderer.defaultSelectedLabelProperties.elementFormat = theme.fonts.themeLargeElementFormat;
         renderer.disabledLabelProperties.elementFormat = theme.fonts.largeDisabledElementFormat;
 
         renderer.horizontalAlign = Button.HORIZONTAL_ALIGN_LEFT;

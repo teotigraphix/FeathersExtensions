@@ -66,11 +66,11 @@ public class FileListItemRenderer extends DefaultListItemRenderer
         {
             if (File(_data).isDirectory)
             {
-                styleNameList.add("custom-label");
+                styleNameList.add("file-list-item-directory");
             }
             else
             {
-                styleNameList.remove("custom-label");
+                styleNameList.remove("file-list-item-file");
             }
         }
         else

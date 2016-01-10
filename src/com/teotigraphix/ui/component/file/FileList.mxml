@@ -1,0 +1,642 @@
+<?xml version="1.0"?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2016 Michael Schmalle - Teoti Graphix, LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License
+//
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+-->
+<f:LayoutGroup xmlns:f="library://ns.feathersui.com/mxml"
+               xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:component="com.teotigraphix.ui.component.*">
+
+    <fx:Metadata>
+        /**
+         * Dispatched when the list changes, data is a File instance or null.
+         */
+        [Event(name="change", type="starling.events.Event")]
+        [Event(name="rootDirectoryChange", type="starling.events.Event")]
+    </fx:Metadata>
+
+    <f:layout>
+        <f:VerticalLayout/>
+    </f:layout>
+
+    <f:LayoutGroup styleName="{STYLE_ACTION_GROUP}">
+        <f:layoutData>
+            <f:VerticalLayoutData percentWidth="100"/>
+        </f:layoutData>
+
+        <f:layout>
+            <f:FlowLayout/>
+        </f:layout>
+
+        <f:Button id="homeButton"
+                  triggered="actionExecuteHandler(NAVIGATE_HOME)"/>
+
+        <f:Button id="upButton"
+                  triggered="actionExecuteHandler(NAVIGATE_UP)"/>
+
+        <f:Button id="newButton"
+                  triggered="this_createHandler()"/>
+
+        <f:Button id="refreshButton"
+                  triggered="refresh()"/>
+
+    </f:LayoutGroup>
+
+    <component:HGroup percentWidth="100">
+
+        <f:Label id="statusLabel"
+                 wordWrap="true"
+                 styleName="{STATUS_STYLE_NAME}">
+        </f:Label>
+
+    </component:HGroup>
+
+    <component:HDivider/>
+
+    <f:List id="list"
+            change="list_changeHandler()"
+            rendererAdd="list_rendererAddHandler(event)"
+            rendererRemove="list_rendererRemoveHandler(event)"
+            styleName="{LIST_STYLE_NAME}">
+        <f:layoutData>
+            <f:VerticalLayoutData percentWidth="100" percentHeight="100"/>
+        </f:layoutData>
+    </f:List>
+
+
+    <fx:Script><![CDATA[
+        import com.teotigraphix.ui.popup.NamePopUp;
+        import com.teotigraphix.util.Files;
+
+        import feathers.controls.List;
+        import feathers.controls.renderers.IListItemRenderer;
+        import feathers.core.PopUpManager;
+        import feathers.data.ListCollection;
+        import feathers.events.FeathersEventType;
+        import feathers.skins.IStyleProvider;
+
+        import starling.display.Image;
+        import starling.events.Event;
+        import starling.textures.Texture;
+
+        public static const INVALIDATION_FLAG_SHOW_FILES:String = "showFiles";
+
+        public static const INVALIDATION_FLAG_EXTENSIONS:String = "extensions";
+
+        public static const INVALIDATION_FLAG_HOME_DIRECTORY:String = "homeDirectory";
+
+        public static const INVALIDATION_FLAG_ROOT_DIRECTORY:String = "rootDirectory";
+
+        public static const INVALIDATION_FLAG_ACTION_TEXT:String = "actionText";
+
+        public static const INVALIDATION_FLAG_ICON_FUNCTION:String = "iconFunction";
+
+        public static const NAVIGATE_HOME:int = 0;
+
+        public static const NAVIGATE_UP:int = 1;
+
+        public static const NAVIGATE_BACK:int = 2;
+
+        public static const NAVIGATE_NEXT:int = 3;
+
+        public static const STYLE_ACTION_GROUP:String = "file-list-action-group";
+        public static const LIST_STYLE_NAME:String = "file-list-list";
+        public static const STATUS_STYLE_NAME:String = "file-list-status";
+
+        public static var globalStyleProvider:IStyleProvider;
+
+        //--------------------------------------------------------------------------
+        // Private :: Variables
+        //--------------------------------------------------------------------------
+
+        private var _showFiles:Boolean = true;
+        private var _directoryDoubleTapEnabled:Boolean;
+        private var _extensions:Array;
+        private var _homeDirectory:File = File.documentsDirectory;
+        private var _rootDirectory:File;
+        private var _actionText:String;
+        private var _iconFunction:Function;
+        private var _enabledFunction:Function;
+        private var _showLabels:Boolean;
+        private var _iconMap:Object = {};
+
+        private var actionBar:LayoutGroup;
+        private var header:LayoutGroup;
+
+        private var _listMinHeight:Number;
+        private var _namePopUp:DirectoryNamePopUp;
+        private var cachedIcons:Dictionary = new Dictionary();
+
+        //--------------------------------------------------------------------------
+        // Public API :: Properties
+        //--------------------------------------------------------------------------
+
+        override protected function get defaultStyleProvider():IStyleProvider
+        {
+            return FileList.globalStyleProvider;
+        }
+
+        //----------------------------------
+        // selectedFile
+        //----------------------------------
+
+        public function get selectedFile():File
+        {
+            return list.selectedItem as File;
+        }
+
+        //----------------------------------
+        // showFiles
+        //----------------------------------
+
+        public function get showFiles():Boolean
+        {
+            return _showFiles;
+        }
+
+        public function set showFiles(value:Boolean):void
+        {
+            if (_showFiles == value)
+                return;
+
+            _showFiles = value;
+            invalidate(INVALIDATION_FLAG_SHOW_FILES);
+        }
+
+        //----------------------------------
+        // directoryDoubleTapEnabled
+        //----------------------------------
+
+        public function get directoryDoubleTapEnabled():Boolean
+        {
+            return _directoryDoubleTapEnabled;
+        }
+
+        public function set directoryDoubleTapEnabled(value:Boolean):void
+        {
+            _directoryDoubleTapEnabled = value;
+        }
+
+        //----------------------------------
+        // extensions
+        //----------------------------------
+
+        public function get extensions():Array
+        {
+            return _extensions;
+        }
+
+        public function set extensions(value:Array):void
+        {
+            if (_extensions == value)
+                return;
+
+            _extensions = value;
+            invalidate(INVALIDATION_FLAG_EXTENSIONS);
+        }
+
+        //----------------------------------
+        // homeDirectory
+        //----------------------------------
+
+        public function get homeDirectory():File
+        {
+            return _homeDirectory;
+        }
+
+        public function set homeDirectory(value:File):void
+        {
+            if (_homeDirectory == value)
+                return;
+
+            _homeDirectory = value;
+            invalidate(INVALIDATION_FLAG_HOME_DIRECTORY);
+        }
+
+        //----------------------------------
+        // rootDirectory
+        //----------------------------------
+
+        public function get rootDirectory():File
+        {
+            return _rootDirectory;
+        }
+
+        public function set rootDirectory(value:File):void
+        {
+            if (_rootDirectory == value)
+                return;
+
+            _rootDirectory = value;
+            dispatchEventWith(FileListEvent.ROOT_DIRECTORY_CHANGE, true, _rootDirectory);
+            invalidate(INVALIDATION_FLAG_ROOT_DIRECTORY);
+        }
+
+        //----------------------------------
+        // actionText
+        //----------------------------------
+
+        public function get actionText():String
+        {
+            return _actionText;
+        }
+
+        public function set actionText(value:String):void
+        {
+            if (_actionText == value)
+                return;
+
+            _actionText = value;
+            invalidate(INVALIDATION_FLAG_ACTION_TEXT);
+        }
+
+        //----------------------------------
+        // iconFunction
+        //----------------------------------
+
+        public function get iconFunction():Function
+        {
+            return _iconFunction;
+        }
+
+        public function set iconFunction(value:Function):void
+        {
+            if (_iconFunction == value)
+                return;
+
+            _iconFunction = value;
+            invalidate(INVALIDATION_FLAG_ICON_FUNCTION);
+        }
+
+        //----------------------------------
+        // enabledFunction
+        //----------------------------------
+
+        public function get enabledFunction():Function
+        {
+            return _enabledFunction;
+        }
+
+        public function set enabledFunction(value:Function):void
+        {
+            if (_enabledFunction == value)
+                return;
+            _enabledFunction = value;
+            invalidate(INVALIDATION_FLAG_ICON_FUNCTION);
+        }
+
+        public function get iconMap():Object
+        {
+            return _iconMap;
+        }
+
+        public function set iconMap(value:Object):void
+        {
+            _iconMap = value;
+        }
+
+        //--------------------------------------------------------------------------
+        // Constructor
+        //--------------------------------------------------------------------------
+
+        //--------------------------------------------------------------------------
+        // Overridden :: Methods
+        //--------------------------------------------------------------------------
+
+        public function get listMinHeight():Number
+        {
+            return _listMinHeight;
+        }
+
+        public function set listMinHeight(value:Number):void
+        {
+            _listMinHeight = value;
+        }
+
+        //----------------------------------
+        // showLabels
+        //----------------------------------
+
+        public function get showLabels():Boolean
+        {
+            return _showLabels;
+        }
+
+        public function set showLabels(value:Boolean):void
+        {
+            _showLabels = value;
+        }
+
+        private function actionExecuteHandler(actionType:int):void
+        {
+            switch (actionType)
+            {
+                case FileListEvent.BACK:
+                    navigate(NAVIGATE_BACK);
+                    break;
+
+                case FileListEvent.NEXT:
+                    navigate(NAVIGATE_NEXT);
+                    break;
+
+                case FileListEvent.CREATE:
+                    this_createHandler();
+                    break;
+
+                case FileListEvent.HOME:
+                    navigate(NAVIGATE_HOME);
+                    break;
+
+                case FileListEvent.REFRESH:
+                    refresh();
+                    break;
+
+                case FileListEvent.UP:
+                    navigate(NAVIGATE_UP);
+                    break;
+            }
+        }
+
+        private function this_createHandler():void
+        {
+            _namePopUp = new DirectoryNamePopUp();
+            _namePopUp.title = "Create Directory";
+            _namePopUp.prompt = "Directory name";
+            _namePopUp.addEventListener(NamePopUp.EVENT_OK, namePopUp_okHandler);
+            _namePopUp.addEventListener(NamePopUp.EVENT_CANCEL, namePopUp_cancelHandler);
+            PopUpManager.addPopUp(_namePopUp, true, true);
+        }
+
+        private function namePopUp_okHandler(event:Event, name:String):void
+        {
+            PopUpManager.removePopUp(_namePopUp);
+            var directory:File = _rootDirectory.resolvePath(name);
+            if (!directory.exists)
+            {
+                directory.createDirectory();
+            }
+            refresh();
+        }
+
+        //--------------------------------------------------------------------------
+        // Internal :: Methods
+        //--------------------------------------------------------------------------
+
+        public function navigate(direction:int):void
+        {
+            switch (direction)
+            {
+                case NAVIGATE_BACK:
+                    // XXX FileList needs stack
+                    break;
+
+                case NAVIGATE_HOME:
+                    rootDirectory = _homeDirectory;
+                    break;
+
+                case NAVIGATE_NEXT:
+                    // XXX FileList needs stack
+                    break;
+
+                case NAVIGATE_UP:
+                    var parent:File = _rootDirectory.parent;
+                    if (parent != null)
+                        rootDirectory = parent;
+                    break;
+            }
+        }
+
+        override protected function initialize():void
+        {
+            super.initialize();
+
+            iconFunction = defaultIconFunction;
+        }
+
+        override protected function draw():void
+        {
+            super.draw();
+
+            if (isInvalid(INVALIDATION_FLAG_ICON_FUNCTION))
+            {
+                commitItemRendererFactory();
+            }
+
+            if (isInvalid(INVALIDATION_FLAG_HOME_DIRECTORY))
+            {
+                // N/A
+            }
+
+            if (isInvalid(INVALIDATION_FLAG_EXTENSIONS) ||
+                    isInvalid(INVALIDATION_FLAG_ROOT_DIRECTORY) ||
+                    isInvalid(INVALIDATION_FLAG_SHOW_FILES))
+            {
+                commitRootDirectory();
+            }
+
+            if (isInvalid(INVALIDATION_FLAG_ACTION_TEXT))
+            {
+                commitActionText();
+            }
+        }
+
+        protected function commitActionText():void
+        {
+            statusLabel.text = _actionText;
+        }
+
+        private function list_rendererAddHandler(event:starling.events.Event):void
+        {
+            IListItemRenderer(event.data).addEventListener("itemDoubleTap", itemRenderer_itemDoubleTapHandler);
+            //itemRenderer.addEventListener("itemSwipeRight", itemRenderer_itemSwipeRightHandler);
+        }
+
+        private function list_rendererRemoveHandler(event:starling.events.Event):void
+        {
+            IListItemRenderer(event.data).removeEventListener("itemDoubleTap", itemRenderer_itemDoubleTapHandler);
+            //itemRenderer.removeEventListener("itemSwipeRight", itemRenderer_itemSwipeRightHandler);
+
+        }
+
+        override public function dispose():void
+        {
+            super.dispose();
+
+            list.removeEventListener(Event.CHANGE, list_changeHandler);
+            list.removeEventListener(FeathersEventType.RENDERER_ADD, list_rendererAddHandler);
+            list.removeEventListener(FeathersEventType.RENDERER_REMOVE, list_rendererRemoveHandler);
+
+            for each (var image:Image in cachedIcons)
+            {
+                image.dispose();
+            }
+            cachedIcons = null;
+        }
+
+        public function navigateHome():void
+        {
+            navigate(NAVIGATE_HOME);
+        }
+
+        public function navigateUp():void
+        {
+            navigate(NAVIGATE_UP);
+        }
+
+        //--------------------------------------------------------------------------
+        // Public API :: Methods
+        //--------------------------------------------------------------------------
+
+        public function navigateBack():void
+        {
+            navigate(NAVIGATE_BACK);
+        }
+
+        public function naviagateNext():void
+        {
+            navigate(NAVIGATE_NEXT);
+        }
+
+        public function refresh():void
+        {
+            var currentRoot:File = _rootDirectory;
+            _rootDirectory = null;
+            rootDirectory = currentRoot;
+        }
+
+        protected function commitRootDirectory():void
+        {
+            if (_rootDirectory == null)
+            {
+                upButton.isEnabled = false;
+                list.dataProvider = null;
+                actionText = "";
+                upButton.isEnabled = false;
+                return;
+            }
+
+            actionText = _rootDirectory.nativePath;
+
+            upButton.isEnabled = _rootDirectory.parent != null;
+
+            var result:Vector.<File> = getFileListing();
+            var dataProvider:ListCollection = new ListCollection(result);
+            list.dataProvider = dataProvider;
+        }
+
+        protected function commitItemRendererFactory():void
+        {
+            list.itemRendererFactory = function ():FileListItemRenderer //IListItemRenderer
+            {
+                var renderer:FileListItemRenderer = new FileListItemRenderer();
+                renderer.iconFunction = _iconFunction;
+                renderer.itemHasEnabled = true;
+                renderer.enabledFunction = _enabledFunction;
+                renderer.labelField = "name";
+                renderer.gap = 10;
+                return renderer;
+            };
+        }
+
+        private function defaultIconFunction(item:Object):starling.display.DisplayObject
+        {
+            if (item in cachedIcons)
+            {
+                return cachedIcons[item];
+            }
+
+            var file:File = File(item);
+            var icon:Image = new Image(getFileIconName(file));
+
+            cachedIcons[item] = icon;
+            return icon;
+        }
+
+        private function getFileListing():Vector.<File>
+        {
+            if (_showFiles)
+            {
+                return Files.listFiles(_rootDirectory, _extensions, false, true);
+            }
+            else
+            {
+                return Files.listDirectories(_rootDirectory, false);
+            }
+        }
+
+        private function getFileIconName(file:File):Texture
+        {
+            var texture:Texture = _iconMap["defaultFileIcon"];
+            if (file.isDirectory)
+            {
+                texture = _iconMap["defaultFolderIcon"];
+            }
+            else if (_iconMap[file.extension] != null)
+            {
+                texture = _iconMap[file.extension];
+            }
+            return texture;
+        }
+
+        private function namePopUp_cancelHandler(event:Event):void
+        {
+            PopUpManager.removePopUp(_namePopUp);
+        }
+
+        private function itemRenderer_itemDoubleTapHandler(event:Event):void
+        {
+            var itemRenderer:IListItemRenderer = IListItemRenderer(event.currentTarget);
+            var file:File = File(itemRenderer.data);
+
+            if (file.isDirectory)
+            {
+                dispatchEventWith(FileListEvent.DIRECTORY_DOUBLE_TAP, true, file);
+                if (_directoryDoubleTapEnabled)
+                {
+                    rootDirectory = file;
+                }
+            }
+            else
+            {
+                dispatchEventWith(FileListEvent.FILE_DOUBLE_TAP, true, file);
+            }
+        }
+
+        private function list_changeHandler():void
+        {
+            if (list.selectedIndex == -1)
+                return;
+
+            var file:File = list.selectedItem as File;
+
+            // no double tap, drill into directory
+            if (file.isDirectory && !_directoryDoubleTapEnabled)
+            {
+                rootDirectory = file;
+            }
+
+            // we dispatch change for any listeners looking for a null File or Directory selection
+            dispatchEventWith(Event.CHANGE, false, list.selectedItem);
+
+            dispatchEventWith(file.isDirectory ?
+                                      FileListEvent.DIRECTORY_SELECT : FileListEvent.FILE_SELECT, true, file);
+        }
+        ]]></fx:Script>
+
+
+</f:LayoutGroup>

@@ -96,7 +96,7 @@ public class CalloutFactory extends AbstractThemeFactory
         leftArrowSkin.scaleX = leftArrowSkin.scaleY = properties.scale;
         callout.leftArrowSkin = leftArrowSkin;
 
-        callout.padding = properties.smallGutterSize;
+        callout.padding = dp(1);//properties.smallGutterSize;
     }
 }
 }

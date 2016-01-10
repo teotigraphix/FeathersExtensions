@@ -22,7 +22,9 @@ package com.teotigraphix.ui.theme
 
 import flash.geom.Rectangle;
 
-public class ThemeProperties
+import starling.events.EventDispatcher;
+
+public class ThemeProperties extends EventDispatcher
 {
     public static const DEFAULT_SCALE9_GRID:Rectangle = new Rectangle(5, 5, 22, 22);
 

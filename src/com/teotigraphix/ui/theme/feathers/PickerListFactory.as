@@ -73,17 +73,17 @@ public class PickerListFactory extends AbstractThemeFactory
 
     public function setPickerListStyles(list:PickerList):void
     {
-        if (DeviceCapabilities.isTablet(Starling.current.nativeStage))
-        {
+        //if (DeviceCapabilities.isTablet(Starling.current.nativeStage))
+        //{
             list.popUpContentManager = new CalloutPopUpContentManager();
-        }
-        else
-        {
-            var centerStage:VerticalCenteredPopUpContentManager = new VerticalCenteredPopUpContentManager();
-            centerStage.marginTop = centerStage.marginRight = centerStage.marginBottom =
-                    centerStage.marginLeft = properties.gutterSize;
-            list.popUpContentManager = centerStage;
-        }
+        //}
+        //else
+        //{
+        //    var centerStage:VerticalCenteredPopUpContentManager = new VerticalCenteredPopUpContentManager();
+        //    centerStage.marginTop = centerStage.marginRight = centerStage.marginBottom =
+        //            centerStage.marginLeft = properties.gutterSize;
+        //    list.popUpContentManager = centerStage;
+        //}
 
         var layout:VerticalLayout = new VerticalLayout();
         layout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_BOTTOM;
@@ -94,21 +94,21 @@ public class PickerListFactory extends AbstractThemeFactory
         list.listProperties.layout = layout;
         list.listProperties.verticalScrollPolicy = List.SCROLL_POLICY_ON;
 
-        if (DeviceCapabilities.isTablet(Starling.current.nativeStage))
-        {
+        //if (DeviceCapabilities.isTablet(Starling.current.nativeStage))
+        //{
             list.listProperties.minWidth = properties.popUpFillSize;
             list.listProperties.maxHeight = properties.popUpFillSize;
-        }
-        else
-        {
-            var backgroundSkin:Scale9Image = new Scale9Image(shared.backgroundSkinTextures, properties.scale);
-            backgroundSkin.width = properties.gridSize;
-            backgroundSkin.height = properties.gridSize;
-            list.listProperties.backgroundSkin = backgroundSkin;
-            list.listProperties.padding = properties.smallGutterSize;
-        }
+        //}
+        //else
+        //{
+        //    var backgroundSkin:Scale9Image = create9ScaleImage("background-popup-skin", 4, 4, 22, 22);
+        //    backgroundSkin.width = properties.gridSize;
+        //    backgroundSkin.height = properties.gridSize;
+        //    list.listProperties.backgroundSkin = backgroundSkin;
+        //    list.listProperties.padding = properties.smallGutterSize;
+        //}
 
-        list.listProperties.customItemRendererStyleName = THEME_STYLE_NAME_PICKER_LIST_ITEM_RENDERER;
+        //list.listProperties.customItemRendererStyleName = THEME_STYLE_NAME_PICKER_LIST_ITEM_RENDERER;
     }
 
     public function setPickerListButtonStyles(button:Button):void
@@ -123,7 +123,7 @@ public class PickerListFactory extends AbstractThemeFactory
         {
             textureScale: properties.scale,
             snapToPixels: true
-        }
+        };
         button.stateToIconFunction = iconSelector.updateValue;
 
         button.gap = Number.POSITIVE_INFINITY;

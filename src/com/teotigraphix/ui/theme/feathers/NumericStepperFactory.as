@@ -83,14 +83,14 @@ public class NumericStepperFactory extends AbstractThemeFactory
         input.padding = properties.smallGutterSize;
         input.isEditable = false;
         input.textEditorFactory = stepperTextEditorFactory;
-        input.textEditorProperties.elementFormat = theme.fonts.lightUIElementFormat;
-        input.textEditorProperties.disabledElementFormat = theme.fonts.lightUIDisabledElementFormat;
+        input.textEditorProperties.elementFormat = theme.fonts.darkUIElementFormat;
+        input.textEditorProperties.disabledElementFormat = theme.fonts.darkUIDisabledElementFormat;
         input.textEditorProperties.textAlign = TextBlockTextEditor.TEXT_ALIGN_CENTER;
     }
 
     public function setNumericStepperButtonStyles(button:Button):void
     {
-        theme.button.setButtonStyles(button);
+        theme.button.setButtonRaisedStyles(button);
         button.keepDownStateOnRollOut = true;
     }
 

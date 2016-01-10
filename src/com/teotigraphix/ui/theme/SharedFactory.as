@@ -91,7 +91,7 @@ public class SharedFactory extends AbstractThemeFactory
 
     // GroupedList
     public static const GROUPED_LIST_FOOTER_BACKGROUND_COLOR:uint = 0x2e2a26;
-    public static const LIST_BACKGROUND_COLOR:uint = 0x383430;
+    public static const LIST_BACKGROUND_COLOR:uint = 0xFFFFFF;//0x383430;
 
     // List
     public static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 2, 82);
@@ -134,8 +134,7 @@ public class SharedFactory extends AbstractThemeFactory
                                                             ThemeProperties.DEFAULT_SCALE9_GRID);
         backgroundInsetSkinTextures = new Scale9Textures(AssetMap.getTexture("background-inset-skin"),
                                                          ThemeProperties.DEFAULT_SCALE9_GRID);
-        // XXX wrong skin
-        backgroundFocusedSkinTextures = new Scale9Textures(AssetMap.getTexture("background-disabled-skin"),
+        backgroundFocusedSkinTextures = new Scale9Textures(AssetMap.getTexture("background-focused-skin"),
                                                            ThemeProperties.DEFAULT_SCALE9_GRID);
         backgroundPopUpSkinTextures = new Scale9Textures(AssetMap.getTexture("background-popup-skin"),
                                                          ThemeProperties.DEFAULT_SCALE9_GRID);

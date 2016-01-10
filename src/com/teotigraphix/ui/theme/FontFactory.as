@@ -35,17 +35,24 @@ import flash.text.engine.RenderingMode;
 
 public class FontFactory extends AbstractThemeFactory
 {
-    public static const LIGHT_TEXT_COLOR:uint = 0xe5e5e5;
+    public static const LIGHT_TEXT_COLOR:uint = 0xFFFFFF;//0xe5e5e5;
     public static const DARK_TEXT_COLOR:uint = 0x1a1816;
     public static const SELECTED_TEXT_COLOR:uint = 0xff9900;
     public static const DISABLED_TEXT_COLOR:uint = 0x8a8a8a;
     public static const DARK_DISABLED_TEXT_COLOR:uint = 0x383430;
+
+    public static var THEME_FONT_COLOR:uint = 0x00BCD4;
 
     /**
      * The name of the embedded font used by controls in this theme. Comes
      * in normal and bold weights.
      */
     public static var FONT_NAME:String = "SourceSansPro";
+
+    /**
+     * An ElementFormat with a theme tint meant for UI controls.
+     */
+    public var themeLargeElementFormat:ElementFormat;
 
     /**
      * A smaller font size for details.
@@ -253,6 +260,8 @@ public class FontFactory extends AbstractThemeFactory
         // ME
         defaultButtonElementFormat = darkUIElementFormat;
         defaultButtonDisableElementFormat = darkUIDisabledElementFormat;
+
+        themeLargeElementFormat = new ElementFormat(regularFontDescription, largeFontSize, THEME_FONT_COLOR);
     }
 
     override public function initializeGlobals():void

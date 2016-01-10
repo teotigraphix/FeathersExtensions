@@ -38,7 +38,11 @@ public final class AssetMap
 
     public static var scale:Number;
 
+    public static var densityPixelRatio:Number;
+
     public static var theme:StyleNameFunctionTheme;
+
+    //public static var scaleManager:ScreenDensityScaleFactorManager;
 
     private static var _textures:Dictionary = new Dictionary();
 
@@ -101,19 +105,14 @@ public final class AssetMap
         return t;
     }
 
-    public static function size(size:int):Number
+    public static function size(size:Number):Number
     {
-        return size * scale;
+        return Math.round(size * scale);
     }
 
-    public static function getWidth(width:int):Number
+    public static function dp(size:Number):Number
     {
-        return width * scale;
-    }
-
-    public static function getHeight(height:int):Number
-    {
-        return height * scale;
+        return Math.round(size * densityPixelRatio);
     }
 }
 }

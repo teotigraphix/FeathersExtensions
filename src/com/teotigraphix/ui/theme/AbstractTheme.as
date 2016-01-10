@@ -53,13 +53,14 @@ import com.teotigraphix.ui.theme.feathers.ToggleButtonFactory;
 import com.teotigraphix.ui.theme.feathers.ToggleSwitchFactory;
 import com.teotigraphix.ui.theme.framework.FormLabelFactory;
 import com.teotigraphix.ui.theme.framework.FrameworkDefaultsFactory;
-import com.teotigraphix.ui.theme.framework.FrameworkScreenFactory;
 import com.teotigraphix.ui.theme.framework.GridGroupFactory;
 import com.teotigraphix.ui.theme.framework.LedFactory;
 import com.teotigraphix.ui.theme.framework.ToastFactory;
 
 import feathers.system.DeviceCapabilities;
 import feathers.themes.StyleNameFunctionTheme;
+
+import flash.display.Stage;
 
 import starling.core.Starling;
 import starling.textures.TextureAtlas;
@@ -107,15 +108,13 @@ public class AbstractTheme extends StyleNameFunctionTheme
 
     // Framework
     public var framework:FrameworkDefaultsFactory;
-    public var frameworkScreen:FrameworkScreenFactory;
     public var led:LedFactory;
     public var gridGroup:GridGroupFactory;
     public var toast:ToastFactory;
     public var formLabel:FormLabelFactory;
-
+    protected var _dp:Number;
     internal var _originalDPI:int;
     internal var _scaleToDPI:Boolean;
-
     private var _factories:Vector.<AbstractThemeFactory> = new <AbstractThemeFactory>[];
     private var _atlas:TextureAtlas;
 
@@ -134,6 +133,11 @@ public class AbstractTheme extends StyleNameFunctionTheme
         _atlas = value;
         for each (var factory:AbstractThemeFactory in _factories)
             factory.atlas = _atlas;
+    }
+
+    public function get dp():Number
+    {
+        return _dp;
     }
 
     /**
@@ -163,6 +167,9 @@ public class AbstractTheme extends StyleNameFunctionTheme
     {
         _scaleToDPI = scaleToDPI;
 
+        _dp = calculateScaleFactor();
+
+        properties = new ThemeProperties(this);
         createFactories();
         addFactories();
 
@@ -187,7 +194,6 @@ public class AbstractTheme extends StyleNameFunctionTheme
 
     protected function createFactories():void
     {
-        properties = new ThemeProperties(this);
         fonts = new FontFactory(this);
         shared = new SharedFactory(this);
 
@@ -225,7 +231,6 @@ public class AbstractTheme extends StyleNameFunctionTheme
 
         // Framework
         framework = new FrameworkDefaultsFactory(this);
-        frameworkScreen = new FrameworkScreenFactory(this);
         led = new LedFactory(this);
         toast = new ToastFactory(this);
         gridGroup = new GridGroupFactory(this);
@@ -271,7 +276,6 @@ public class AbstractTheme extends StyleNameFunctionTheme
 
         // Framework
         _factories.push(framework);
-        _factories.push(frameworkScreen);
         _factories.push(led);
         _factories.push(gridGroup);
         _factories.push(toast);
@@ -322,6 +326,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
      */
     protected function initializeScale():void
     {
+        AssetMap.densityPixelRatio = dp;
         var scaledDPI:int = DeviceCapabilities.dpi / Starling.contentScaleFactor;
         this._originalDPI = scaledDPI;
         if (_scaleToDPI)
@@ -378,5 +383,62 @@ public class AbstractTheme extends StyleNameFunctionTheme
             factory.initializeStyleProviders();
     }
 
+    protected function calculateScaleFactor():Number
+    {
+        var nativeStage:Stage = Starling.current.nativeStage;
+        var screenDensity:Number = DeviceCapabilities.dpi;
+        //workaround because these rules derived from Android's behavior
+        //would "incorrectly" give iPads a lower scale factor than iPhones
+        //when both devices have the same scale factor natively.
+        //if(Capabilities.version.indexOf("IOS") >= 0 && DeviceCapabilities.isTablet(nativeStage))
+        //{
+        //    screenDensity *= IOS_TABLET_DENSITY_SCALE_FACTOR;
+        //}
+        var bucket:ScreenDensityBucket = BUCKETS[0];
+        if (screenDensity <= bucket.density)
+        {
+            return bucket.scale;
+        }
+        var previousBucket:ScreenDensityBucket = bucket;
+        var bucketCount:int = BUCKETS.length;
+        for (var i:int = 1; i < bucketCount; i++)
+        {
+            bucket = BUCKETS[i];
+            if (screenDensity > bucket.density)
+            {
+                previousBucket = bucket;
+                continue;
+            }
+            var midDPI:Number = (bucket.density + previousBucket.density) / 2;
+            if (screenDensity < midDPI)
+            {
+                return previousBucket.scale;
+            }
+            return bucket.scale;
+        }
+        return bucket.scale;
+    }
 }
 }
+
+class ScreenDensityBucket
+{
+    public function ScreenDensityBucket(dpi:Number, scale:Number)
+    {
+        this.density = dpi;
+        this.scale = scale;
+    }
+
+    public var density:Number;
+    public var scale:Number;
+}
+
+var BUCKETS:Vector.<ScreenDensityBucket> = new <ScreenDensityBucket>
+        [
+            new ScreenDensityBucket(120, 0.75), //ldpi
+            new ScreenDensityBucket(160, 1), //mdpi
+            new ScreenDensityBucket(240, 1.5), //hdpi
+            new ScreenDensityBucket(320, 2), //xhdpi
+            new ScreenDensityBucket(480, 3), //xxhdpi
+            new ScreenDensityBucket(640, 4) ///xxxhpi
+        ];

@@ -60,5 +60,10 @@ public class AbstractCommandLauncher extends AbstractController implements IComm
     {
         commandMap.mapEvent(commandClazz["ID"], commandClazz);
     }
+
+    protected final function fire(command:Class, data:Object = null):void
+    {
+        dispatchWith(command["ID"], false, data == null ? {} : data);
+    }
 }
 }

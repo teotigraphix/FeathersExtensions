@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<!--
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2016 Michael Schmalle - Teoti Graphix, LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License
+//
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+-->
+<component:HGroup xmlns:f="library://ns.feathersui.com/mxml"
+                  xmlns:fx="http://ns.adobe.com/mxml/2009"
+                  xmlns:component="com.teotigraphix.ui.component.*"
+                  padding="{AssetMap.dp(8)}">
+
+    <component:VGroup percentWidth="100">
+
+        <f:Label id="mainHeadingLabel"
+                 styleName="{FrameworkStyleNames.THEME_LABEL}"/>
+
+        <f:Label id="subHeadingLabel"
+                 styleName="{FrameworkStyleNames.THEME_LABEL_SUB_HEADING}"
+                 wordWrap="true">
+            <f:layoutData>
+                <f:VerticalLayoutData percentWidth="100"/>
+            </f:layoutData>
+        </f:Label>
+
+    </component:VGroup>
+
+    <!-- controlFactory -->
+
+    <fx:Script><![CDATA[
+        import com.teotigraphix.ui.theme.AssetMap;
+        import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+
+        import feathers.core.FeathersControl;
+        import feathers.skins.IStyleProvider;
+
+        public static var globalStyleProvider:IStyleProvider;
+
+        override protected function get defaultStyleProvider():IStyleProvider
+        {
+            return SettingsGroup.globalStyleProvider;
+        }
+
+        private var _heading:String;
+        private var _subHeading:String;
+        private var _control:FeathersControl;
+
+        //----------------------------------
+        // controlFactory
+        //----------------------------------
+
+        public function get control():FeathersControl
+        {
+            return _control;
+        }
+
+        public function set control(value:FeathersControl):void
+        {
+            _control = value;
+            invalidate("control");
+            invalidate(INVALIDATION_FLAG_SIZE);
+            invalidate(INVALIDATION_FLAG_LAYOUT);
+        }
+
+        //----------------------------------
+        // heading
+        //----------------------------------
+
+        public function get heading():String
+        {
+            return _heading;
+        }
+
+        public function set heading(value:String):void
+        {
+            _heading = value;
+            invalidate("heading");
+        }
+
+        //----------------------------------
+        // subHeading
+        //----------------------------------
+
+        public function get subHeading():String
+        {
+            return _subHeading;
+        }
+
+        public function set subHeading(value:String):void
+        {
+            _subHeading = value;
+            invalidate("subHeading");
+        }
+
+        override protected function draw():void
+        {
+            super.draw();
+
+            if (isInvalid("heading"))
+            {
+                mainHeadingLabel.text = _heading;
+            }
+
+            if (isInvalid("subHeading"))
+            {
+                subHeadingLabel.text = _subHeading;
+            }
+
+            if (isInvalid("control"))
+            {
+                addChild(control);
+            }
+        }
+        ]]></fx:Script>
+
+</component:HGroup>

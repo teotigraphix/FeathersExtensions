@@ -4,10 +4,16 @@
 package com.teotigraphix.ui.theme.framework
 {
 
+import com.teotigraphix.ui.component.HGroup;
+import com.teotigraphix.ui.component.file.FileList;
+import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
 import com.teotigraphix.ui.theme.*;
 
-import com.teotigraphix.ui.component.file.FileList;
-import com.teotigraphix.ui.component.file.FileListPopUp;
+import feathers.controls.Label;
+import feathers.controls.LayoutGroup;
+import feathers.controls.List;
+import feathers.layout.FlowLayout;
+import feathers.layout.HorizontalLayout;
 
 import flash.filesystem.File;
 
@@ -15,9 +21,6 @@ import starling.display.DisplayObject;
 
 public class FileListFactory extends AbstractThemeFactory
 {
-    private var fileListIconWidth:int = 55;
-    private var fileListIconHeight:int = 55;
-
     public function FileListFactory(theme:AbstractTheme)
     {
         super(theme);
@@ -34,47 +37,35 @@ public class FileListFactory extends AbstractThemeFactory
 
         setStyle(FileList, setFileListStyles);
 
-        setStyle(FileListPopUp, setFileListPopUpStyles);
-       //setStyle(FileListPopUp, setRootSelectorFileListPopUpStyles, "root-selector");
-        //setStyle(FileListPopUp, setPresetSelectorFileListPopUpStyles, "preset-selector");
+        setStyle(List, setListStyles, FileList.LIST_STYLE_NAME);
+        setStyle(Label, setStatusStyles, FileList.STATUS_STYLE_NAME);
+        setStyle(LayoutGroup, set_ActionHeaderStyles, FileList.STYLE_ACTION_GROUP);
+        setStyle(HGroup, set_HeaderStyles, FileExplorerScreen.STYLE_HEADER);
     }
 
-    public function setFileListPopUpStyles(popup:FileListPopUp):void
+    public function set_ActionHeaderStyles(group:LayoutGroup):void
     {
-        popup.backgroundSkin = AssetMap.create9ScaleImage("background-skin", 5, 5, 22, 22);
-        //popup.defaultCausticIcon = AssetMap.getTexture("mimetype_caustic");
-        //popup.defaultFolderIcon = AssetMap.getTexture("filesystem_folder");
-        //popup.defaultFileIcon = AssetMap.getTexture("mimetype_misc");
+        FlowLayout(group.layout).padding = dp(8);
     }
 
-    public function setRootSelectorFileListPopUpStyles(popup:FileListPopUp):void
+    public function set_HeaderStyles(group:HGroup):void
     {
-        setFileListPopUpStyles(popup);
-
-        //var fileList:FileList = popup.fileList;
-        //
-        //fileList.list.minHeight = 0;
-        //fileList.showFiles = false;
-        //fileList.extensions = [];
-        //fileList.directoryDoubleTapEnabled = true;
+        group.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
+        group.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_LEFT;
+        group.backgroundSkin = AssetMap.create9ScaleImage('application-header-skin', 5, 5, 50, 50);
+        group.padding = dp(16);
     }
 
-    // CausticLive
-    //private function setPresetSelectorFileListPopUpStyles(popup:FileListPopUp):void
-    //{
-    //    setFileListPopUpStyles(popup);
-    //
-    //    var fileList:FileList = popup.fileList;
-    //
-    //    fileList.list.minHeight = 0;
-    //    fileList.showFiles = true;
-    //    fileList.extensions = [];
-    //    for each (var type:MachineType in MachineType.values)
-    //    {
-    //        fileList.extensions.push(type.extension);
-    //    }
-    //    fileList.directoryDoubleTapEnabled = false;
-    //}
+    public function setListStyles(list:List):void
+    {
+        theme.list.setListStyles(list);
+    }
+
+    public function setStatusStyles(label:Label):void
+    {
+        theme.label.set_themeHeadingStyles(label);
+        label.padding = dp(8);
+    }
 
     public function setFileListStyles(list:FileList):void
     {
@@ -85,41 +76,41 @@ public class FileListFactory extends AbstractThemeFactory
         list.showFiles = true;
         //list.iconFunction = iconFunction;
 
-        list.homeButton.defaultIcon = AssetMap.createScaledImage("filesystem_folder_home2");
+        list.homeButton.defaultIcon = AssetMap.createScaledImage("file-list-folder-home-icon");
 
-        list.upButton.defaultIcon = AssetMap.createScaledImage("action_up");
-        list.upButton.disabledIcon = AssetMap.createScaledImage("action_up_disabled");
+        list.upButton.defaultIcon = AssetMap.createScaledImage("file-list-up-icon");
+        list.upButton.disabledIcon = AssetMap.createScaledImage("file-list-up-disabled-icon");
 
-        list.backButton.defaultIcon = AssetMap.createScaledImage("action_back");
-        list.backButton.disabledIcon = AssetMap.createScaledImage("action_back_disabled");
+        //list.backButton.defaultIcon = AssetMap.createScaledImage("file-list-back-icon");
+        //list.backButton.disabledIcon = AssetMap.createScaledImage("file-list-back-disabled-icon");
+        //
+        //list.nextButton.defaultIcon = AssetMap.createScaledImage("file-list-forward-icon");
+        //list.nextButton.disabledIcon = AssetMap.createScaledImage("file-list-forward-disabled-icon");
 
-        list.nextButton.defaultIcon = AssetMap.createScaledImage("action_forward");
-        list.nextButton.disabledIcon = AssetMap.createScaledImage("action_forward_disabled");
+        list.newButton.defaultIcon = AssetMap.createScaledImage("file-list-folder-new-icon");
+        list.newButton.disabledIcon = AssetMap.createScaledImage("file-list-folder-new-disabled-icon");
 
-        list.createButton.defaultIcon = AssetMap.createScaledImage("filesystem_folder_create");
-        list.createButton.disabledIcon = AssetMap.createScaledImage("filesystem_folder_create_disabled");
-
-        list.refreshButton.defaultIcon = AssetMap.createScaledImage("quick_restart");
+        list.refreshButton.defaultIcon = AssetMap.createScaledImage("file-list-refresh-icon");
 
         sizeFileListIcon(list.homeButton.defaultIcon);
 
         sizeFileListIcon(list.upButton.defaultIcon);
         sizeFileListIcon(list.upButton.disabledIcon);
 
-        sizeFileListIcon(list.backButton.defaultIcon);
-        sizeFileListIcon(list.backButton.disabledIcon);
+        //sizeFileListIcon(list.backButton.defaultIcon);
+        //sizeFileListIcon(list.backButton.disabledIcon);
+        //
+        //sizeFileListIcon(list.nextButton.defaultIcon);
+        //sizeFileListIcon(list.nextButton.disabledIcon);
 
-        sizeFileListIcon(list.nextButton.defaultIcon);
-        sizeFileListIcon(list.nextButton.disabledIcon);
-
-        sizeFileListIcon(list.createButton.defaultIcon);
-        sizeFileListIcon(list.createButton.disabledIcon);
+        sizeFileListIcon(list.newButton.defaultIcon);
+        sizeFileListIcon(list.newButton.disabledIcon);
 
         sizeFileListIcon(list.refreshButton.defaultIcon);
 
         const iconMap:Object = {};
-        iconMap["defaultFolderIcon"] = AssetMap.getTexture("filesystem_folder");
-        iconMap["defaultFileIcon"] = AssetMap.getTexture("mimetype_misc");
+        iconMap["defaultFolderIcon"] = AssetMap.getTexture("file-list-folder-icon");
+        iconMap["defaultFileIcon"] = AssetMap.getTexture("file-list-file-icon");
         list.iconMap = iconMap;
     }
 

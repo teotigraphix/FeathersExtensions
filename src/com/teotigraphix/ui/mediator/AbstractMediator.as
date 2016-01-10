@@ -55,6 +55,7 @@ public class AbstractMediator extends Mediator
     [Inject]
     public var root:DisplayObjectContainer;
 
+    private var _controls:Vector.<Class>;
     private var _commands:Vector.<Class>;
 
     public function AbstractMediator()
@@ -89,7 +90,13 @@ public class AbstractMediator extends Mediator
             commandMap.unmapEvent(command["ID"], command);
         }
 
+        for each (var control:Class in _controls)
+        {
+            mediatorMap.unmapView(control);
+        }
+
         _commands = null;
+        _controls = null;
     }
 
     /**
@@ -98,6 +105,15 @@ public class AbstractMediator extends Mediator
      * @see #mapCommand()
      */
     protected function mapCommands():void
+    {
+    }
+
+    /**
+     * Maps mediator specific controls.
+     *
+     * @see #mapControl()
+     */
+    protected function mapControls():void
     {
     }
 
@@ -137,6 +153,19 @@ public class AbstractMediator extends Mediator
     //protected function onMapView(mediatorClass:*):void
     //{
     //}
+
+    protected final function mapControl(viewOrClassName:*, mediatorClass:*, screenID:String = null):void
+    {
+        if (_controls == null)
+            _controls = new <Class>[];
+
+        if (!mediatorMap.hasMapping(viewOrClassName))
+        {
+            _controls.push(viewOrClassName);
+
+            mediatorMap.mapView(viewOrClassName, mediatorClass);
+        }
+    }
 
     /**
      * Maps a sub screen view to the mediator map once.

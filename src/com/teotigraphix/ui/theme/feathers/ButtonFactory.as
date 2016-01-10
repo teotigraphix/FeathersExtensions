@@ -23,6 +23,7 @@ package com.teotigraphix.ui.theme.feathers
 import com.teotigraphix.ui.component.SimpleButton;
 import com.teotigraphix.ui.component.UIToggleButton;
 import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 
 import feathers.controls.Button;
 import feathers.controls.ToggleButton;
@@ -33,12 +34,17 @@ import flash.text.engine.ElementFormat;
 
 public class ButtonFactory extends AbstractThemeFactory
 {
-
     public var buttonUpSkinTextures:Scale9Textures;
     public var buttonDownSkinTextures:Scale9Textures;
     public var buttonDisabledSkinTextures:Scale9Textures;
     public var buttonSelectedUpSkinTextures:Scale9Textures;
     public var buttonSelectedDisabledSkinTextures:Scale9Textures;
+
+    public var buttonRaisedUpSkinTextures:Scale9Textures;
+    public var buttonRaisedDownSkinTextures:Scale9Textures;
+    public var buttonRaisedDisabledSkinTextures:Scale9Textures;
+    public var buttonRaisedSelectedUpSkinTextures:Scale9Textures;
+    public var buttonRaisedSelectedDisabledSkinTextures:Scale9Textures;
 
     public function ButtonFactory(theme:AbstractTheme)
     {
@@ -57,6 +63,17 @@ public class ButtonFactory extends AbstractThemeFactory
                                                                      SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
         buttonSelectedDisabledSkinTextures = AssetMap.createScale9Textures("button-selected-disabled-skin",
                                                                            SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
+
+        buttonRaisedUpSkinTextures = AssetMap.createScale9Textures("button-raised-up-skin",
+                                                                   SharedFactory.BUTTON_SCALE9_GRID);
+        buttonRaisedDownSkinTextures = AssetMap.createScale9Textures("button-raised-down-skin",
+                                                                     SharedFactory.BUTTON_SCALE9_GRID);
+        buttonRaisedDisabledSkinTextures = AssetMap.createScale9Textures("button-raised-disabled-skin",
+                                                                         SharedFactory.BUTTON_SCALE9_GRID);
+        buttonRaisedSelectedUpSkinTextures = AssetMap.createScale9Textures("button-raised-selected-up-skin",
+                                                                     SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
+        buttonRaisedSelectedDisabledSkinTextures = AssetMap.createScale9Textures("button-raised-selected-disabled-skin",
+                                                                           SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
     }
 
     override public function initializeStyleProviders():void
@@ -65,6 +82,10 @@ public class ButtonFactory extends AbstractThemeFactory
         setStyle(SimpleButton, setSimpleButtonStyles);
         setStyle(ToggleButton, setButtonStyles);
         setStyle(UIToggleButton, setButtonStyles);
+
+        // Button Raised
+        setStyle(Button, setButtonRaisedStyles, FrameworkStyleNames.THEME_BUTTON_RAISED);
+        setStyle(ToggleButton, setToggleButtonRaisedStyles, FrameworkStyleNames.THEME_BUTTON_RAISED);
     }
 
     public function setBaseButtonStyles(button:Button):void
@@ -78,13 +99,17 @@ public class ButtonFactory extends AbstractThemeFactory
             ToggleButton(button).selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
         }
 
-        button.paddingTop = properties.smallGutterSize;
-        button.paddingBottom = properties.smallGutterSize;
-        button.paddingLeft = properties.gutterSize;
-        button.paddingRight = properties.gutterSize;
-        button.gap = properties.smallGutterSize;
-        button.minGap = properties.smallGutterSize;
+        //button.paddingTop = properties.smallGutterSize;
+        //button.paddingBottom = properties.smallGutterSize;
+        //button.paddingLeft = properties.gutterSize;
+        //button.paddingRight = properties.gutterSize;
+        //button.gap = properties.smallGutterSize;
+        //button.minGap = properties.smallGutterSize;
         button.minWidth = button.minHeight = properties.controlSize;
+        //button.minWidth = dp(64);
+        button.height = dp(36);
+        button.padding = dp(8);
+        button.gap = dp(8);
         button.minTouchWidth = properties.gridSize;
         button.minTouchHeight = properties.gridSize;
     }
@@ -124,20 +149,78 @@ public class ButtonFactory extends AbstractThemeFactory
         setBaseButtonStyles(button);
     }
 
-    /**
-     * Regular button font, lightElementFormat.
-     */
-    protected function getFont():ElementFormat
+    public function setButtonRaisedStyles(button:Button):void
     {
-        return font.lightElementFormat;
+        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
+        skinSelector.defaultValue = buttonRaisedUpSkinTextures;
+        skinSelector.setValueForState(buttonRaisedDownSkinTextures, Button.STATE_DOWN, false);
+        skinSelector.setValueForState(buttonRaisedDisabledSkinTextures, Button.STATE_DISABLED, false);
+        if (button is ToggleButton)
+        {
+            //for convenience, this function can style both a regular button
+            //and a toggle button
+            // ME
+            var toggleButton:ToggleButton = ToggleButton(button);
+            toggleButton.defaultSelectedLabelProperties.elementFormat = getSelectedFont();
+            toggleButton.selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
+
+            skinSelector.defaultSelectedValue = buttonSelectedUpSkinTextures;
+            skinSelector.setValueForState(buttonSelectedDisabledSkinTextures, Button.STATE_DISABLED, true);
+        }
+        skinSelector.displayObjectProperties =
+        {
+            width: properties.controlSize,
+            height: properties.controlSize,
+            textureScale: theme.scale
+        };
+        button.stateToSkinFunction = skinSelector.updateValue;
+
+        setBaseButtonStyles(button);
+    }
+
+    public function setToggleButtonRaisedStyles(button:ToggleButton):void
+    {
+        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
+        skinSelector.defaultValue = buttonRaisedUpSkinTextures;
+        skinSelector.setValueForState(buttonRaisedDownSkinTextures, Button.STATE_DOWN, false);
+        skinSelector.setValueForState(buttonRaisedDisabledSkinTextures, Button.STATE_DISABLED, false);
+        if (button is ToggleButton)
+        {
+            //for convenience, this function can style both a regular button
+            //and a toggle button
+            // ME
+            var toggleButton:ToggleButton = ToggleButton(button);
+            toggleButton.defaultSelectedLabelProperties.elementFormat = getSelectedFont();
+            toggleButton.selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
+
+            skinSelector.defaultSelectedValue = buttonRaisedSelectedUpSkinTextures;
+            skinSelector.setValueForState(buttonRaisedSelectedDisabledSkinTextures, Button.STATE_DISABLED, true);
+        }
+        skinSelector.displayObjectProperties =
+        {
+            width: properties.controlSize,
+            height: properties.controlSize,
+            textureScale: theme.scale
+        };
+        button.stateToSkinFunction = skinSelector.updateValue;
+
+        setBaseButtonStyles(button);
     }
 
     /**
-     * Regular disabled button font, darkUIDisabledElementFormat.
+     * Regular button font, darkElementFormat.
+     */
+    protected function getFont():ElementFormat
+    {
+        return font.darkElementFormat;
+    }
+
+    /**
+     * Regular disabled button font, lightElementFormat.
      */
     protected function getDisabledFont():ElementFormat
     {
-        return font.darkUIDisabledElementFormat;
+        return font.disabledElementFormat;
     }
 
     /**

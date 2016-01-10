@@ -19,6 +19,8 @@
 package com.teotigraphix.ui.theme.framework
 {
 
+import com.teotigraphix.ui.component.HGroup;
+import com.teotigraphix.ui.component.VGroup;
 import com.teotigraphix.ui.control.BackButtonControl;
 import com.teotigraphix.ui.theme.AbstractTheme;
 import com.teotigraphix.ui.theme.AbstractThemeFactory;
@@ -26,6 +28,9 @@ import com.teotigraphix.ui.theme.FontFactory;
 
 import feathers.controls.Button;
 import feathers.controls.Label;
+import feathers.controls.LayoutGroup;
+import feathers.controls.TextInput;
+import feathers.layout.HorizontalLayout;
 
 import flash.text.engine.CFFHinting;
 import flash.text.engine.ElementFormat;
@@ -81,27 +86,74 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         setStyle(Label, setFormLabelStyles, FrameworkStyleNames.FORM_LABEL);
         setStyle(Label, setFormItemLabelStyles, FrameworkStyleNames.FORM_ITEM_LABEL);
         setStyle(Label, setFileExplorerTitleLabelStyles, FrameworkStyleNames.FILE_EXPLORER_TITLE_LABEL);
+
+        setStyle(LayoutGroup, theme_dialogContentGroup, FrameworkStyleNames.DIALOG_SCREEN_CONTENT);
+        setStyle(HGroup, theme_formButtonFooter, FrameworkStyleNames.DIALOG_BUTTON_FOOTER);
+
+        setStyle(Label, theme_toolTipLabelStyles, FrameworkStyleNames.TOOL_TIP_LABEL);
+
+        setStyle(TextInput, theme_textInputDarkStyles, FrameworkStyleNames.THEME_TEXT_INPUT_DARK);
+        setStyle(Label, theme_formTitleDarkStyles, FrameworkStyleNames.THEME_FORM_TITLE_DARK);
+    }
+
+    private function theme_dialogContentGroup(group:LayoutGroup):void
+    {
+        group.minWidth = dp(300);
+        VGroup(group).padding = dp(2);
+        group.backgroundSkin = create9ScaleImage('background-popup-skin', 4, 4, 24, 24);
+    }
+
+    private function theme_textInputDarkStyles(textInput:TextInput):void
+    {
+        theme.textInput.setDarkTextInputStyles(textInput);
+        textInput.padding = dp(8);
+    }
+
+    private function theme_formTitleDarkStyles(label:Label):void
+    {
+        theme.label.set_themeHeadingDarkStyles(label);
+        label.padding = dp(16);
+    }
+
+    public function theme_toolTipLabelStyles(label:Label):void
+    {
+        theme.label.setLabelDarkStyles(label);
+        label.padding = dp(8);
+    }
+
+    public function theme_formButtonFooter(group:HGroup):void
+    {
+        group.percentWidth = 100;
+        group.padding = dp(8);
+        group.gap = dp(8);
+        group.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_RIGHT;
+        group.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
     }
 
     public function setFormOkButtonStyles(button:Button):void
     {
         theme.button.setButtonStyles(button);
-        button.width = size(200);
+        button.minWidth = dp(64);
+        button.height = dp(36);
+        button.paddingLeft = button.paddingRight = dp(8);
         button.label = "OK";
     }
 
     public function setFormCancelButtonStyles(button:Button):void
     {
         theme.button.setButtonStyles(button);
-        button.width = size(200);
-        button.label = "Cancel";
+        button.minWidth = dp(64);
+        button.height = dp(36);
+        button.paddingLeft = button.paddingRight = dp(8);
+        button.label = "CANCEL";
     }
 
     public function setBackButtonStyles(button:BackButtonControl):void
     {
         theme.button.setButtonStyles(button);
         button.stateToSkinFunction = null;
-        button.defaultIcon = createImage("back-button-icon");
+        button.defaultIcon = createImage("back-button-up-icon");
+        button.downIcon = createImage("back-button-down-icon");
         button.hasLabelTextRenderer = false;
 
         button.paddingTop = size(4);

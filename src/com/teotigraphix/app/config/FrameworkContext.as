@@ -24,8 +24,10 @@ import com.teotigraphix.app.command.StartupFactory;
 import com.teotigraphix.app.ui.IBootstrapApplication;
 import com.teotigraphix.controller.ICommandLauncher;
 import com.teotigraphix.model.IApplicationSettings;
+import com.teotigraphix.model.IDeviceModel;
 import com.teotigraphix.model.IFrameworkModel;
 import com.teotigraphix.model.impl.AbstractApplicationSettings;
+import com.teotigraphix.model.impl.DeviceModelImpl;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.impl.FileServiceImpl;
@@ -54,22 +56,26 @@ import starling.display.DisplayObjectContainer;
 public class FrameworkContext extends Context
 {
     //----------------------------------
-    // Framework
+    // Minimal Impl
     //----------------------------------
 
-    public var $loggerClass:Class = LoggerImpl;
-    public var $fileServiceClass:Class = FileServiceImpl;
-    public var $screenProviderClass:Class = ScreenProviderImpl;
+    public var applicationDescriptorClass:Class = ApplicationDescriptor;
+    public var applicationSettingsClass:Class = AbstractApplicationSettings; // IFileService, ApplicationDescriptor
+    public var $loggerClass:Class = LoggerImpl; // NO DEPS
+    public var $fileServiceClass:Class = FileServiceImpl; // ApplicationDescriptor DEP
+    public var $deviceModelClass:Class = DeviceModelImpl; // NO DEPS
+    public var $screenProviderClass:Class = ScreenProviderImpl; // NO DEPS
+    public var startupCommand:Class;
+
+    //----------------------------------
+    // Framework
+    //----------------------------------
 
     //----------------------------------
     // App Config
     //----------------------------------
 
-    public var applicationDescriptorClass:Class = ApplicationDescriptor;
-    public var applicationSettingsClass:Class = AbstractApplicationSettings;
-
     public var startupFactoryClass:Class = StartupFactory;
-    public var startupCommand:Class;
 
     public var applicationModelAPI:Class;
     public var applicationModelClass:Class;
@@ -130,6 +136,22 @@ public class FrameworkContext extends Context
         super.mapInjections();
     }
 
+    /*
+    Requirements
+
+    - applicationDescriptorClass
+    - navigator
+    - applicationClass, applicationMediatorClass
+
+     */
+
+    /**
+     * Template startup method.
+     *
+     * - #configureCore()
+     * - #configureApplication()
+     * - #startupComplete()
+     */
     override public function startup():void
     {
         injector.mapValue(IEventDispatcher, flashDispatcher);
@@ -138,12 +160,31 @@ public class FrameworkContext extends Context
         injector.mapSingletonOf(ApplicationDescriptor, applicationDescriptorClass);
 
         trace("    FrameworkContext.configureCore()");
-        configureCore();
-        trace("    FrameworkContext.configureApplication()");
+        configureCoreNonDependencies();
 
-        injector.mapValue(IScreenNavigator, navigator);
+        trace("    FrameworkContext.configureCore()");
+        configureCore();
+
+        if (navigator != null)
+        {
+            injector.mapValue(IScreenNavigator, navigator);
+        }
+        else
+        {
+            trace("    FrameworkContext [IScreenNavigator] NOT FOUND!!!");
+        }
+
+        trace("    FrameworkContext.configureApplication()");
         configureApplication();
-        mediatorMap.mapView(applicationClass, applicationMediatorClass);
+
+        if (applicationClass != null && applicationMediatorClass != null)
+        {
+            mediatorMap.mapView(applicationClass, applicationMediatorClass);
+        }
+        else
+        {
+            trace("    FrameworkContext [applicationMediatorClass] NOT FOUND!!!");
+        }
 
         trace("    FrameworkContext.startupComplete()");
         startupComplete();
@@ -169,18 +210,21 @@ public class FrameworkContext extends Context
         return injector;
     }
 
-    protected function configureCore():void
+    protected function configureCoreNonDependencies():void
     {
         injector.mapValue(Juggler, Starling.juggler);
-
         injector.mapValue(IBootstrapApplication, contextView);
 
         injector.mapSingletonOf(ILogger, $loggerClass);
         injector.mapSingletonOf(IFileService, $fileServiceClass);
-        injector.mapSingletonOf(IScreenProvider, $screenProviderClass);
-
-        injector.mapSingletonOf(StartupFactory, startupFactoryClass);
         injector.mapSingletonOf(IApplicationSettings, applicationSettingsClass);
+        injector.mapSingletonOf(IDeviceModel, $deviceModelClass);
+    }
+
+    protected function configureCore():void
+    {
+        injector.mapSingletonOf(StartupFactory, startupFactoryClass);
+        injector.mapSingletonOf(IScreenProvider, $screenProviderClass);
         injector.mapSingletonOf(IScreenLauncher, screenLauncherClass);
         injector.mapSingletonOf(ICommandLauncher, commandLauncherClass);
         injector.mapSingletonOf(IUIController, uiControllerClass);
@@ -201,8 +245,18 @@ public class FrameworkContext extends Context
         configureController();
 
         trace("    FrameworkContext.configureApplicationModel()");
-        var model:IFrameworkModel = injector.instantiate(applicationModelClass);
-        mapApplicationModel(model);
+        if (applicationModelClass != null)
+        {
+            var model:Object = injector.instantiate(applicationModelClass);
+            if (model is IFrameworkModel)
+            {
+                mapApplicationModel(model as IFrameworkModel);
+            }
+            else
+            {
+                injector.mapValue(applicationModelAPI, model);
+            }
+        }
 
         trace("    FrameworkContext.configureView()");
         configureView();

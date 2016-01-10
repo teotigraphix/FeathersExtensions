@@ -25,9 +25,17 @@ import feathers.layout.HorizontalLayout;
 import feathers.layout.HorizontalLayoutData;
 import feathers.layout.VerticalLayout;
 import feathers.layout.VerticalLayoutData;
+import feathers.skins.IStyleProvider;
 
 public class HGroup extends LayoutGroup
 {
+    public static var globalStyleProvider:IStyleProvider;
+
+    override protected function get defaultStyleProvider():IStyleProvider
+    {
+        return HGroup.globalStyleProvider;
+    }
+
     private var _verticalAlign:String = "top";
     private var _horizontalAlign:String = "left";
 

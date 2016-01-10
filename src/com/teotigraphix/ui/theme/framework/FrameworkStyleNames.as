@@ -24,9 +24,31 @@ package com.teotigraphix.ui.theme.framework
  */
 public class FrameworkStyleNames
 {
+    public static const TOOL_TIP_LABEL:String = "tool-tip-label";
+
+    public static const THEME_BUTTON_RAISED:String = "theme-button-raised";
+
+    public static const THEME_LABEL:String = "theme-label-light";
+    public static const THEME_LABEL_HEADING:String = "theme-label-heading";
+    public static const THEME_LABEL_ACTION_BAR:String = "theme-action-bar";
+
+    public static const THEME_TEXT_INPUT_DARK:String = "theme-text-input-dark";
+
+    public static const THEME_LABEL_SUB_HEADING:String = "theme-label-sub-heading";
+
+    public static const THEME_DIVIDER:String = "theme-divider";
+
+    public static const APPLICATION_ACTION_BAR:String = "application-action-bar";
+
     public static const BACK_BUTTON:String = "back-button";
 
+    // Screen Dialog
+    public static const DIALOG_SCREEN_CONTENT:String = "dialog-content-group";
+    public static const DIALOG_BUTTON_FOOTER:String = "dialog-button-footer";
+
     // Form
+    public static const THEME_FORM_TITLE_DARK:String = "theme-form-title-dark";
+
     public static const FORM_LABEL:String = "form-label";
     public static const FORM_ITEM_LABEL:String = "form-item-label";
     public static const FORM_OK_BUTTON:String = "form-ok-button";
