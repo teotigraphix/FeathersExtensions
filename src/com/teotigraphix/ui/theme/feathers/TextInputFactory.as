@@ -21,6 +21,7 @@ package com.teotigraphix.ui.theme.feathers
 {
 
 import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 
 import feathers.controls.TextInput;
 import feathers.skins.SmartDisplayObjectStateValueSelector;
@@ -54,7 +55,8 @@ public class TextInputFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
-        setStyle(TextInput, setTextInputStyles);
+        setStyle(TextInput, setStyles);
+        setStyle(TextInput, setDarkStyles, FrameworkStyleNames.TEXT_INPUT_DARK);
         setStyle(TextInput, setSearchTextInputStyles, TextInput.ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT);
     }
 
@@ -62,9 +64,22 @@ public class TextInputFactory extends AbstractThemeFactory
     // TextInput
     //-------------------------
 
-    public function setTextInputStyles(input:TextInput):void
+    public function setStyles(input:TextInput):void
     {
         this.setBaseTextInputStyles(input);
+    }
+
+    public function setDarkStyles(input:TextInput):void
+    {
+        setBaseTextInputStyles(input);
+
+        input.textEditorProperties.fontFamily = "Helvetica";
+        input.textEditorProperties.fontSize = theme.fonts.regularFontSize;
+        input.textEditorProperties.color = DARK_TEXT_COLOR;
+        input.textEditorProperties.disabledColor = DISABLED_TEXT_COLOR;
+
+        input.promptProperties.elementFormat = theme.fonts.darkElementFormat;
+        input.promptProperties.disabledElementFormat = theme.fonts.darkUIDisabledElementFormat;
     }
 
     public function setDarkTextInputStyles(input:TextInput):void

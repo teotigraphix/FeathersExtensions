@@ -290,7 +290,7 @@ public final class Project implements ISerialize
      * @param length If name is null and a random name created, this is the length of the file name.
      * @throws IOError Temp file exists
      */
-    public function getTempFile(name:String = null, length = -1):File
+    public function getTempFile(name:String = null, length:int = -1):File
     {
         var directory:File = workingTempDirectory;
         if (!directory.exists)

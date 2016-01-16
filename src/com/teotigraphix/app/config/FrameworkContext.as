@@ -219,12 +219,12 @@ public class FrameworkContext extends Context
         injector.mapSingletonOf(IFileService, $fileServiceClass);
         injector.mapSingletonOf(IApplicationSettings, applicationSettingsClass);
         injector.mapSingletonOf(IDeviceModel, $deviceModelClass);
+        injector.mapSingletonOf(IScreenProvider, $screenProviderClass);
     }
 
     protected function configureCore():void
     {
         injector.mapSingletonOf(StartupFactory, startupFactoryClass);
-        injector.mapSingletonOf(IScreenProvider, $screenProviderClass);
         injector.mapSingletonOf(IScreenLauncher, screenLauncherClass);
         injector.mapSingletonOf(ICommandLauncher, commandLauncherClass);
         injector.mapSingletonOf(IUIController, uiControllerClass);

@@ -30,6 +30,11 @@ public interface IFileService
      * The private read-only File.applicationStorageDirectory.
      */
     function get storageDirectory():File;
+    
+    /**
+     * Place to save junk files and copy operations, will be cleaned at app startup.
+     */
+    function get storageCacheDirectory():File;
 
     /**
      * Returns something like /storage/sdcard0/MyApp.

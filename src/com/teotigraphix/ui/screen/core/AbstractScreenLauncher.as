@@ -139,6 +139,8 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
             _screenProvider.pop();
 
             var lastScreen:IScreen = IScreen(_navigator.popScreen());
+            logger.log("AbstractScreenLauncher", "Back screen [{0}] created as {1}", _navigator.activeScreenID,
+                       lastScreen);
 
             setInternalScreenID(_navigator.activeScreenID);
         }
@@ -231,7 +233,7 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
      *
      * @param screenID The current screen id.
      */
-    private function setInternalScreenID(screenID:String):void
+    protected function setInternalScreenID(screenID:String):void
     {
         _applicationScreenID = screenID;
     }
@@ -254,9 +256,11 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
 
         _screenProvider.push(data);
 
+        logger.log("AbstractScreenLauncher", "creating screen [{0}]", screenID);
         var screen:IScreen = IScreen(_navigator.pushScreen(_applicationScreenID));
         injector.injectInto(screen);
 
+        logger.log("AbstractScreenLauncher", "screen [{0}] created as {1}", screenID, screen);
         //dispatchWith(ApplicationModelEventType.APPLICATION_SCREEN_CHANGE, false, data);
         return screen;
     }

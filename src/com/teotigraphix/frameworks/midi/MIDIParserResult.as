@@ -28,6 +28,11 @@ public class MIDIParserResult
     // Public :: Properties
     //--------------------------------------------------------------------------
 
+    public function get tracks():Vector.<MIDITrackInfo>
+    {
+        return _tracks;
+    }
+
     //----------------------------------
     // file
     //----------------------------------

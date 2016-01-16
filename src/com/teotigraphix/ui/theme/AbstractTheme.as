@@ -341,6 +341,11 @@ public class AbstractTheme extends StyleNameFunctionTheme
             }
         }
         scale = scaledDPI / _originalDPI;
+        if (scale < 0.3)
+        {
+            scale = 1;
+            AssetMap.densityPixelRatio = _dp = 1.5;
+        }
         properties.scale = scale;
         for each (var factory:AbstractThemeFactory in _factories)
             factory.initializeScale();

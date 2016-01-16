@@ -31,7 +31,7 @@ public class ThemeProperties extends EventDispatcher
     public static var gap:Number;
     public static var gapx2:Number;
     public static var padding:Number;
-
+	
     public var scale:Number;
 
     /**

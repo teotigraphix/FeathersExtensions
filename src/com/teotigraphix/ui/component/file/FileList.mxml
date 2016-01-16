@@ -571,6 +571,8 @@
         {
             if (_showFiles)
             {
+                if (!_rootDirectory.exists)
+                    _rootDirectory = _homeDirectory;
                 return Files.listFiles(_rootDirectory, _extensions, false, true);
             }
             else

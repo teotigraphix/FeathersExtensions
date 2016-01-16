@@ -52,6 +52,7 @@ public class TabBarFactory extends AbstractThemeFactory
     public function setTabStyles(tab:ToggleButton):void
     {
         var defaultSkin:Quad = new Quad(properties.gridSize, properties.gridSize, SharedFactory.TAB_BACKGROUND_COLOR);
+        defaultSkin.alpha = 0;
         tab.defaultSkin = defaultSkin;
 
         var downSkin:Scale9Image = new Scale9Image(tabDownSkinTextures, properties.scale);
@@ -63,6 +64,7 @@ public class TabBarFactory extends AbstractThemeFactory
         var disabledSkin:Quad = new Quad(properties.gridSize, properties.gridSize,
                                          SharedFactory.TAB_DISABLED_BACKGROUND_COLOR);
         tab.disabledSkin = disabledSkin;
+        disabledSkin.alpha = 0;
 
         var selectedDisabledSkin:Scale9Image = new Scale9Image(tabSelectedDisabledSkinTextures, properties.scale);
         tab.selectedDisabledSkin = selectedDisabledSkin;

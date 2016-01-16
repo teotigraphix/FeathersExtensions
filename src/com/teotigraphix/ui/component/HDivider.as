@@ -31,7 +31,6 @@ public class HDivider extends HGroup
     {
         super.initialize();
 
-        percentWidth = 100;
         styleNameList.add(FrameworkStyleNames.THEME_DIVIDER);
     }
 }

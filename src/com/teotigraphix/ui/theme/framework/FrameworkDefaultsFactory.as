@@ -40,6 +40,8 @@ import flash.text.engine.FontPosture;
 import flash.text.engine.FontWeight;
 import flash.text.engine.RenderingMode;
 
+import starling.display.Quad;
+
 public class FrameworkDefaultsFactory extends AbstractThemeFactory
 {
     public var darkFormLabelElementFormat:ElementFormat;
@@ -83,7 +85,10 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         setStyle(Button, setFormCancelButtonStyles, FrameworkStyleNames.FORM_CANCEL_BUTTON);
         setStyle(BackButtonControl, setBackButtonStyles, FrameworkStyleNames.BACK_BUTTON);
 
+
         setStyle(Label, setFormLabelStyles, FrameworkStyleNames.FORM_LABEL);
+        setStyle(Label, setFormLabelDarkStyles, FrameworkStyleNames.FORM_LABEL_DARK);
+
         setStyle(Label, setFormItemLabelStyles, FrameworkStyleNames.FORM_ITEM_LABEL);
         setStyle(Label, setFileExplorerTitleLabelStyles, FrameworkStyleNames.FILE_EXPLORER_TITLE_LABEL);
 
@@ -94,6 +99,33 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
 
         setStyle(TextInput, theme_textInputDarkStyles, FrameworkStyleNames.THEME_TEXT_INPUT_DARK);
         setStyle(Label, theme_formTitleDarkStyles, FrameworkStyleNames.THEME_FORM_TITLE_DARK);
+
+        setStyle(HGroup, set_divider, FrameworkStyleNames.THEME_DIVIDER);
+
+        setStyle(LayoutGroup, set_ApplicationActionBar, FrameworkStyleNames.APPLICATION_ACTION_BAR);
+    }
+
+    private function set_ApplicationActionBar(actionBar:LayoutGroup):void
+    {
+        HorizontalLayout(actionBar.layout).verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
+
+        actionBar.minWidth = properties.gridSize;
+        actionBar.minHeight = dp(48);//properties.gridSize;
+
+        var hl:HorizontalLayout = actionBar.layout as HorizontalLayout;
+        hl.paddingLeft = hl.paddingRight = dp(8); //properties.smallGutterSize;
+        //actionBar.gap = properties.smallGutterSize;
+        //actionBar.titleGap = properties.smallGutterSize;
+
+        actionBar.backgroundSkin = create9ScaleImage("application-header-skin", 5, 5, 50, 50);
+    }
+
+
+    private function set_divider(group:HGroup):void
+    {
+        group. percentWidth = 100;
+        var quad:Quad = new Quad(size(1), size(1), 0xCCCCCC);
+        group.backgroundSkin = quad;
     }
 
     private function theme_dialogContentGroup(group:LayoutGroup):void
@@ -173,6 +205,12 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
     {
         label.textRendererProperties.elementFormat = lightFormLabelElementFormat;
         label.textRendererProperties.disabledElementFormat = lightFormLabelElementFormat;
+    }
+
+    private function setFormLabelDarkStyles(label:Label):void
+    {
+        label.textRendererProperties.elementFormat = darkFormLabelElementFormat;
+        label.textRendererProperties.disabledElementFormat = darkFormLabelElementFormat;
     }
 
     private function setFormItemLabelStyles(label:Label):void

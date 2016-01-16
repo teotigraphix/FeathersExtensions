@@ -55,6 +55,11 @@ public class FontFactory extends AbstractThemeFactory
     public var themeLargeElementFormat:ElementFormat;
 
     /**
+     * The smallest font.
+     */
+    public var extraSmallFontSize:int;
+
+    /**
      * A smaller font size for details.
      */
     public var smallFontSize:int;
@@ -204,6 +209,10 @@ public class FontFactory extends AbstractThemeFactory
      */
     public var smallDisabledElementFormat:ElementFormat;
 
+    ///
+    public var extraSmallDarkElementFormat:ElementFormat;
+    public var extraSmallDarkDisabledElementFormat:ElementFormat;
+
     public function FontFactory(theme:AbstractTheme)
     {
         super(theme);
@@ -214,6 +223,7 @@ public class FontFactory extends AbstractThemeFactory
      */
     override public function initializeFonts():void
     {
+        extraSmallFontSize = Math.round(16 * theme.scale);
         smallFontSize = Math.round(20 * theme.scale);
         regularFontSize = Math.round(24 * theme.scale);
         largeFontSize = Math.round(28 * theme.scale);
@@ -225,37 +235,43 @@ public class FontFactory extends AbstractThemeFactory
         scrollTextDisabledTextFormat = new TextFormat("_sans", regularFontSize, DISABLED_TEXT_COLOR);
 
         regularFontDescription = new FontDescription(FONT_NAME, FontWeight.NORMAL, FontPosture.NORMAL,
-                                                     FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
+                FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
         boldFontDescription = new FontDescription(FONT_NAME, FontWeight.BOLD, FontPosture.NORMAL,
-                                                  FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
+                FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
 
-        headerElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, LIGHT_TEXT_COLOR);
-        headerDarkElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, DARK_TEXT_COLOR);
+        extraSmallDarkElementFormat = new ElementFormat(regularFontDescription, extraSmallFontSize, DARK_TEXT_COLOR);
+        extraSmallDarkDisabledElementFormat = new ElementFormat(regularFontDescription, extraSmallFontSize, DARK_DISABLED_TEXT_COLOR);
 
+        // Small
+        smallLightElementFormat = new ElementFormat(regularFontDescription, smallFontSize, LIGHT_TEXT_COLOR);
+        smallDarkElementFormat = new ElementFormat(boldFontDescription, smallFontSize, DARK_TEXT_COLOR);
+        smallDisabledElementFormat = new ElementFormat(regularFontDescription, smallFontSize, DISABLED_TEXT_COLOR);
+
+        // UI Regular font size
         darkUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_TEXT_COLOR);
         lightUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, LIGHT_TEXT_COLOR);
         selectedUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, SELECTED_TEXT_COLOR);
         lightUIDisabledElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DISABLED_TEXT_COLOR);
         darkUIDisabledElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_DISABLED_TEXT_COLOR);
 
+        // UI Large
         largeUIDarkElementFormat = new ElementFormat(boldFontDescription, largeFontSize, DARK_TEXT_COLOR);
         largeUILightElementFormat = new ElementFormat(boldFontDescription, largeFontSize, LIGHT_TEXT_COLOR);
         largeUISelectedElementFormat = new ElementFormat(boldFontDescription, largeFontSize, SELECTED_TEXT_COLOR);
         largeUIDarkDisabledElementFormat = new ElementFormat(boldFontDescription, largeFontSize,
-                                                             DARK_DISABLED_TEXT_COLOR);
+                DARK_DISABLED_TEXT_COLOR);
         largeUILightDisabledElementFormat = new ElementFormat(boldFontDescription, largeFontSize, DISABLED_TEXT_COLOR);
 
         darkElementFormat = new ElementFormat(regularFontDescription, regularFontSize, DARK_TEXT_COLOR);
         lightElementFormat = new ElementFormat(regularFontDescription, regularFontSize, LIGHT_TEXT_COLOR);
         disabledElementFormat = new ElementFormat(regularFontDescription, regularFontSize, DISABLED_TEXT_COLOR);
 
-        smallLightElementFormat = new ElementFormat(regularFontDescription, smallFontSize, LIGHT_TEXT_COLOR);
-        smallDarkElementFormat = new ElementFormat(boldFontDescription, smallFontSize, DARK_TEXT_COLOR);
-        smallDisabledElementFormat = new ElementFormat(regularFontDescription, smallFontSize, DISABLED_TEXT_COLOR);
-
         largeDarkElementFormat = new ElementFormat(regularFontDescription, largeFontSize, DARK_TEXT_COLOR);
         largeLightElementFormat = new ElementFormat(regularFontDescription, largeFontSize, LIGHT_TEXT_COLOR);
         largeDisabledElementFormat = new ElementFormat(regularFontDescription, largeFontSize, DISABLED_TEXT_COLOR);
+
+        headerElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, LIGHT_TEXT_COLOR);
+        headerDarkElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, DARK_TEXT_COLOR);
 
         // ME
         defaultButtonElementFormat = darkUIElementFormat;

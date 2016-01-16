@@ -49,7 +49,19 @@ public class FrameworkStyleNames
     // Form
     public static const THEME_FORM_TITLE_DARK:String = "theme-form-title-dark";
 
+    public static const CHECK_DARK:String = "check-dark";
+    public static const TEXT_INPUT_DARK:String = "text-input-dark";
+
+    /**
+     * The dark bold size of 24 pixels not scaled (base font size), this is uiFont descriptions.
+     */
+    public static const LABEL_UI_DARK:String = "label-ui-dark";
+
+    public static const LABEL_16_DARK:String = "label-16-dark";
+    public static const LABEL_20_DARK:String = "label-20-dark";
+
     public static const FORM_LABEL:String = "form-label";
+    public static const FORM_LABEL_DARK:String = "form-label-dark";
     public static const FORM_ITEM_LABEL:String = "form-item-label";
     public static const FORM_OK_BUTTON:String = "form-ok-button";
     public static const FORM_CANCEL_BUTTON:String = "form-cancel-button";

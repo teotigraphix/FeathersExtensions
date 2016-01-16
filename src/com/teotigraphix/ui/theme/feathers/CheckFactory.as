@@ -21,6 +21,7 @@ package com.teotigraphix.ui.theme.feathers
 {
 
 import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 
 import feathers.controls.Button;
 import feathers.controls.Check;
@@ -58,9 +59,11 @@ public class CheckFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
-        setStyle(Check, setCheckStyles);
+        setStyle(Check, setStyles);
+        setStyle(Check, setCheckDarkStyles, FrameworkStyleNames.CHECK_DARK);
     }
-    public function setCheckStyles(check:Check):void
+
+    public function setStyles(check:Check):void
     {
         var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
         iconSelector.defaultValue = checkUpIconTexture;
@@ -85,6 +88,16 @@ public class CheckFactory extends AbstractThemeFactory
         check.minHeight = properties.controlSize;
         check.minTouchWidth = properties.gridSize;
         check.minTouchHeight = properties.gridSize;
+    }
+
+    public function setCheckDarkStyles(check:Check):void
+    {
+        setStyles(check);
+
+        check.defaultLabelProperties.elementFormat = theme.fonts.darkUIElementFormat;
+        check.disabledLabelProperties.elementFormat = theme.fonts.darkUIDisabledElementFormat;
+        check.selectedDisabledLabelProperties.elementFormat = theme.fonts.darkUIDisabledElementFormat;
+
     }
 
 }

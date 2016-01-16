@@ -41,7 +41,15 @@ public class FileServiceImpl extends AbstractService implements IFileService
     {
         return descriptor.storageDirectory;
     }
-
+    
+    /**
+     * @inheritDoc
+     */
+    public function get storageCacheDirectory():File
+    {
+        return descriptor.storageDirectory.resolvePath(".cache");
+    }
+    
     public function get applicationDirectory():File
     {
         return descriptor.applicationDirectory;

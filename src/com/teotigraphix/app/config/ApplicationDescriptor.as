@@ -20,6 +20,7 @@
 package com.teotigraphix.app.config
 {
 
+import flash.events.Event;
 import flash.filesystem.File;
 
 public class ApplicationDescriptor
@@ -34,14 +35,14 @@ public class ApplicationDescriptor
     public var DOCUMENTS_DIRECTORY:File = File.documentsDirectory;
 
     public var APPLICATION_PREFERENCES:String = "application_preferences.xml";
-
+    
     public var APPLICATION_STATE:String = "application_preferences.bin";
-
-    //--------------------------------------------------------------------------
-    // Properties
-    //--------------------------------------------------------------------------
-
+    
     public var STORAGE_DIRECTORY:File = File.applicationStorageDirectory;
+    
+    //--------------------------------------------------------------------------
+    // Private :: Variables
+    //--------------------------------------------------------------------------
 
     private var _appID:String;
     private var _name:String;
@@ -50,6 +51,10 @@ public class ApplicationDescriptor
     private var _flushState:Boolean;
     private var _fps:int;
     private var _isDebug:Boolean;
+    
+    //--------------------------------------------------------------------------
+    // API :: Properties
+    //--------------------------------------------------------------------------
 
     //----------------------------------
     // appID
@@ -156,46 +161,106 @@ public class ApplicationDescriptor
     // documentsDirectory
     //----------------------------------
 
-    // /storage/sdcard0
+    /**
+     * /storage/sdcard0
+     * 
+     * @see File#documentsDirectory
+     */
     public function get documentsDirectory():File
     {
         return DOCUMENTS_DIRECTORY;
     }
+    
+    //----------------------------------
+    // storageDirectory
+    //----------------------------------
 
+    /**
+     * ..\AppData\Roaming\com...\Local Store
+     * 
+     * @see File#applicationStorageDirectory
+     */
     public function get storageDirectory():File
     {
         return File.applicationStorageDirectory;
     }
+    
+    /**
+     * ..\AppData\Roaming\com...\Local Store\.cache
+     * 
+     * @see File#applicationStorageDirectory
+     */
+    public function get storageCacheDirectory():File
+    {
+        return File.applicationStorageDirectory.resolvePath(".cache");
+    }
+    
+    //----------------------------------
+    // applicationDirectory
+    //----------------------------------
 
-    // /storage/sdcard0/CausticPlayer
+    /**
+     * /storage/sdcard0/[name]
+     */
     public function get applicationDirectory():File
     {
         return DOCUMENTS_DIRECTORY.resolvePath(_name);
     }
+    
+    //----------------------------------
+    // libraryDirectory
+    //----------------------------------
 
-    // /storage/sdcard0/App/Library
+    /**
+     * /storage/sdcard0/[name]/Library
+     */
     public function get libraryDirectory():File
     {
         return applicationDirectory.resolvePath("Library");
     }
+    
+    //----------------------------------
+    // projectDirectory
+    //----------------------------------
 
-    // /storage/sdcard0/App/Library/Packages
+    /**
+     * /storage/sdcard0/[name]/Library/Packages
+     */
     public function get packagesDirectory():File
     {
         return libraryDirectory.resolvePath("Packages");
     }
+    
+    //----------------------------------
+    // projectDirectory
+    //----------------------------------
 
-    // /storage/sdcard0/App/Projects
+    /**
+     * /storage/sdcard0/[name]/Library/Projects
+     */
     public function get projectDirectory():File
     {
         return applicationDirectory.resolvePath("Projects");
     }
+    
+    //----------------------------------
+    // preferenceBinFile
+    //----------------------------------
 
+    /**
+     * ..\AppData\Roaming\com...\Local Store\application_preferences.bin
+     * 
+     * @see File#applicationStorageDirectory
+     */
     public function get preferenceBinFile():File
     {
         return STORAGE_DIRECTORY.resolvePath(APPLICATION_STATE);
     }
 
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+    
     public function ApplicationDescriptor()
     {
     }
