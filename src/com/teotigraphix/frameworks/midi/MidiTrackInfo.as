@@ -120,7 +120,7 @@ public class MIDITrackInfo
             var start:Number = 0;
             var duration:Number = 0;
             var end:Number = 0;
-
+            // Spark is 480
             start = tick / midiFile.division; // 960
             duration = note.duration / midiFile.division;
             end = start + duration;

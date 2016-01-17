@@ -24,6 +24,7 @@ import com.teotigraphix.app.config.ApplicationDescriptor;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.util.Files;
+import com.teotigraphix.util.IDUtils;
 
 import flash.filesystem.File;
 
@@ -45,9 +46,9 @@ public class FileServiceImpl extends AbstractService implements IFileService
     /**
      * @inheritDoc
      */
-    public function get storageCacheDirectory():File
+    public function get applicationCacheDirectory():File
     {
-        return descriptor.storageDirectory.resolvePath(".cache");
+        return descriptor.applicationDirectory.resolvePath(".cache");
     }
     
     public function get applicationDirectory():File
@@ -88,12 +89,36 @@ public class FileServiceImpl extends AbstractService implements IFileService
 
         logger.startup(TAG, " applicationDirectory: " + applicationDirectory.nativePath);
     }
-
+    
+    /**
+     * @inheritDoc
+     */
+    public function getCacheFile(path:String, useID:Boolean = false, extension:String = null):File
+    {
+        const file:File = applicationCacheDirectory.resolvePath(path);
+        if (file.extension == null)
+        {
+            if (!file.exists)
+                file.createDirectory();
+            
+            const uid:String = IDUtils.createUID();
+            const fileName:String = (extension != null) ? uid + "." + extension : uid; 
+            return useID ? file.resolvePath(fileName) : file;
+        }
+        return file;
+    }
+    
+    /**
+     * @inheritDoc
+     */
     public function readString(file:File):String
     {
         return Files.readUTF8File(file);
     }
-
+    
+    /**
+     * @inheritDoc
+     */
     public function writeString(file:File, data:String):void
     {
         writeStringToFile(file, data);

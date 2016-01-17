@@ -32,9 +32,10 @@ public interface IFileService
     function get storageDirectory():File;
     
     /**
-     * Place to save junk files and copy operations, will be cleaned at app startup.
+     * Place to save junk files and copy operations, will be cleaned at app startup,
+     * this directory would have no file permission conflicts as it's public.
      */
-    function get storageCacheDirectory():File;
+    function get applicationCacheDirectory():File;
 
     /**
      * Returns something like /storage/sdcard0/MyApp.
@@ -58,6 +59,18 @@ public interface IFileService
 
     function get preferenceBinFile():File;
 
+    /**
+     * Creates a file in the app's .cache directory, the path can resolve to a file.extension
+     * if useID is false, if useID is true, the path needs to be a directory and a generated UID
+     * will be used as the file name with no extension.
+     * 
+     * @param path The reletive path, a directory or directory/file.extension.
+     * @param useID Whether to use an auto generated UID for the file name, using path as a directory.
+     * @param extension If useID true, optional extension for ID generated file name.
+     * @return A pointer to the new file, does not exist yet on disk.
+     */
+    function getCacheFile(path:String, useID:Boolean = false, extension:String = null):File;
+    
     function listFiles(directory:File,
                        filter:Array = null,
                        recursive:Boolean = false,
