@@ -63,7 +63,7 @@ public class AbstractStartupCommand extends AbstractCommand
         main.addCompleteListener(sequence_completeHandler);
         main.execute();
 
-        // XXX, This STARTUP_COMPLETE seems to do nothing right now, check to see
+        // TODO, This STARTUP_COMPLETE seems to do nothing right now, check to see
         logger.startup("AbstractStartupCommand", "dispatchWith(STARTUP_COMPLETE)");
         dispatchWith(ContextEventType.STARTUP_COMPLETE);
     }

@@ -19,6 +19,7 @@
 package com.teotigraphix.ui.popup
 {
 
+import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.theme.AssetMap;
 
 import feathers.controls.ButtonGroup;
@@ -34,10 +35,6 @@ import starling.events.Event;
 
 public class NamePopUp extends Panel
 {
-
-    public static const EVENT_OK:String = "ok";
-    public static const EVENT_CANCEL:String = "cancel";
-
     private var _textInput:TextInput;
     private var _buttonGroup:ButtonGroup;
 
@@ -90,7 +87,7 @@ public class NamePopUp extends Panel
 
         _buttonGroup = new ButtonGroup();
         _buttonGroup.direction = ButtonGroup.DIRECTION_HORIZONTAL;
-        _buttonGroup.dataProvider = new ListCollection([{label: "OK", isEnabled: false}, {label: "Cancel"}]);
+        _buttonGroup.dataProvider = new ListCollection([{label: "OK", isEnabled: false}, {label: "CANCEL"}]);
         _buttonGroup.addEventListener(Event.TRIGGERED, buttonGroup_triggeredHandler);
 
         footerFactory = function ():Header
@@ -117,11 +114,11 @@ public class NamePopUp extends Panel
         if (data.label == "OK")
         {
             _text = _textInput.text;
-            dispatchEventWith(EVENT_OK, false, _text);
+            dispatchEventWith(FrameworkEventType.OK, false, _text);
         }
         else
         {
-            dispatchEventWith(EVENT_CANCEL);
+            dispatchEventWith(FrameworkEventType.CANCEL);
         }
     }
 

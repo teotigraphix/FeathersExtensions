@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog:Dialog xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:dialog="com.teotigraphix.ui.dialog.*" 
+               xmlns:f="library://ns.feathersui.com/mxml"
+               content="{textInput}">
+    
+    <fx:Declarations>
+        
+        <f:TextInput id="textInput" 
+                     styleName="{FrameworkStyleNames.TEXT_INPUT_DARK}"
+                     change="textInput_changeHandler()">
+            
+            <f:layoutData>
+                <f:AnchorLayoutData top="10" bottom="10" left="10" right="10"/>
+            </f:layoutData>
+            
+        </f:TextInput>
+        
+    </fx:Declarations>
+    
+    <fx:Script>
+        <![CDATA[
+            import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+            
+            import feathers.core.PopUpManager;
+            
+            //----------------------------------
+            // text
+            //----------------------------------
+            
+            private var _text:String;
+            
+            public function get text():String 
+            {
+                return _text;
+            }
+            
+            public function set text(value:String):void
+            {
+                if (_text == value)
+                    return;
+                
+                _text = value;
+                invalidate("text");
+            }
+
+            //----------------------------------
+            // prompt
+            //----------------------------------
+            
+            private var _prompt:String;
+            
+            public function get prompt():String 
+            {
+                return _prompt;
+            }
+            
+            public function set prompt(value:String):void
+            {
+                if (_prompt == value)
+                    return;
+                
+                _prompt = value;
+                invalidate("prompt");
+            }
+            
+            public static function show(title:String, prompt:String):GetStringDialog
+            {
+                const dialog:GetStringDialog = Dialog.show(title, GetStringDialog) as GetStringDialog; 
+                dialog.prompt = prompt;
+                return dialog;
+            }
+            
+            public static function hide(dialog:Dialog):void
+            {
+                PopUpManager.removePopUp(dialog, true);
+            }
+            
+            override protected function initialize():void
+            {
+                super.initialize();
+                
+                isNoEnabled = true;
+            }
+
+            override protected function draw():void
+            {   
+                super.draw();
+                
+                if (isInvalid("text"))
+                {
+                    textInput.text = _text;
+                }
+                
+                if (isInvalid("prompt"))
+                {
+                    textInput.prompt = _prompt;
+                }
+            }
+            
+            private function textInput_changeHandler():void
+            {
+                _text = textInput.text;
+                isYesEnabled = (_text != null && _text != "");
+            }
+            
+        ]]>
+    </fx:Script>
+    
+</dialog:Dialog>

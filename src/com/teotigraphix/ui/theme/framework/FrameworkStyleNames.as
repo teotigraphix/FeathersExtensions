@@ -63,6 +63,8 @@ public class FrameworkStyleNames
     public static const FORM_LABEL:String = "form-label";
     public static const FORM_LABEL_DARK:String = "form-label-dark";
     public static const FORM_ITEM_LABEL:String = "form-item-label";
+    
+    public static const FORM_BUTTON:String = "form-button";
     public static const FORM_OK_BUTTON:String = "form-ok-button";
     public static const FORM_CANCEL_BUTTON:String = "form-cancel-button";
 

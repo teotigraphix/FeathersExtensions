@@ -38,7 +38,8 @@ public class FileListData
     public var actionText:String;
     public var iconFunction:Function;
     public var enabledFunction:Function;
-
+    public var isCreateEnabled:Boolean = false;
+    
     public function FileListData()
     {
     }

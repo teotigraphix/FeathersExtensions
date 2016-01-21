@@ -34,7 +34,6 @@ import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.screen.IScreenLauncher;
-import com.teotigraphix.ui.screen.IScreenProvider;
 
 import flash.filesystem.File;
 import flash.utils.Dictionary;
@@ -46,9 +45,6 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
 
     [Inject]
     public var _applicationSettings:IApplicationSettings; // override
-
-    [Inject]
-    public var _screenProvider:IScreenProvider;
 
     [Inject]
     public var _projectService:IProjectService;
@@ -101,18 +97,6 @@ public class FrameworkModelImpl extends AbstractModel implements IFrameworkModel
     public function get actions():IActionManager
     {
         return _actions;
-    }
-
-    //----------------------------------
-    // screenData
-    //----------------------------------
-
-    /**
-     * @inheritDoc
-     */
-    public function get screenData():*
-    {
-        return _screenProvider.data;
     }
 
     //----------------------------------

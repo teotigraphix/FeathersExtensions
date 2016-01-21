@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog:Dialog xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:dialog="com.teotigraphix.ui.dialog.*" 
+               xmlns:f="library://ns.feathersui.com/mxml"
+               content="{messageLabel}">
+    
+    <fx:Declarations>
+        
+        <f:Label id="messageLabel" 
+                 wordWrap="true"
+                 maxWidth="{AssetMap.dp(300)}"
+                 styleName="{FrameworkStyleNames.LABEL_UI_DARK}">
+            
+            <f:layoutData>
+                <f:AnchorLayoutData top="{AssetMap.dp(15)}" bottom="{AssetMap.dp(15)}" 
+                                    left="{AssetMap.dp(15)}" right="{AssetMap.dp(15)}"/>
+            </f:layoutData>
+            
+        </f:Label>
+        
+    </fx:Declarations>
+    
+    <fx:Script>
+        <![CDATA[
+            import com.teotigraphix.ui.theme.AssetMap;
+            import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+            
+            //----------------------------------
+            // message
+            //----------------------------------
+            
+            private var _message:String;
+            
+            public function get message():String 
+            {
+                return _message;
+            }
+            
+            public function set message(value:String):void
+            {
+                if (_message == value)
+                    return;
+                
+                _message = value;
+                invalidate("message");
+            }
+            
+            override protected function initialize():void
+            {
+                super.initialize();
+                
+                isYesEnabled = isNoEnabled = true;
+            }
+            
+            override protected function draw():void
+            {
+                super.draw();
+                
+                if (isInvalid("message"))
+                {
+                    messageLabel.text = _message;
+                }
+            }
+
+            public static function show(message:String):MessageDialog
+            {
+                const dialog:MessageDialog = Dialog.show(null, MessageDialog) as MessageDialog; 
+                dialog.message = message;
+                return dialog;
+            }
+        ]]>
+    </fx:Script>
+    
+</dialog:Dialog>

@@ -31,10 +31,6 @@ import starling.textures.Texture;
 
 public class TextInputFactory extends AbstractThemeFactory
 {
-    protected static const LIGHT_TEXT_COLOR:uint = 0xe5e5e5;
-    protected static const DARK_TEXT_COLOR:uint = 0x1a1816;
-    protected static const DISABLED_TEXT_COLOR:uint = 0x8a8a8a;
-
     public var searchIconTexture:Texture;
     public var searchIconDisabledTexture:Texture;
 
@@ -75,11 +71,11 @@ public class TextInputFactory extends AbstractThemeFactory
 
         input.textEditorProperties.fontFamily = "Helvetica";
         input.textEditorProperties.fontSize = theme.fonts.regularFontSize;
-        input.textEditorProperties.color = DARK_TEXT_COLOR;
-        input.textEditorProperties.disabledColor = DISABLED_TEXT_COLOR;
+        input.textEditorProperties.color = FontFactory.DARK_TEXT_COLOR;
+        input.textEditorProperties.disabledColor = FontFactory.DARK_DISABLED_TEXT_COLOR;
 
-        input.promptProperties.elementFormat = theme.fonts.darkElementFormat;
-        input.promptProperties.disabledElementFormat = theme.fonts.darkUIDisabledElementFormat;
+        input.promptProperties.elementFormat = theme.fonts.darkUIPromptElementFormat;
+        input.promptProperties.disabledElementFormat = theme.fonts.darkUIPromptElementFormat;
     }
 
     public function setDarkTextInputStyles(input:TextInput):void
@@ -105,8 +101,8 @@ public class TextInputFactory extends AbstractThemeFactory
 
         input.textEditorProperties.fontFamily = "Helvetica";
         input.textEditorProperties.fontSize = theme.fonts.regularFontSize;
-        input.textEditorProperties.color = DARK_TEXT_COLOR;
-        input.textEditorProperties.disabledColor = DISABLED_TEXT_COLOR;
+        input.textEditorProperties.color = FontFactory.DARK_TEXT_COLOR;
+        input.textEditorProperties.disabledColor = FontFactory.DARK_DISABLED_TEXT_COLOR;
 
         input.promptProperties.elementFormat = theme.fonts.darkElementFormat;
         input.promptProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
@@ -135,8 +131,8 @@ public class TextInputFactory extends AbstractThemeFactory
 
         input.textEditorProperties.fontFamily = "Helvetica";
         input.textEditorProperties.fontSize = theme.fonts.regularFontSize;
-        input.textEditorProperties.color = LIGHT_TEXT_COLOR;
-        input.textEditorProperties.disabledColor = DISABLED_TEXT_COLOR;
+        input.textEditorProperties.color = FontFactory.LIGHT_TEXT_COLOR;
+        input.textEditorProperties.disabledColor = FontFactory.DISABLED_TEXT_COLOR;
 
         input.promptProperties.elementFormat = theme.fonts.lightElementFormat;
         input.promptProperties.disabledElementFormat = theme.fonts.disabledElementFormat;

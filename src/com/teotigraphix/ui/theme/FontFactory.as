@@ -39,8 +39,9 @@ public class FontFactory extends AbstractThemeFactory
     public static const DARK_TEXT_COLOR:uint = 0x1a1816;
     public static const SELECTED_TEXT_COLOR:uint = 0xff9900;
     public static const DISABLED_TEXT_COLOR:uint = 0x8a8a8a;
-    public static const DARK_DISABLED_TEXT_COLOR:uint = 0x383430;
-
+    public static const DARK_DISABLED_TEXT_COLOR:uint = 0xAAA9A9;
+    public static const DARK_PROPMT_TEXT_COLOR:uint = 0xAAA9A9;
+    
     public static var THEME_FONT_COLOR:uint = 0x00BCD4;
 
     /**
@@ -141,7 +142,8 @@ public class FontFactory extends AbstractThemeFactory
      * An ElementFormat with a dark tint meant for disabled UI controls.
      */
     public var darkUIDisabledElementFormat:ElementFormat;
-
+    public var darkUIPromptElementFormat:ElementFormat;
+    
     /**
      * An ElementFormat with a dark tint meant for larger UI controls.
      */
@@ -253,7 +255,8 @@ public class FontFactory extends AbstractThemeFactory
         selectedUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, SELECTED_TEXT_COLOR);
         lightUIDisabledElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DISABLED_TEXT_COLOR);
         darkUIDisabledElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_DISABLED_TEXT_COLOR);
-
+        darkUIPromptElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_PROPMT_TEXT_COLOR);
+        
         // UI Large
         largeUIDarkElementFormat = new ElementFormat(boldFontDescription, largeFontSize, DARK_TEXT_COLOR);
         largeUILightElementFormat = new ElementFormat(boldFontDescription, largeFontSize, LIGHT_TEXT_COLOR);

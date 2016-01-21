@@ -273,7 +273,7 @@ public class ScaleData
         return NOTE_NAMES[note % 12] + (int)((2 - Math.floor(note / 12) + _octave));
     }
 
-    // XXX if performance problem, this could be cached and refreshed when rootKey or scaleIndex changes
+    // TODO if performance problem, this could be cached and refreshed when rootKey or scaleIndex changes
 
     internal function formatDrumNote(note:int):String
     {
@@ -323,7 +323,7 @@ public class ScaleData
             var x:int = column;
             var offset:int = y * _shift + x;
             matrix[index] = (int)((Math.floor(offset / len)) * 12 + notes[offset % len]);
-            // XXX chromaticMatrix[index] = (y * (_shift == _gridSize ? _gridSize : notes[_shift % len]) + x);
+            // TODO chromaticMatrix[index] = (y * (_shift == _gridSize ? _gridSize : notes[_shift % len]) + x);
             index++;
         }
         //}

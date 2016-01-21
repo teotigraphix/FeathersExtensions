@@ -130,7 +130,7 @@ public class MIDIParserResult
 
     public function getChannelName(channel:int):String
     {
-        var track:MidiTrack = _midi.getTrack(channel + 1); // XXX Remove when you have MidiTrackInfo
+        var track:MidiTrack = _midi.getTrack(channel + 1); // TODO Remove when you have MidiTrackInfo
         for (var i:int = 0; i < track.messages.length; i++)
         {
             if (track.messages[i] is MetaItem)

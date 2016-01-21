@@ -191,7 +191,7 @@ public class UIKnob extends FeathersControl
 
         invalidate();
 
-        //// XXX figure out if this affects things and if there is a better way
+        //// TODO figure out if this affects things and if there is a better way
         //currentAngle = getAngleFromValue(_value);
         //if (isNaN(lastAngle))
         //    lastAngle = currentAngle;

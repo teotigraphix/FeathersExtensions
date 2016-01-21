@@ -20,7 +20,6 @@
 package com.teotigraphix.app.config
 {
 
-import flash.events.Event;
 import flash.filesystem.File;
 
 public class ApplicationDescriptor
@@ -49,7 +48,7 @@ public class ApplicationDescriptor
     private var _extension:String;
     private var _version:Version;
     private var _flushState:Boolean;
-    private var _fps:int;
+    private var _fps:int = 30;
     private var _isDebug:Boolean;
     
     //--------------------------------------------------------------------------

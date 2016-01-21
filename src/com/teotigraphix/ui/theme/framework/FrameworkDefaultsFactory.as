@@ -81,6 +81,7 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
+        setStyle(Button, setFormButtonStyles, FrameworkStyleNames.FORM_BUTTON);
         setStyle(Button, setFormOkButtonStyles, FrameworkStyleNames.FORM_OK_BUTTON);
         setStyle(Button, setFormCancelButtonStyles, FrameworkStyleNames.FORM_CANCEL_BUTTON);
         setStyle(BackButtonControl, setBackButtonStyles, FrameworkStyleNames.BACK_BUTTON);
@@ -162,9 +163,25 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         group.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
     }
 
+    public function setFormButtonStyles(button:Button):void
+    {
+        theme.button.setButtonStyles(button);
+        
+        button.defaultLabelProperties.elementFormat = font.darkUIElementFormat;
+        button.disabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
+        
+        button.minWidth = dp(64);
+        button.height = dp(36);
+        button.paddingLeft = button.paddingRight = dp(8);
+    }
+    
     public function setFormOkButtonStyles(button:Button):void
     {
         theme.button.setButtonStyles(button);
+        
+        button.defaultLabelProperties.elementFormat = font.darkUIElementFormat;
+        button.disabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
+        
         button.minWidth = dp(64);
         button.height = dp(36);
         button.paddingLeft = button.paddingRight = dp(8);
@@ -174,6 +191,10 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
     public function setFormCancelButtonStyles(button:Button):void
     {
         theme.button.setButtonStyles(button);
+        
+        button.defaultLabelProperties.elementFormat = font.darkUIElementFormat;
+        button.disabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
+        
         button.minWidth = dp(64);
         button.height = dp(36);
         button.paddingLeft = button.paddingRight = dp(8);

@@ -52,8 +52,8 @@ public final class Files
                     files[files.length] = current;
             }
 
-            directories = directories.sortOn("name");
-            files = files.sortOn("name");
+            directories = directories.sortOn("name", Array.CASEINSENSITIVE);
+            files = files.sortOn("name", Array.CASEINSENSITIVE);
 
             for (var j:int = 0; j < directories.length; j++)
             {

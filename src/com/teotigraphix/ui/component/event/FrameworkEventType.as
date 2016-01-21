@@ -21,8 +21,13 @@ package com.teotigraphix.ui.component.event
 
 public class FrameworkEventType
 {
+    public static const SCREEN_REDRAW:String = "screenRedraw";
+    
     public static const DOUBLE_TAP:String = "doubleTap";
     public static const TOUCH_DOWN:String = "touchDown";
     public static const TOUCH_UP:String = "touchUp";
+    
+    public static const OK:String = "ok";
+    public static const CANCEL:String = "cancel";
 }
 }

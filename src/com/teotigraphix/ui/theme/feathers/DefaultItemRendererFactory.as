@@ -22,7 +22,7 @@ package com.teotigraphix.ui.theme.feathers
 
 import com.teotigraphix.ui.theme.*;
 
-// XXX take the out of List and GroupedList factories?
+// TODO take the out of List and GroupedList factories?
 public class DefaultItemRendererFactory extends AbstractThemeFactory
 {
 

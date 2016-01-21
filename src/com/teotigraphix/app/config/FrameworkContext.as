@@ -34,10 +34,8 @@ import com.teotigraphix.service.impl.FileServiceImpl;
 import com.teotigraphix.service.impl.LoggerImpl;
 import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.screen.IScreenLauncher;
-import com.teotigraphix.ui.screen.IScreenNavigator;
-import com.teotigraphix.ui.screen.IScreenProvider;
+import com.teotigraphix.ui.component.IScreenNavigator;
 import com.teotigraphix.ui.screen.impl.NullScreenLauncher;
-import com.teotigraphix.ui.screen.impl.ScreenProviderImpl;
 
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
@@ -64,7 +62,6 @@ public class FrameworkContext extends Context
     public var $loggerClass:Class = LoggerImpl; // NO DEPS
     public var $fileServiceClass:Class = FileServiceImpl; // ApplicationDescriptor DEP
     public var $deviceModelClass:Class = DeviceModelImpl; // NO DEPS
-    public var $screenProviderClass:Class = ScreenProviderImpl; // NO DEPS
     public var startupCommand:Class;
 
     //----------------------------------
@@ -219,7 +216,6 @@ public class FrameworkContext extends Context
         injector.mapSingletonOf(IFileService, $fileServiceClass);
         injector.mapSingletonOf(IApplicationSettings, applicationSettingsClass);
         injector.mapSingletonOf(IDeviceModel, $deviceModelClass);
-        injector.mapSingletonOf(IScreenProvider, $screenProviderClass);
     }
 
     protected function configureCore():void

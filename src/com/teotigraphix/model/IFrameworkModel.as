@@ -29,11 +29,6 @@ public interface IFrameworkModel extends IProjectModel, IDeviceModel
 
     function get actions():IActionManager;
 
-    /**
-     * The current data object
-     */
-    function get screenData():*;
-
     //--------------------------------------------------------------------------
     // Methods
     //--------------------------------------------------------------------------

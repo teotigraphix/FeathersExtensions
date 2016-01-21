@@ -23,7 +23,9 @@ package com.teotigraphix.ui.mediator
 import com.teotigraphix.model.IDeviceModel;
 import com.teotigraphix.model.event.DeviceModelEventType;
 import com.teotigraphix.service.ILogger;
+import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.screen.IOrientationAware;
+import com.teotigraphix.ui.screen.core.ScreenRedrawData;
 
 import feathers.controls.StackScreenNavigator;
 import feathers.controls.StackScreenNavigatorItem;
@@ -32,6 +34,7 @@ import org.robotlegs.starling.core.ICommandMap;
 import org.robotlegs.starling.core.IInjector;
 import org.robotlegs.starling.mvcs.Mediator;
 
+import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
 import starling.events.Event;
 
@@ -77,10 +80,20 @@ public class AbstractMediator extends Mediator
         setupContextListeners();
 
         addContextListener(DeviceModelEventType.ORIENTATION_CHANGE, context_orientationChange);
-
+        addContextListener(FrameworkEventType.SCREEN_REDRAW, context_screenRedrawHandler);
+        
         onOrientationChange(deviceModel.isLandscape, deviceModel.isTablet);
     }
-
+    
+    private function context_screenRedrawHandler(event:Event, data:ScreenRedrawData):void
+    {
+        var doc:DisplayObjectContainer = data.activeScreen as DisplayObjectContainer;
+        if (doc == data.activeScreen || doc.contains(getViewComponent() as DisplayObject))
+        {
+            initializeView();
+        }
+    }
+    
     override public function onRemove():void
     {
         super.onRemove();

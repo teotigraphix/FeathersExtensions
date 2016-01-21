@@ -35,7 +35,7 @@
 
         override protected function get defaultStyleProvider():IStyleProvider
         {
-            return GetStringDialog.globalStyleProvider;
+            return GetStringScreen.globalStyleProvider;
         }
 
         [Bindable]

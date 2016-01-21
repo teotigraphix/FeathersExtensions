@@ -77,6 +77,16 @@ public class __FindFileLocationStep extends StepCommand
     {
         return _screen.fileList.selectedFile;
     }
+    
+    /**
+     * Never null, returns the rootDirectory if the selectedFile is null.
+     */
+    public function get selectedDirectory():File 
+    {
+        if (selectedFile != null)
+            return selectedFile;
+        return rootDirectory;
+    }
 
     public function get rootDirectory():File
     {

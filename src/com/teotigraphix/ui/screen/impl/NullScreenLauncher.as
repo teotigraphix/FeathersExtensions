@@ -19,18 +19,26 @@
 package com.teotigraphix.ui.screen.impl
 {
 
-import com.teotigraphix.ui.screen.*;
-
-import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.component.file.FileListData;
+import com.teotigraphix.ui.screen.IScreenLauncher;
 
 public class NullScreenLauncher implements IScreenLauncher
 {
     public function NullScreenLauncher()
     {
     }
-
-    public function goToAlert(message:String, title:String):AlertScreen
+    
+    public function redraw():void
+    {
+        // TODO Auto Generated method stub
+        
+    }
+    
+    
+    public function goToAlert(message:String,
+                              title:String,
+                              okHandler:Function,
+                              cancelHandler:Function):AlertScreen
     {
         return null;
     }

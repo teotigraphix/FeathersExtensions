@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<f:LayoutGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                xmlns:f="library://ns.feathersui.com/mxml"
+                xmlns:component="com.teotigraphix.ui.component.*">
+    
+    <f:layout>
+        <f:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
+    </f:layout>
+    
+    <component:VGroup styleName="{FrameworkStyleNames.DIALOG_SCREEN_CONTENT}">
+        
+        <f:Label id="titleLabel"
+                 styleName="{FrameworkStyleNames.THEME_FORM_TITLE_DARK}"/>
+        
+        <component:HDivider/>
+        
+        <f:LayoutGroup id="contentGroup">
+            
+            <f:layoutData>
+                <f:VerticalLayoutData percentWidth="100"/>
+            </f:layoutData>
+            
+            <f:layout>
+                <f:AnchorLayout/>
+            </f:layout>
+            
+            <!-- content -->
+            
+        </f:LayoutGroup>
+        
+        <component:HDivider id="divider"/>
+        
+        <component:HGroup id="footer" 
+                          styleName="{FrameworkStyleNames.DIALOG_BUTTON_FOOTER}">
+            
+            <f:Button id="yesButton"
+                      label="OK"
+                      styleName="{FrameworkStyleNames.FORM_OK_BUTTON}"
+                      triggered="okButton_triggeredHandler()"/>
+            
+            <f:Button id="noButton"
+                      label="CANCEL"
+                      styleName="{FrameworkStyleNames.FORM_CANCEL_BUTTON}"
+                      triggered="cancelButton_triggeredHandler()"/>
+            
+        </component:HGroup>
+        
+    </component:VGroup>
+    
+   <fx:Script>
+       <![CDATA[
+           import com.teotigraphix.ui.component.event.FrameworkEventType;
+           import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+           
+           import feathers.core.PopUpManager;
+           import feathers.skins.IStyleProvider;
+           
+           import starling.core.Starling;
+           import starling.display.DisplayObject;
+           import starling.display.Quad;
+           
+           
+           
+           public static var globalStyleProvider:IStyleProvider;
+           
+           override protected function get defaultStyleProvider():IStyleProvider
+           {
+               return Dialog.globalStyleProvider;
+           }
+           
+           // TODO okLabel, cancelLabel props
+           
+           private var _yesLabel:String = "OK";
+           private var _noLabel:String = "CANCEL";
+           
+           private var _title:String;
+           private var _content:starling.display.DisplayObject;
+           private var _isYesEnabled:Boolean;
+           private var _isNoEnabled:Boolean;
+           
+           //----------------------------------
+           // yesLabel
+           //----------------------------------
+           
+
+           public function get yesLabel():String 
+           {
+               return _yesLabel;
+           }
+           
+           public function set yesLabel(value:String):void
+           {
+               if (_yesLabel == value)
+                   return;
+               
+               _yesLabel = value;
+               invalidate("yesLabel");
+           }
+           
+           //----------------------------------
+           // noLabel
+           //----------------------------------
+           
+           public function get noLabel():String 
+           {
+               return _noLabel;
+           }
+           
+           public function set noLabel(value:String):void
+           {
+               if (_noLabel == value)
+                   return;
+               
+               _noLabel = value;
+               invalidate("noLabel");
+           }
+           
+           //----------------------------------
+           // isYesEnabled
+           //----------------------------------
+
+           public function get isYesEnabled():Boolean 
+           {
+               return _isYesEnabled;
+           }
+           
+           public function set isYesEnabled(value:Boolean):void
+           {
+               if (_isYesEnabled == value)
+                   return;
+               
+               _isYesEnabled = value;
+               invalidate("isYesEnabled");
+           }
+           
+           //----------------------------------
+           // isNoEnabled
+           //----------------------------------
+           
+           public function get isNoEnabled():Boolean 
+           {
+               return _isNoEnabled;
+           }
+           
+           public function set isNoEnabled(value:Boolean):void
+           {
+               if (_isNoEnabled == value)
+                   return;
+               
+               _isNoEnabled = value;
+               invalidate("isNoEnabled");
+           }
+           
+           //----------------------------------
+           // content
+           //----------------------------------
+           
+           public function get content():starling.display.DisplayObject
+           {
+               return _content;
+           }
+           
+           public function set content(value:starling.display.DisplayObject):void
+           {
+               _content = value;
+               invalidate("content");
+           }
+           
+           //----------------------------------
+           // title
+           //----------------------------------
+           
+           public function get title():String
+           {
+               return _title;
+           }
+           
+           public function set title(value:String):void
+           {
+               _title = value;
+               invalidate("title");
+           }
+
+           //----------------------------------
+           // dialogFactory
+           //----------------------------------
+           
+           private var _dialogFactory:Function;
+           
+           public function get dialogFactory():Function 
+           {
+               return _dialogFactory;
+           }
+           
+           public function set dialogFactory(value:Function):void
+           {
+               if (_dialogFactory == value)
+                   return;
+               
+               _dialogFactory = value;
+               invalidate("dialogFactory");
+           }
+           
+           override protected function initialize():void
+           {
+               super.initialize();
+           }
+          
+           override protected function draw():void
+           {
+               super.draw();
+               
+               if (isInvalid("content"))
+               {
+                   contentGroup.removeChildren();
+                   
+                   if (_content != null)
+                   {
+                       contentGroup.addChild(_content);
+                   }
+               }
+               
+               if (isInvalid("yesLabel"))
+               {
+                   yesButton.label = _yesLabel;
+               }
+               
+               if (isInvalid("noLabel"))
+               {
+                   noButton.label = _noLabel;
+               }
+               
+               if (isInvalid("title"))
+               {
+                   titleLabel.text = _title;
+                   if (_title == null)
+                   {
+                       titleLabel.visible = titleLabel.includeInLayout = false;
+                       footer.visible = footer.includeInLayout = false;
+                       divider.visible = divider.includeInLayout = false;
+                   }
+               }
+               
+               if (isInvalid("isYesEnabled"))
+               {
+                   yesButton.isEnabled = _isYesEnabled;
+               }
+               
+               if (isInvalid("isNoEnabled"))
+               {
+                   noButton.isEnabled = _isNoEnabled;
+               }
+           }
+
+           public static function show(title:String, 
+                                       dialogClazz:Class = null, 
+                                       content:starling.display.DisplayObject = null):Dialog
+           {
+               const dialog:Dialog = dialogClazz == null ? new Dialog() : new dialogClazz();
+               
+               dialog.title = title;
+               if (content != null)
+               {
+                   dialog.content = content;
+               }
+                
+               dialog.alpha = 0;
+               
+               PopUpManager.addPopUp(dialog, true, true, function():Object {
+                   var quad:Quad = new Quad(25, 25, 0x000000);
+                   quad.alpha = 0.1;
+                   return quad;
+               });
+               
+               Starling.juggler.tween(dialog, 0.5, {alpha: 1});
+               
+               return dialog;
+           }
+           
+           public function hide():void
+           {
+               var dialog:Dialog = this;
+               Starling.juggler.tween(this, 0.5, {alpha: 0});
+               Starling.juggler.delayCall(function():void {
+                   PopUpManager.removePopUp(dialog, true);
+               }, 0.5);
+           }
+           
+           protected function okButton_triggeredHandler():void
+           {
+               dispatchEventWith(FrameworkEventType.OK);
+           }
+           
+           protected function cancelButton_triggeredHandler():void
+           {
+               dispatchEventWith(FrameworkEventType.CANCEL);
+           }
+           
+       ]]>
+   </fx:Script>
+    
+</f:LayoutGroup>

@@ -80,16 +80,16 @@
 
 
     <fx:Script><![CDATA[
-        import com.teotigraphix.ui.popup.NamePopUp;
+        import com.teotigraphix.ui.component.event.FrameworkEventType;
+        import com.teotigraphix.ui.dialog.GetStringDialog;
         import com.teotigraphix.util.Files;
-
-        import feathers.controls.List;
+        
+        import feathers.controls.LayoutGroup;
         import feathers.controls.renderers.IListItemRenderer;
-        import feathers.core.PopUpManager;
         import feathers.data.ListCollection;
         import feathers.events.FeathersEventType;
         import feathers.skins.IStyleProvider;
-
+        
         import starling.display.Image;
         import starling.events.Event;
         import starling.textures.Texture;
@@ -139,7 +139,7 @@
         private var header:LayoutGroup;
 
         private var _listMinHeight:Number;
-        private var _namePopUp:DirectoryNamePopUp;
+        private var _dialog:GetStringDialog;
         private var cachedIcons:Dictionary = new Dictionary();
 
         //--------------------------------------------------------------------------
@@ -309,14 +309,27 @@
         {
             _iconMap = value;
         }
-
-        //--------------------------------------------------------------------------
-        // Constructor
-        //--------------------------------------------------------------------------
-
-        //--------------------------------------------------------------------------
-        // Overridden :: Methods
-        //--------------------------------------------------------------------------
+        
+        //----------------------------------
+        // isCreateEnabled
+        //----------------------------------
+        
+        private var _isCreateEnabled:Boolean;
+        
+        public function get isCreateEnabled():Boolean 
+        {
+            return _isCreateEnabled;
+        }
+        
+        public function set isCreateEnabled(value:Boolean):void
+        {
+            if (_isCreateEnabled == value)
+                return;
+            
+            _isCreateEnabled = value;
+            invalidate("isCreateEnabled");
+        }
+        
 
         public function get listMinHeight():Number
         {
@@ -374,23 +387,29 @@
 
         private function this_createHandler():void
         {
-            _namePopUp = new DirectoryNamePopUp();
-            _namePopUp.title = "Create Directory";
-            _namePopUp.prompt = "Directory name";
-            _namePopUp.addEventListener(NamePopUp.EVENT_OK, namePopUp_okHandler);
-            _namePopUp.addEventListener(NamePopUp.EVENT_CANCEL, namePopUp_cancelHandler);
-            PopUpManager.addPopUp(_namePopUp, true, true);
+            _dialog = GetStringDialog.show("Create Directory", "Directory name");
+            _dialog.addEventListener(FrameworkEventType.OK, dialog_okHandler);
+            _dialog.addEventListener(FrameworkEventType.CANCEL, dialog_cancelHandler);
         }
 
-        private function namePopUp_okHandler(event:Event, name:String):void
+        private function dialog_okHandler(event:Event):void
         {
-            PopUpManager.removePopUp(_namePopUp);
-            var directory:File = _rootDirectory.resolvePath(name);
+            var directory:File = _rootDirectory.resolvePath(_dialog.text);
             if (!directory.exists)
             {
                 directory.createDirectory();
             }
+            
+            _dialog.hide();
+            _dialog = null;
+            
             refresh();
+        }
+        
+        private function dialog_cancelHandler(event:Event):void
+        {
+            _dialog.hide();
+            _dialog = null;
         }
 
         //--------------------------------------------------------------------------
@@ -402,7 +421,7 @@
             switch (direction)
             {
                 case NAVIGATE_BACK:
-                    // XXX FileList needs stack
+                    // TODO FileList needs stack
                     break;
 
                 case NAVIGATE_HOME:
@@ -410,7 +429,7 @@
                     break;
 
                 case NAVIGATE_NEXT:
-                    // XXX FileList needs stack
+                    // TODO FileList needs stack
                     break;
 
                 case NAVIGATE_UP:
@@ -452,6 +471,11 @@
             if (isInvalid(INVALIDATION_FLAG_ACTION_TEXT))
             {
                 commitActionText();
+            }
+            
+            if (isInvalid("isCreateEnabled"))
+            {
+                newButton.visible = newButton.includeInLayout = _isCreateEnabled;
             }
         }
 
@@ -590,15 +614,18 @@
             }
             else if (_iconMap[file.extension] != null)
             {
-                texture = _iconMap[file.extension];
+                if (_iconMap[file.extension] is Function)
+                {
+                    texture = _iconMap[file.extension](file);
+                }
+                else
+                {
+                    texture = _iconMap[file.extension];
+                }
             }
             return texture;
         }
 
-        private function namePopUp_cancelHandler(event:Event):void
-        {
-            PopUpManager.removePopUp(_namePopUp);
-        }
 
         private function itemRenderer_itemDoubleTapHandler(event:Event):void
         {

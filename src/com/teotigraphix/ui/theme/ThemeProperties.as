@@ -28,10 +28,48 @@ public class ThemeProperties extends EventDispatcher
 {
     public static const DEFAULT_SCALE9_GRID:Rectangle = new Rectangle(5, 5, 22, 22);
 
-    public static var gap:Number;
-    public static var gapx2:Number;
-    public static var padding:Number;
-	
+    private static var _gap:Number;
+    private static var _gapx2:Number;
+    private static var _padding:Number;
+    
+    private static var dispatcher:EventDispatcher;
+    
+    [Bindable("change")]
+    public static function get gap():Number
+    {
+        return _gap;
+    }
+
+    public static function set gap(value:Number):void
+    {
+        _gap = value;
+        dispatcher.dispatchEventWith("change");
+    }
+    
+    [Bindable("change")]
+    public static function get gapx2():Number
+    {
+        return _gapx2;
+    }
+
+    public static function set gapx2(value:Number):void
+    {
+        _gapx2 = value;
+        dispatcher.dispatchEventWith("change");
+    }
+    
+    [Bindable("change")]
+    public static function get padding():Number
+    {
+        return _padding;
+    }
+
+    public static function set padding(value:Number):void
+    {
+        _padding = value;
+        dispatcher.dispatchEventWith("change");
+    }
+
     public var scale:Number;
 
     /**
@@ -75,14 +113,16 @@ public class ThemeProperties extends EventDispatcher
 
     public function ThemeProperties(theme:AbstractTheme)
     {
+        dispatcher = this;
+        
         this.theme = theme;
     }
 
     public function initialize():void
     {
-        gap = Math.round(6 * theme.scale);
-        gapx2 = Math.round(11 * theme.scale);
-        padding = Math.round(11 * theme.scale);
+        gap = AssetMap.dp(8);
+        gapx2 = AssetMap.dp(11);
+        padding = AssetMap.dp(11);
 
         gridSize = Math.round(88 * theme.scale);
         gutterSize = Math.round(22 * theme.scale);

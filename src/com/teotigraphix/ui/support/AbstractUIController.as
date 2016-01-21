@@ -22,15 +22,21 @@ package com.teotigraphix.ui.support
 import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.component.Toast;
+import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.component.file.FileListData;
+import com.teotigraphix.ui.dialog.AlertDialog;
+import com.teotigraphix.ui.dialog.GetStringDialog;
+import com.teotigraphix.ui.dialog.MessageDialog;
 import com.teotigraphix.ui.popup.CenterPopUpContentManager;
 import com.teotigraphix.ui.popup.ProgressPopUp;
 import com.teotigraphix.ui.popup.WebViewPopUp;
 
-import feathers.core.PopUpManager;
-
 import flash.filesystem.File;
 
+import feathers.core.PopUpManager;
+
+import starling.animation.Tween;
+import starling.core.Starling;
 import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
 import starling.display.Quad;
@@ -50,6 +56,32 @@ public class AbstractUIController extends AbstractController implements IUIContr
     override protected function onRegister():void
     {
         super.onRegister();
+    }
+    
+    public function alert(title:String, message:String, 
+                          okHandler:Function, cancelHandler:Function,
+                          yesLabel:String = "OK", noLabel:String = "CANCEL"):AlertDialog
+    {
+        const dialog:AlertDialog = AlertDialog.show(title, message);
+        dialog.yesLabel = yesLabel;
+        dialog.noLabel = noLabel;
+        dialog.addEventListener(FrameworkEventType.OK, okHandler);
+        dialog.addEventListener(FrameworkEventType.CANCEL, cancelHandler);
+        return dialog;
+    }
+    
+    public function message(message:String):MessageDialog
+    {
+        const dialog:MessageDialog = MessageDialog.show(message);
+        return dialog;
+    }
+    
+    public function getString(title:String, prompt:String, okHandler:Function, cancelHandler:Function):GetStringDialog
+    {
+        const dialog:GetStringDialog = GetStringDialog.show(title, prompt);
+        dialog.addEventListener(FrameworkEventType.OK, okHandler);
+        dialog.addEventListener(FrameworkEventType.CANCEL, cancelHandler);
+        return dialog;
     }
 
     /**
@@ -91,7 +123,36 @@ public class AbstractUIController extends AbstractController implements IUIContr
 
     public function notifyToast(message:String, icon:String = null, duration:Number = 3000):void
     {
-        Toast.show(message, duration);
+        //Toast.show(message, duration);
+        
+        var dialog:MessageDialog = new MessageDialog();
+        dialog.message = message;
+        dialog.validate();
+        
+        PopUpManager.addPopUp(dialog, false, false);
+        
+        var height:Number = dialog.height;
+        var width:Number = dialog.width;
+        
+        var swidth:Number = Starling.current.stage.width;
+        var sheight:Number = Starling.current.stage.height;
+        
+        dialog.y = sheight + height;
+        dialog.x = (swidth - width) / 2;
+        
+        var t1:Tween = new Tween(dialog, 0.3);
+        t1.moveTo(dialog.x, sheight - height);
+        
+        var t2:Tween = new Tween(dialog, 0.3);
+        t2.delay = 1;
+        t2.moveTo(dialog.x, sheight + height);
+        t1.nextTween = t2;
+        
+        t2.onComplete = function ():void {
+            PopUpManager.removePopUp(dialog, true);
+        };
+        
+        Starling.juggler.add(t1);
     }
 
     public function showWebText(title:String, htmlText:String, backHandler:Function):WebViewPopUp

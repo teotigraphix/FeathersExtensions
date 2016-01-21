@@ -25,7 +25,15 @@ import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
 
 public interface IScreenLauncher
 {
-    //function goToAlert(message:String, title:String):AlertScreen;
+    /**
+     * @see com.teotigraphix.ui.screen.core.ScreenRedrawData
+     */
+    function redraw():void;
+    
+    function goToAlert(message:String,
+                       title:String,
+                       okHandler:Function,
+                       cancelHandler:Function):AlertScreen;
 
     function goToFileExplorer(data:FileListData):FileExplorerScreen;
 

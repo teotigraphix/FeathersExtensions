@@ -22,13 +22,18 @@ package com.teotigraphix.ui.screen.core
 import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.async.StepSequence;
+import com.teotigraphix.ui.component.IScreenNavigator;
+import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.component.file.FileListData;
-import com.teotigraphix.ui.screen.*;
+import com.teotigraphix.ui.screen.FrameworkScreens;
+import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.screen.data.AlertScreenData;
 import com.teotigraphix.ui.screen.impl.AlertScreen;
 import com.teotigraphix.ui.screen.impl.DialogScreen;
 import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
-import com.teotigraphix.ui.screen.impl.dialog.GetStringDialog;
+import com.teotigraphix.ui.screen.impl.dialog.GetStringScreen;
+
+import flash.errors.IllegalOperationError;
 
 import feathers.controls.IScreen;
 import feathers.controls.StackScreenNavigatorItem;
@@ -49,9 +54,6 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     public var _mediatorMap:IMediatorMap;
 
     [Inject]
-    public var _screenProvider:IScreenProvider;
-
-    [Inject]
     public var _navigator:IScreenNavigator;
 
     [Inject]
@@ -61,9 +63,10 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     public var reflector:IReflector;
 
     private var _popupMediatorMap:IMediatorMap;
-
     private var _applicationScreenID:String;
 
+    protected var rootScreen:String;
+    
     //--------------------------------------------------------------------------
     // Private :: Variables
     //--------------------------------------------------------------------------
@@ -114,8 +117,6 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     {
         for (var i:int = 0; i < 10; i++)
         {
-            _screenProvider.pop();
-
             var lastScreen:IScreen = IScreen(_navigator.popScreen());
 
             if (_navigator.activeScreenID == screenID)
@@ -128,7 +129,12 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
 
     public function back():void
     {
-        if (_screenProvider.isEmpty && !sdk_internal::inExitAlert)
+        if (rootScreen == _navigator.activeScreenID)
+        {
+            throw new IllegalOperationError("Already at root, back() cannot be called");
+        }
+        
+        if (rootScreen == _navigator.activeScreenID && !sdk_internal::inExitAlert)
         {
             var sequence:StepSequence = new StepSequence();
             sequence.addCommand(injector.instantiate(ShowAlertExitStep));
@@ -136,8 +142,6 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
         }
         else
         {
-            _screenProvider.pop();
-
             var lastScreen:IScreen = IScreen(_navigator.popScreen());
             logger.log("AbstractScreenLauncher", "Back screen [{0}] created as {1}", _navigator.activeScreenID,
                        lastScreen);
@@ -157,10 +161,10 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     public function getString(title:String,
                               prompt:String,
                               okHandler:Function,
-                              cancelHandler:Function):GetStringDialog
+                              cancelHandler:Function):GetStringScreen
     {
-        var screen:GetStringDialog = GetStringDialog(sdk_internal::setApplicationScreen(
-                FrameworkScreens.GET_STRING, {}));
+        var screen:GetStringScreen = GetStringScreen(sdk_internal::setApplicationScreen(
+                FrameworkScreens.GET_STRING));
         screen.title = title;
         screen.prompt = prompt;
         screen.addEventListener(DialogScreen.EVENT_OK, okHandler);
@@ -174,25 +178,30 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
                               cancelHandler:Function):AlertScreen
     {
         var screen:AlertScreen = AlertScreen(
-                sdk_internal::setApplicationScreen(FrameworkScreens.ALERT, null));
+                sdk_internal::setApplicationScreen(FrameworkScreens.ALERT));
         screen.data = new AlertScreenData(message, title);
-        screen.addEventListener(AlertScreen.EVENT_OK, okHandler);
-        screen.addEventListener(AlertScreen.EVENT_CANCEL, cancelHandler);
+        screen.addEventListener(DialogScreen.EVENT_OK, okHandler);
+        screen.addEventListener(DialogScreen.EVENT_CANCEL, cancelHandler);
         return screen;
     }
 
     public function goToFileExplorer(data:FileListData):FileExplorerScreen
     {
         var screen:FileExplorerScreen = FileExplorerScreen(
-                sdk_internal::setApplicationScreen(FrameworkScreens.FILE_EXPLORER, data));
+                sdk_internal::setApplicationScreen(FrameworkScreens.FILE_EXPLORER));
         screen.data = data;
         return screen;
     }
 
+    public function redraw():void
+    {
+        dispatchWith(FrameworkEventType.SCREEN_REDRAW, false, new ScreenRedrawData(_navigator.activeScreen));
+    }
+    
     protected function configureFramework(navigator:IScreenNavigator):void
     {
         navigator.addScreen(FrameworkScreens.GET_STRING,
-                            create(GetStringDialog, null));
+                            create(GetStringScreen, null));
 
         navigator.addScreen(FrameworkScreens.ALERT,
                             create(AlertScreen, null));
@@ -245,16 +254,13 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
      * set int he IScreenProvider.
      *
      * @param screenID The String screenID.
-     * @param data The optional screen data.
      */
-    sdk_internal function setApplicationScreen(screenID:String, data:*):IScreen
+    sdk_internal function setApplicationScreen(screenID:String):IScreen
     {
         if (_applicationScreenID == screenID)
             return null;
 
         setInternalScreenID(screenID);
-
-        _screenProvider.push(data);
 
         logger.log("AbstractScreenLauncher", "creating screen [{0}]", screenID);
         var screen:IScreen = IScreen(_navigator.pushScreen(_applicationScreenID));
@@ -272,10 +278,10 @@ import com.teotigraphix.service.async.StepCommand;
 import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.screen.core.AbstractScreenLauncher;
 
+import flash.desktop.NativeApplication;
+
 import feathers.controls.Alert;
 import feathers.data.ListCollection;
-
-import flash.desktop.NativeApplication;
 
 import starling.events.Event;
 
@@ -293,7 +299,7 @@ final class ShowAlertExitStep extends StepCommand
         var alert:Alert = Alert.show("Are you sure you want to exit application?",
                                      "Exit Caustic Guide",
                                      new ListCollection([
-                                         {label: "Yes"}, {label: "No"}
+                                         {label: "YES"}, {label: "NO"}
                                      ]));
         alert.addEventListener(Event.CLOSE, alert_closeHandler);
         return super.execute();
@@ -303,7 +309,7 @@ final class ShowAlertExitStep extends StepCommand
     {
         AbstractScreenLauncher(screenLauncher).sdk_internal::inExitAlert = false;
 
-        if (event.data.label == "Yes")
+        if (event.data.label == "YES")
         {
             NativeApplication.nativeApplication.exit();
         }

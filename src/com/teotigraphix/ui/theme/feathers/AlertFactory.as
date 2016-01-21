@@ -101,7 +101,7 @@ public class AlertFactory extends AbstractThemeFactory
     protected function setAlertButtonGroupStyles(group:ButtonGroup):void
     {
         group.direction = ButtonGroup.DIRECTION_HORIZONTAL;
-        group.horizontalAlign = ButtonGroup.HORIZONTAL_ALIGN_CENTER;
+        group.horizontalAlign = ButtonGroup.HORIZONTAL_ALIGN_RIGHT;
         group.verticalAlign = ButtonGroup.VERTICAL_ALIGN_JUSTIFY;
         group.distributeButtonSizes = false;
         group.gap = properties.smallGutterSize;
@@ -118,7 +118,7 @@ public class AlertFactory extends AbstractThemeFactory
     protected function setAlertMessageTextRendererStyles(renderer:TextBlockTextRenderer):void
     {
         renderer.wordWrap = true;
-        renderer.elementFormat = theme.fonts.lightElementFormat;
+        renderer.elementFormat = theme.fonts.darkElementFormat;
     }
 
     protected function setHeaderWithoutBackgroundStyles(header:Header):void
@@ -129,7 +129,7 @@ public class AlertFactory extends AbstractThemeFactory
         header.gap = properties.smallGutterSize;
         header.titleGap = properties.smallGutterSize;
 
-        header.titleProperties.elementFormat = theme.fonts.headerElementFormat;
+        header.titleProperties.elementFormat = theme.fonts.headerDarkElementFormat;
     }
 
     protected static function popUpOverlayFactory():DisplayObject

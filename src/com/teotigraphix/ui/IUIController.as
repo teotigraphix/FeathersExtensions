@@ -18,9 +18,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.teotigraphix.ui
 {
+import com.teotigraphix.ui.dialog.GetStringDialog;
 
 public interface IUIController
 {
+    function getString(title:String, prompt:String, okHandler:Function, cancelHandler:Function):GetStringDialog;
+    
     function notifyToast(message:String, icon:String = null, duration:Number = 3000):void;
 }
 }
