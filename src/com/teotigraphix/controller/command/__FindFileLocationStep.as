@@ -117,10 +117,16 @@ public class __FindFileLocationStep extends StepCommand
 
         // bubbling events
         _screen.addEventListener(FileListEvent.FILE_DOUBLE_TAP, view_fileDoubleTapHandler);
+        
+        setupScreen(_screen);
 
         return super.execute();
     }
-
+    
+    protected function setupScreen(screen:FileExplorerScreen):void
+    {
+    }
+    
     protected function back():void
     {
         screenLauncher.back();

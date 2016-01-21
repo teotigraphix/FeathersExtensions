@@ -20,7 +20,9 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.framework.FrameworkSkinNames;
 
 import feathers.controls.Callout;
 import feathers.display.Scale9Image;
@@ -60,10 +62,10 @@ public class CalloutFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        calloutTopArrowSkinTexture = atlas.getTexture("callout-arrow-top-skin");
-        calloutRightArrowSkinTexture = atlas.getTexture("callout-arrow-right-skin");
-        calloutBottomArrowSkinTexture = atlas.getTexture("callout-arrow-bottom-skin");
-        calloutLeftArrowSkinTexture = atlas.getTexture("callout-arrow-left-skin");
+        calloutTopArrowSkinTexture = atlas.getTexture(FrameworkSkinNames.CALLOUT_ARROW_TOP_SKIN);
+        calloutRightArrowSkinTexture = atlas.getTexture(FrameworkSkinNames.CALLOUT_ARROW_RIGHT_SKIN);
+        calloutBottomArrowSkinTexture = atlas.getTexture(FrameworkSkinNames.CALLOUT_ARROW_BOTTOM_SKIN);
+        calloutLeftArrowSkinTexture = atlas.getTexture(FrameworkSkinNames.CALLOUT_ARROW_LEFT_SKIN);
     }
 
     override public function initializeStyleProviders():void
@@ -75,7 +77,8 @@ public class CalloutFactory extends AbstractThemeFactory
 
     public function setCalloutStyles(callout:Callout):void
     {
-        var backgroundSkin:Scale9Image = new Scale9Image(shared.backgroundPopUpSkinTextures, properties.scale);
+        var backgroundSkin:Scale9Image = create9ScaleImage(
+            FrameworkSkinNames.BACKGROUND_POPUP_SHADOW_SKIN, 6, 6, 20, 18);
         backgroundSkin.width = this.calloutBackgroundMinSize;
         backgroundSkin.height = this.calloutBackgroundMinSize;
         callout.backgroundSkin = backgroundSkin;
@@ -96,7 +99,7 @@ public class CalloutFactory extends AbstractThemeFactory
         leftArrowSkin.scaleX = leftArrowSkin.scaleY = properties.scale;
         callout.leftArrowSkin = leftArrowSkin;
 
-        callout.padding = dp(1);//properties.smallGutterSize;
+        callout.padding = dp(4);//properties.smallGutterSize;
     }
 }
 }

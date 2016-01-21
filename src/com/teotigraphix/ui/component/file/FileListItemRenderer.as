@@ -22,14 +22,15 @@ package com.teotigraphix.ui.component.file
 
 import feathers.controls.renderers.DefaultListItemRenderer;
 
-import flash.filesystem.File;
-
+import starling.display.Image;
 import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
 public class FileListItemRenderer extends DefaultListItemRenderer
 {
+    public static const EVENT_ICON_DOUBLE_TAP:String = "FileListItemRenderer/iconDoubleTap";
+    
     protected var _padding:Number = 0;
 
     private var globalX:Number;
@@ -62,21 +63,6 @@ public class FileListItemRenderer extends DefaultListItemRenderer
     override protected function commitData():void
     {
         super.commitData();
-        if (_data)
-        {
-            if (File(_data).isDirectory)
-            {
-                styleNameList.add("file-list-item-directory");
-            }
-            else
-            {
-                styleNameList.remove("file-list-item-file");
-            }
-        }
-        else
-        {
-
-        }
     }
 
 //    override protected function preLayout():void
@@ -123,7 +109,14 @@ public class FileListItemRenderer extends DefaultListItemRenderer
             }
             else if (touch.phase == TouchPhase.ENDED && touch.tapCount == 2)
             {
-                dispatchEventWith("itemDoubleTap", false, data);
+                if (event.target is Image)
+                {
+                    dispatchEventWith(EVENT_ICON_DOUBLE_TAP, true, data);
+                }
+                else
+                {
+                    dispatchEventWith("itemDoubleTap", false, data);
+                }
             }
         }
     }

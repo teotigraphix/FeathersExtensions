@@ -21,7 +21,6 @@ package com.teotigraphix.ui.support
 
 import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.ui.IUIController;
-import com.teotigraphix.ui.component.Toast;
 import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.dialog.AlertDialog;
@@ -144,7 +143,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
         t1.moveTo(dialog.x, sheight - height);
         
         var t2:Tween = new Tween(dialog, 0.3);
-        t2.delay = 1;
+        t2.delay = duration / 1000;
         t2.moveTo(dialog.x, sheight + height);
         t1.nextTween = t2;
         

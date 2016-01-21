@@ -152,6 +152,26 @@
         }
 
         //----------------------------------
+        // itemRendererFactory
+        //----------------------------------
+        
+        private var _itemRendererFactory:Function;
+        
+        public function get itemRendererFactory():Function 
+        {
+            return _itemRendererFactory;
+        }
+        
+        public function set itemRendererFactory(value:Function):void
+        {
+            if (_itemRendererFactory == value)
+                return;
+            
+            _itemRendererFactory = value;
+            invalidate("itemRendererFactory");
+        }
+        
+        //----------------------------------
         // selectedFile
         //----------------------------------
 
@@ -451,7 +471,7 @@
         {
             super.draw();
 
-            if (isInvalid(INVALIDATION_FLAG_ICON_FUNCTION))
+            if (isInvalid(INVALIDATION_FLAG_ICON_FUNCTION) || isInvalid("itemRendererFactory"))
             {
                 commitItemRendererFactory();
             }
@@ -563,18 +583,20 @@
             list.dataProvider = dataProvider;
         }
 
+        protected function defaultItemRendererFactory():IListItemRenderer
+        {
+            var renderer:FileListItemRenderer = new FileListItemRenderer();
+            renderer.iconFunction = _iconFunction;
+            renderer.itemHasEnabled = true;
+            renderer.enabledFunction = _enabledFunction;
+            renderer.labelField = "name";
+            renderer.gap = 10;
+            return renderer;
+        }
+        
         protected function commitItemRendererFactory():void
         {
-            list.itemRendererFactory = function ():FileListItemRenderer //IListItemRenderer
-            {
-                var renderer:FileListItemRenderer = new FileListItemRenderer();
-                renderer.iconFunction = _iconFunction;
-                renderer.itemHasEnabled = true;
-                renderer.enabledFunction = _enabledFunction;
-                renderer.labelField = "name";
-                renderer.gap = 10;
-                return renderer;
-            };
+            list.itemRendererFactory = _itemRendererFactory != null ? _itemRendererFactory : defaultItemRendererFactory;
         }
 
         private function defaultIconFunction(item:Object):starling.display.DisplayObject
