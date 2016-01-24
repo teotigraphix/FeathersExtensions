@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog:Dialog xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:dialog="com.teotigraphix.ui.dialog.*" 
+               xmlns:f="library://ns.feathersui.com/mxml"
+               xmlns:file="com.teotigraphix.ui.component.file.*"
+               autoSizeMode="stage"
+               content="{fileList}">
+    
+    <fx:Declarations>
+
+        <file:FileList id="fileList"
+                       change="fileList_changeHandler()">
+            <file:layoutData>
+                <f:AnchorLayoutData top="0" left="0" right="0" bottom="0"/>
+            </file:layoutData>
+        </file:FileList>
+        
+    </fx:Declarations>
+    
+    <fx:Script>
+        <![CDATA[
+            import com.teotigraphix.ui.component.file.FileListData;
+            
+            import feathers.core.PopUpManager;
+            import feathers.skins.IStyleProvider;
+            
+            public static var globalStyleProvider:IStyleProvider;
+            
+            override protected function get defaultStyleProvider():IStyleProvider
+            {
+                return FileDialog.globalStyleProvider;
+            }
+            
+            public static const EVENT_FILE_CHANGE:String = "fileChange";
+            
+            private var _data:FileListData;
+            
+            //--------------------------------------------------------------------------
+            // API :: Properties
+            //--------------------------------------------------------------------------
+            
+            //----------------------------------
+            // data
+            //----------------------------------
+            
+            public function get data():FileListData
+            {
+                return _data;
+            }
+            
+            public function set data(value:FileListData):void
+            {
+                _data = value;
+                invalidate(INVALIDATION_FLAG_DATA);
+            }
+
+            //--------------------------------------------------------------------------
+            // API :: Methods
+            //--------------------------------------------------------------------------
+           
+            public static function show(data:FileListData):FileDialog
+            {
+                const dialog:FileDialog = Dialog.show(data.title, FileDialog) as FileDialog;
+                dialog.data = data;
+                return dialog;
+            }
+            
+            public static function hide(dialog:Dialog):void
+            {
+                PopUpManager.removePopUp(dialog, true);
+            }
+            
+            //--------------------------------------------------------------------------
+            // Hanlders
+            //--------------------------------------------------------------------------
+            
+            private function fileList_changeHandler():void
+            {
+                dispatchEventWith(EVENT_FILE_CHANGE, false, fileList.selectedFile);
+            }
+            
+            override protected function draw():void
+            {
+                if (_data != null && isInvalid(INVALIDATION_FLAG_DATA))
+                {
+                   _data.copyTo(fileList);
+                }
+                
+                super.draw();
+            }
+
+        ]]>
+    </fx:Script>
+    
+</dialog:Dialog>

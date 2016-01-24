@@ -95,23 +95,15 @@
         import starling.textures.Texture;
 
         public static const INVALIDATION_FLAG_SHOW_FILES:String = "showFiles";
-
         public static const INVALIDATION_FLAG_EXTENSIONS:String = "extensions";
-
         public static const INVALIDATION_FLAG_HOME_DIRECTORY:String = "homeDirectory";
-
         public static const INVALIDATION_FLAG_ROOT_DIRECTORY:String = "rootDirectory";
-
         public static const INVALIDATION_FLAG_ACTION_TEXT:String = "actionText";
-
         public static const INVALIDATION_FLAG_ICON_FUNCTION:String = "iconFunction";
 
         public static const NAVIGATE_HOME:int = 0;
-
         public static const NAVIGATE_UP:int = 1;
-
         public static const NAVIGATE_BACK:int = 2;
-
         public static const NAVIGATE_NEXT:int = 3;
 
         public static const STYLE_ACTION_GROUP:String = "file-list-action-group";
@@ -571,6 +563,7 @@
                 list.dataProvider = null;
                 actionText = "";
                 upButton.isEnabled = false;
+                dispatchEventWith(Event.CHANGE, false, null);
                 return;
             }
 
@@ -581,6 +574,8 @@
             var result:Vector.<File> = getFileListing();
             var dataProvider:ListCollection = new ListCollection(result);
             list.dataProvider = dataProvider;
+            
+            dispatchEventWith(Event.CHANGE, false, null);
         }
 
         protected function defaultItemRendererFactory():IListItemRenderer
@@ -619,6 +614,7 @@
             {
                 if (!_rootDirectory.exists)
                     _rootDirectory = _homeDirectory;
+                
                 return Files.listFiles(_rootDirectory, _extensions, false, true);
             }
             else

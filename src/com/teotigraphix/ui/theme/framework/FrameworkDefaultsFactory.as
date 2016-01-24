@@ -22,15 +22,11 @@ package com.teotigraphix.ui.theme.framework
 import com.teotigraphix.ui.component.HGroup;
 import com.teotigraphix.ui.component.VGroup;
 import com.teotigraphix.ui.control.BackButtonControl;
+import com.teotigraphix.ui.dialog.Dialog;
+import com.teotigraphix.ui.dialog.FileDialog;
 import com.teotigraphix.ui.theme.AbstractTheme;
 import com.teotigraphix.ui.theme.AbstractThemeFactory;
 import com.teotigraphix.ui.theme.FontFactory;
-
-import feathers.controls.Button;
-import feathers.controls.Label;
-import feathers.controls.LayoutGroup;
-import feathers.controls.TextInput;
-import feathers.layout.HorizontalLayout;
 
 import flash.text.engine.CFFHinting;
 import flash.text.engine.ElementFormat;
@@ -39,6 +35,12 @@ import flash.text.engine.FontLookup;
 import flash.text.engine.FontPosture;
 import flash.text.engine.FontWeight;
 import flash.text.engine.RenderingMode;
+
+import feathers.controls.Button;
+import feathers.controls.Label;
+import feathers.controls.LayoutGroup;
+import feathers.controls.TextInput;
+import feathers.layout.HorizontalLayout;
 
 import starling.display.Quad;
 
@@ -81,6 +83,9 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
+        setStyle(Dialog, theme_dialogContentGroup, FrameworkStyleNames.DIALOG_SCREEN_CONTENT);
+        setStyle(FileDialog, theme_dialogContentGroup, FrameworkStyleNames.DIALOG_SCREEN_CONTENT);
+        
         setStyle(Button, setFormButtonStyles, FrameworkStyleNames.FORM_BUTTON);
         setStyle(Button, setFormOkButtonStyles, FrameworkStyleNames.FORM_OK_BUTTON);
         setStyle(Button, setFormCancelButtonStyles, FrameworkStyleNames.FORM_CANCEL_BUTTON);
@@ -93,7 +98,7 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         setStyle(Label, setFormItemLabelStyles, FrameworkStyleNames.FORM_ITEM_LABEL);
         setStyle(Label, setFileExplorerTitleLabelStyles, FrameworkStyleNames.FILE_EXPLORER_TITLE_LABEL);
 
-        setStyle(LayoutGroup, theme_dialogContentGroup, FrameworkStyleNames.DIALOG_SCREEN_CONTENT);
+
         setStyle(HGroup, theme_formButtonFooter, FrameworkStyleNames.DIALOG_BUTTON_FOOTER);
 
         setStyle(Label, theme_toolTipLabelStyles, FrameworkStyleNames.TOOL_TIP_LABEL);
@@ -129,10 +134,10 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         group.backgroundSkin = quad;
     }
 
-    private function theme_dialogContentGroup(group:LayoutGroup):void
+    private function theme_dialogContentGroup(group:Dialog):void
     {
         group.minWidth = dp(300);
-        VGroup(group).padding = dp(2);
+       // FileDialog(group).padding = dp(2);
         group.backgroundSkin = create9ScaleImage('background-popup-skin', 4, 4, 24, 24);
     }
 

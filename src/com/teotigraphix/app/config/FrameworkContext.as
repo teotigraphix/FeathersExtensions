@@ -60,7 +60,7 @@ public class FrameworkContext extends Context
     public var applicationDescriptorClass:Class = ApplicationDescriptor;
     public var applicationSettingsClass:Class = AbstractApplicationSettings; // IFileService, ApplicationDescriptor
     public var $loggerClass:Class = LoggerImpl; // NO DEPS
-    public var $fileServiceClass:Class = FileServiceImpl; // ApplicationDescriptor DEP
+    public var _fileServiceClass:Class = FileServiceImpl; // ApplicationDescriptor DEP
     public var $deviceModelClass:Class = DeviceModelImpl; // NO DEPS
     public var startupCommand:Class;
 
@@ -213,7 +213,7 @@ public class FrameworkContext extends Context
         injector.mapValue(IBootstrapApplication, contextView);
 
         injector.mapSingletonOf(ILogger, $loggerClass);
-        injector.mapSingletonOf(IFileService, $fileServiceClass);
+        injector.mapSingletonOf(IFileService, _fileServiceClass);
         injector.mapSingletonOf(IApplicationSettings, applicationSettingsClass);
         injector.mapSingletonOf(IDeviceModel, $deviceModelClass);
     }

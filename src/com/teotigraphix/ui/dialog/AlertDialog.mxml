@@ -12,8 +12,8 @@
                  styleName="{FrameworkStyleNames.LABEL_UI_DARK}">
             
             <f:layoutData>
-                <f:AnchorLayoutData top="{AssetMap.dp(15)}" bottom="{AssetMap.dp(15)}" 
-                                    left="{AssetMap.dp(15)}" right="{AssetMap.dp(15)}"/>
+                <f:AnchorLayoutData top="{AssetMap.dp(8)}" bottom="{AssetMap.dp(8)}" 
+                                    left="{AssetMap.dp(8)}" right="{AssetMap.dp(8)}"/>
             </f:layoutData>
             
         </f:Label>
@@ -43,6 +43,8 @@
                 
                 _message = value;
                 invalidate("message");
+                invalidate(INVALIDATION_FLAG_SIZE);
+                invalidate(INVALIDATION_FLAG_LAYOUT);
             }
             
             override protected function initialize():void
@@ -54,12 +56,12 @@
             
             override protected function draw():void
             {
-                super.draw();
-                
                 if (isInvalid("message"))
                 {
                     messageLabel.text = _message;
                 }
+                
+                super.draw();
             }
 
             public static function show(title:String, message:String):AlertDialog

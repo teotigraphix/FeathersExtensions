@@ -20,10 +20,10 @@ package com.teotigraphix.controller.command
 {
 
 import com.teotigraphix.service.async.StepCommand;
+import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.component.file.FileListEvent;
-import com.teotigraphix.ui.screen.IScreenLauncher;
-import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
+import com.teotigraphix.ui.dialog.FileDialog;
 
 import flash.filesystem.File;
 
@@ -33,24 +33,24 @@ import starling.events.Event;
  * 
  * @author Teoti
  */
-public class __FindFileLocationStep extends StepCommand
+public class __BrowseWithFileDialogStep extends StepCommand
 {
     //--------------------------------------------------------------------------
     // Inject
     //--------------------------------------------------------------------------
 
     [Inject]
-    public var screenLauncher:IScreenLauncher;
-
+    public var ui:IUIController;
+    
     //--------------------------------------------------------------------------
     // Private :: Variables
     //--------------------------------------------------------------------------
     
-    private var _screen:FileExplorerScreen;
-
-    private var _title:String;
-    private var _okEnabled:Boolean;
-
+    private var _dialog:FileDialog;
+    
+    private var _isYesEnabled:Boolean;
+    private var _iNoEnabled:Boolean;
+    
     private var _currentFile:File;
 
     //--------------------------------------------------------------------------
@@ -79,39 +79,39 @@ public class __FindFileLocationStep extends StepCommand
     // title
     //----------------------------------
     
-    public function get title():String
+    public function setTitle(value:String):void
     {
-        return _title;
+        _dialog.title = value;
+    }
+    
+    //----------------------------------
+    // isOkEnabled
+    //----------------------------------
+    
+    public function get isYesEnabled():Boolean
+    {
+        return _isYesEnabled;
     }
 
-    public function set title(value:String):void
+    public function set isYesEnabled(value:Boolean):void
     {
-        _title = value;
-        _screen.title = _title;
+        _isYesEnabled = value;
+        _dialog.yesButton.isEnabled = _isYesEnabled;
     }
     
     //----------------------------------
-    // okEnabled
+    // isNoEnabled
     //----------------------------------
     
-    public function get okEnabled():Boolean
+    public function get isNoEnabled():Boolean
     {
-        return _okEnabled;
-    }
-
-    public function set okEnabled(value:Boolean):void
-    {
-        _okEnabled = value;
-        _screen.okButton.isEnabled = _okEnabled;
+        return _iNoEnabled;
     }
     
-    //----------------------------------
-    // cancelEnabled
-    //----------------------------------
-    
-    public function set cancelEnabled(value:Boolean):void
+    public function set isNoEnabled(value:Boolean):void
     {
-        _screen.cancelButton.isEnabled = _okEnabled;
+        _iNoEnabled = value;
+        _dialog.noButton.isEnabled = _iNoEnabled;
     }
     
     //----------------------------------
@@ -123,7 +123,7 @@ public class __FindFileLocationStep extends StepCommand
      */
     public function get selectedFile():File
     {
-        return _screen.fileList.selectedFile;
+        return _dialog.fileList.selectedFile;
     }
     
     //----------------------------------
@@ -146,7 +146,7 @@ public class __FindFileLocationStep extends StepCommand
     
     public function get rootDirectory():File
     {
-        return _screen.fileList.rootDirectory;
+        return _dialog.fileList.rootDirectory;
     }
     
     //----------------------------------
@@ -172,18 +172,15 @@ public class __FindFileLocationStep extends StepCommand
 
         var data:FileListData = createData();
 
-        _screen = screenLauncher.goToFileExplorer(data);
+        _dialog = ui.browseForFile(data, view_yesHandler, view_noHandler);
 
-        _screen.addEventListener(FileListEvent.ROOT_DIRECTORY_CHANGE, view_rootDirectoryChangeHandler);
-        _screen.addEventListener(FileExplorerScreen.EVENT_FILE_OR_DIRECTORY_CHANGE, view_fileOrDirectoryChangeHandler);
+        _dialog.addEventListener(FileListEvent.ROOT_DIRECTORY_CHANGE, view_rootDirectoryChangeHandler);
+        _dialog.addEventListener(FileDialog.EVENT_FILE_CHANGE, view_fileOrDirectoryChangeHandler);
         
-        _screen.addEventListener(FileExplorerScreen.EVENT_OK, view_okHandler);
-        _screen.addEventListener(FileExplorerScreen.EVENT_CANCEL, view_cancelHandler);
-
         // bubbling events
-        _screen.addEventListener(FileListEvent.FILE_DOUBLE_TAP, view_fileDoubleTapHandler);
+        _dialog.addEventListener(FileListEvent.FILE_DOUBLE_TAP, view_fileDoubleTapHandler);
         
-        setupScreen(_screen);
+        setupDialog(_dialog);
 
         return super.execute();
     }
@@ -193,7 +190,7 @@ public class __FindFileLocationStep extends StepCommand
         return null;
     }
     
-    protected function setupScreen(screen:FileExplorerScreen):void
+    protected function setupDialog(screen:FileDialog):void
     {
     }
     
@@ -205,25 +202,6 @@ public class __FindFileLocationStep extends StepCommand
     {
     }
     
-    // TODO remove after others implement
-    protected function selectedFileChanged(file:File):void
-    {
-    }
-    
-    //--------------------------------------------------------------------------
-    // API
-    //--------------------------------------------------------------------------
-    
-    protected function back():void
-    {
-        screenLauncher.back();
-    }
-    
-    protected function backTo(screenID:String):void
-    {
-        screenLauncher.backTo(screenID);
-    }
-    
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -232,28 +210,27 @@ public class __FindFileLocationStep extends StepCommand
     {
     }
 
-    protected function view_okHandler(event:Event, file:File):void
+    protected function view_yesHandler(event:Event, file:File):void
     {
-        o.file = file;
-        back();
+        _dialog.hide();
+        _dialog = null;
         finished();
     }
 
-    protected function view_cancelHandler(event:Event, file:File):void
+    protected function view_noHandler(event:Event, file:File):void
     {
-        back();
+        _dialog.hide();
+        _dialog = null;
         cancel();
     }
 
     protected function view_rootDirectoryChangeHandler(event:Event, directory:File):void
     {
-        selectedFileChanged(selectedFile);
         stateChanged(selectedFile, selectedDirectory);
     }
 
     protected function view_fileOrDirectoryChangeHandler(event:Event, file:File):void
     {
-        selectedFileChanged(selectedFile);
         stateChanged(selectedFile, selectedDirectory);
     }
 }

@@ -18,11 +18,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.teotigraphix.ui
 {
+import com.teotigraphix.ui.component.file.FileListData;
+import com.teotigraphix.ui.dialog.FileDialog;
 import com.teotigraphix.ui.dialog.GetStringDialog;
 
 public interface IUIController
 {
-    function getString(title:String, prompt:String, okHandler:Function, cancelHandler:Function):GetStringDialog;
+    function browseForFile(data:FileListData, yesHandler:Function, noHandler:Function):FileDialog;
+    
+    function getString(title:String, prompt:String, yesHandler:Function, noHandler:Function):GetStringDialog;
     
     function notifyToast(message:String, icon:String = null, duration:Number = 3000):void;
 }

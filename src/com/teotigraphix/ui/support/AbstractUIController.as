@@ -24,6 +24,7 @@ import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.dialog.AlertDialog;
+import com.teotigraphix.ui.dialog.FileDialog;
 import com.teotigraphix.ui.dialog.GetStringDialog;
 import com.teotigraphix.ui.dialog.MessageDialog;
 import com.teotigraphix.ui.popup.CenterPopUpContentManager;
@@ -39,6 +40,7 @@ import starling.core.Starling;
 import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
 import starling.display.Quad;
+import starling.display.Stage;
 import starling.events.Event;
 
 public class AbstractUIController extends AbstractController implements IUIController
@@ -55,6 +57,17 @@ public class AbstractUIController extends AbstractController implements IUIContr
     override protected function onRegister():void
     {
         super.onRegister();
+    }
+    
+    public function browseForFile(data:FileListData,
+                                  okHandler:Function, cancelHandler:Function):FileDialog
+    {
+        const dialog:FileDialog = FileDialog.show(data);
+        dialog.yesLabel = "OK";
+        dialog.noLabel = "CANCEL";
+        dialog.addEventListener(FrameworkEventType.OK, okHandler);
+        dialog.addEventListener(FrameworkEventType.CANCEL, cancelHandler);
+        return dialog;
     }
     
     public function alert(title:String, message:String, 

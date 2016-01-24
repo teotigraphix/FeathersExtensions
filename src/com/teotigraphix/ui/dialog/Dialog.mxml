@@ -1,52 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <f:LayoutGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
                 xmlns:f="library://ns.feathersui.com/mxml"
-                xmlns:component="com.teotigraphix.ui.component.*">
+                xmlns:component="com.teotigraphix.ui.component.*"
+                styleName="{FrameworkStyleNames.DIALOG_SCREEN_CONTENT}">
     
     <f:layout>
-        <f:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
+        <f:VerticalLayout/>
     </f:layout>
+
+    <f:Label id="titleLabel"
+             styleName="{FrameworkStyleNames.THEME_FORM_TITLE_DARK}"/>
     
-    <component:VGroup styleName="{FrameworkStyleNames.DIALOG_SCREEN_CONTENT}">
-        
-        <f:Label id="titleLabel"
-                 styleName="{FrameworkStyleNames.THEME_FORM_TITLE_DARK}"/>
-        
-        <component:HDivider/>
-        
-        <f:LayoutGroup id="contentGroup">
-            
-            <f:layoutData>
-                <f:VerticalLayoutData percentWidth="100"/>
-            </f:layoutData>
-            
-            <f:layout>
-                <f:AnchorLayout/>
-            </f:layout>
-            
-            <!-- content -->
-            
-        </f:LayoutGroup>
-        
-        <component:HDivider id="divider"/>
-        
-        <component:HGroup id="footer" 
-                          styleName="{FrameworkStyleNames.DIALOG_BUTTON_FOOTER}">
-            
-            <f:Button id="yesButton"
-                      label="OK"
-                      styleName="{FrameworkStyleNames.FORM_OK_BUTTON}"
-                      triggered="okButton_triggeredHandler()"/>
-            
-            <f:Button id="noButton"
-                      label="CANCEL"
-                      styleName="{FrameworkStyleNames.FORM_CANCEL_BUTTON}"
-                      triggered="cancelButton_triggeredHandler()"/>
-            
-        </component:HGroup>
-        
-    </component:VGroup>
+    <component:HDivider/>
     
+    <f:LayoutGroup id="contentGroup">
+        
+        <f:layoutData>
+            <f:VerticalLayoutData percentWidth="100" />
+        </f:layoutData>
+        
+        <f:layout>
+            <f:AnchorLayout/>
+        </f:layout>
+        
+        <!-- content -->
+        
+    </f:LayoutGroup>
+    
+    <component:HDivider id="divider"/>
+    
+    <component:HGroup id="footer" 
+                      styleName="{FrameworkStyleNames.DIALOG_BUTTON_FOOTER}">
+        
+        <f:Button id="yesButton"
+                  label="OK"
+                  styleName="{FrameworkStyleNames.FORM_OK_BUTTON}"
+                  triggered="okButton_triggeredHandler()"/>
+        
+        <f:Button id="noButton"
+                  label="CANCEL"
+                  styleName="{FrameworkStyleNames.FORM_CANCEL_BUTTON}"
+                  triggered="cancelButton_triggeredHandler()"/>
+        
+    </component:HGroup>
+         
    <fx:Script>
        <![CDATA[
            import com.teotigraphix.ui.component.event.FrameworkEventType;
@@ -58,8 +55,6 @@
            import starling.core.Starling;
            import starling.display.DisplayObject;
            import starling.display.Quad;
-           
-           
            
            public static var globalStyleProvider:IStyleProvider;
            
@@ -81,7 +76,6 @@
            //----------------------------------
            // yesLabel
            //----------------------------------
-           
 
            public function get yesLabel():String 
            {
@@ -209,6 +203,11 @@
            override protected function draw():void
            {
                super.draw();
+               
+               if (autoSizeMode == AUTO_SIZE_MODE_STAGE)
+               {
+                   VerticalLayoutData(contentGroup.layoutData).percentHeight = 100;
+               }
                
                if (isInvalid("content"))
                {

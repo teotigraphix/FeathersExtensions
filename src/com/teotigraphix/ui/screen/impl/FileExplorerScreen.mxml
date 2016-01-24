@@ -58,6 +58,7 @@
                   styleName="{FrameworkStyleNames.FORM_CANCEL_BUTTON}"
                   triggered="cancelButton_triggeredHandler()">
         </f:Button>
+        
     </component:HGroup>
 
     <fx:Script><![CDATA[
@@ -126,13 +127,7 @@
 
         public function get selectedFile():File
         {
-
-            var result:File = fileList.selectedFile;
-            if (result == null)
-            {
-                result = fileList.rootDirectory;
-            }
-            return result;
+            return fileList.rootDirectory;
         }
 
         //--------------------------------------------------------------------------

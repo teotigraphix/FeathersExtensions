@@ -63,8 +63,8 @@ public class FileListFactory extends AbstractThemeFactory
 
     public function setStatusStyles(label:Label):void
     {
-        theme.label.set_themeHeadingStyles(label);
-        label.padding = dp(8);
+        theme.label.set_label20Dark(label);
+        label.padding = dp(4);
     }
 
     public function setFileListStyles(list:FileList):void

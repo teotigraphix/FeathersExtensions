@@ -8,7 +8,7 @@
         
         <f:Label id="messageLabel" 
                  wordWrap="true"
-                 maxWidth="{AssetMap.dp(300)}"
+                 maxWidth="{AssetMap.dp(300)}" minHeight="{AssetMap.dp(55)}"
                  styleName="{FrameworkStyleNames.LABEL_UI_DARK}">
             
             <f:layoutData>
