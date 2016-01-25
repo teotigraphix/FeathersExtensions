@@ -20,10 +20,10 @@
 package com.teotigraphix.model.impl
 {
 
-import com.teotigraphix.app.config.ApplicationDescriptor;
+import com.teotigraphix.app.configuration.ApplicationDescriptor;
 import com.teotigraphix.model.AbstractModel;
 import com.teotigraphix.model.IApplicationSettings;
-import com.teotigraphix.service.*;
+import com.teotigraphix.service.IFileService;
 
 import flash.filesystem.File;
 
@@ -122,8 +122,11 @@ public class AbstractApplicationSettings extends AbstractModel implements IAppli
             flush();
         }
 
-        logger.startup(TAG, "Setting FPS to {0}", fps);
-        Starling.current.nativeStage.frameRate = fps;
+        if (Starling.current != null)
+        {
+            logger.startup(TAG, "Setting FPS to {0}", fps);
+            Starling.current.nativeStage.frameRate = fps;
+        }
     }
 
     //--------------------------------------------------------------------------

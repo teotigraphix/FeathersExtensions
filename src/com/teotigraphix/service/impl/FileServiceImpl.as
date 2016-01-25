@@ -20,7 +20,7 @@
 package com.teotigraphix.service.impl
 {
 
-import com.teotigraphix.app.config.ApplicationDescriptor;
+import com.teotigraphix.app.configuration.ApplicationDescriptor;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.util.Files;

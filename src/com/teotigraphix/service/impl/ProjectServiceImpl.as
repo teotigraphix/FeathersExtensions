@@ -20,12 +20,13 @@
 package com.teotigraphix.service.impl
 {
 
-import com.teotigraphix.app.config.ApplicationDescriptor;
+import com.teotigraphix.app.configuration.ApplicationDescriptor;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.frameworks.project.IProjectState;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IProjectModel;
-import com.teotigraphix.service.*;
+import com.teotigraphix.service.IFileService;
+import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepSequence;
@@ -135,10 +136,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.frameworks.project.Project;
+import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.model.event.ProjectModelEventType;
 import com.teotigraphix.service.IFileService;
-import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepCommand;

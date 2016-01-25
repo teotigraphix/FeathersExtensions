@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.app.config
+package com.teotigraphix.app.configuration
 {
 
 import flash.filesystem.File;
@@ -262,6 +262,7 @@ public class ApplicationDescriptor
     
     public function ApplicationDescriptor()
     {
+        _version = new Version("0.0.0");
     }
 }
 }

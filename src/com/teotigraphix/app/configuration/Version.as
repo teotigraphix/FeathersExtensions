@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.app.config
+package com.teotigraphix.app.configuration
 {
 
 public class Version

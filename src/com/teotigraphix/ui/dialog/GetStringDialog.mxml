@@ -11,7 +11,7 @@
                      change="textInput_changeHandler()">
             
             <f:layoutData>
-                <f:AnchorLayoutData top="10" bottom="10" left="10" right="10"/>
+                <f:VerticalLayoutData percentWidth="100"/>
             </f:layoutData>
             
         </f:TextInput>

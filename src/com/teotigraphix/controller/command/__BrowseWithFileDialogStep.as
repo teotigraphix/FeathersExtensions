@@ -212,15 +212,13 @@ public class __BrowseWithFileDialogStep extends StepCommand
 
     protected function view_yesHandler(event:Event, file:File):void
     {
-        _dialog.hide();
-        _dialog = null;
+        hide();
         finished();
     }
 
     protected function view_noHandler(event:Event, file:File):void
     {
-        _dialog.hide();
-        _dialog = null;
+        hide();
         cancel();
     }
 
@@ -232,6 +230,12 @@ public class __BrowseWithFileDialogStep extends StepCommand
     protected function view_fileOrDirectoryChangeHandler(event:Event, file:File):void
     {
         stateChanged(selectedFile, selectedDirectory);
+    }
+    
+    protected function hide():void
+    {
+        _dialog.hide();
+        _dialog = null;
     }
 }
 }

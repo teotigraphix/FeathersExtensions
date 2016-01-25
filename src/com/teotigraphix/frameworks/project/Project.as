@@ -20,14 +20,13 @@
 package com.teotigraphix.frameworks.project
 {
 
-import com.teotigraphix.app.config.Version;
+import com.teotigraphix.app.configuration.Version;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.util.ISerialize;
 
 import flash.errors.IOError;
-
 import flash.filesystem.File;
 
 import mx.utils.UIDUtil;

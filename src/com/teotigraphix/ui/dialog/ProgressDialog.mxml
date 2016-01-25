@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog:Dialog xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:dialog="com.teotigraphix.ui.dialog.*" 
+               xmlns:f="library://ns.feathersui.com/mxml"
+               content="{statusLabel}">
+    
+    <fx:Declarations>
+        
+        <f:Label id="statusLabel" 
+                 wordWrap="true"
+                 styleName="{FrameworkStyleNames.LABEL_UI_DARK}">
+            
+            <f:layoutData>
+                <f:VerticalLayoutData percentWidth="100"/>
+            </f:layoutData>
+            
+        </f:Label>
+        
+    </fx:Declarations>
+    
+    <fx:Script>
+        <![CDATA[
+            import com.teotigraphix.ui.theme.AssetMap;
+            import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+
+            private var _status:String;
+            private var _percent:int;
+            
+            //----------------------------------
+            // status
+            //----------------------------------
+
+            public function get status():String 
+            {
+                return _status;
+            }
+            
+            public function set status(value:String):void
+            {
+                if (_status == value)
+                    return;
+                
+                _status = value;
+                invalidate("status");
+            }
+            
+            //----------------------------------
+            // percent
+            //----------------------------------
+
+            public function get percent():int 
+            {
+                return _percent;
+            }
+            
+            public function set percent(value:int):void
+            {
+                if (_percent == value)
+                    return;
+                
+                _percent = value;
+                invalidate("percent");
+            }
+            
+            override protected function initialize():void
+            {
+                super.initialize();
+                
+                isYesEnabled = isNoEnabled = false;
+            }
+            
+            override protected function draw():void
+            {
+                super.draw();
+                
+                if (isInvalid("status"))
+                {
+                    statusLabel.text = _status;
+                }
+                
+                if (isInvalid("percent"))
+                {
+                    
+                }
+            }
+
+            public static function show(status:String, percent:int):ProgressDialog
+            {
+                const dialog:ProgressDialog = Dialog.show(null, ProgressDialog) as ProgressDialog; 
+                dialog.status = status;
+                dialog.percent = percent;
+                return dialog;
+            }
+        ]]>
+    </fx:Script>
+    
+</dialog:Dialog>

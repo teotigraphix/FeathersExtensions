@@ -27,6 +27,7 @@ public class FrameworkEventType
     public static const TOUCH_DOWN:String = "touchDown";
     public static const TOUCH_UP:String = "touchUp";
     
+    public static const BACK:String = "back";
     public static const OK:String = "ok";
     public static const CANCEL:String = "cancel";
 }

@@ -27,20 +27,23 @@ import com.teotigraphix.ui.dialog.AlertDialog;
 import com.teotigraphix.ui.dialog.FileDialog;
 import com.teotigraphix.ui.dialog.GetStringDialog;
 import com.teotigraphix.ui.dialog.MessageDialog;
+import com.teotigraphix.ui.dialog.ProgressDialog;
+import com.teotigraphix.ui.dialog.WebViewDialog;
 import com.teotigraphix.ui.popup.CenterPopUpContentManager;
 import com.teotigraphix.ui.popup.ProgressPopUp;
-import com.teotigraphix.ui.popup.WebViewPopUp;
+import com.teotigraphix.ui.theme.AssetMap;
 
 import flash.filesystem.File;
 
+import feathers.controls.Alert;
 import feathers.core.PopUpManager;
+import feathers.data.ListCollection;
 
 import starling.animation.Tween;
 import starling.core.Starling;
 import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
 import starling.display.Quad;
-import starling.display.Stage;
 import starling.events.Event;
 
 public class AbstractUIController extends AbstractController implements IUIController
@@ -70,6 +73,24 @@ public class AbstractUIController extends AbstractController implements IUIContr
         return dialog;
     }
     
+    public function showAlert(title:String, message:String, iconSkin:String,
+                              okHandler:Function, cancelHandler:Function,
+                              yesLabel:String = "OK", noLabel:String = "CANCEL"):Alert
+    {
+        const alert:Alert = Alert.show(message, title,
+            new ListCollection([{label: yesLabel}, {label: noLabel}]));
+        alert.icon = AssetMap.createImage(iconSkin);
+        alert.icon.width = alert.icon.height = AssetMap.size(60);
+        alert.addEventListener(Event.CLOSE, function (event:Event, data:Object):void {
+            if (data.label == yesLabel)
+                okHandler();
+            else
+                cancelHandler();
+        });
+        
+        return alert;
+    }
+    
     public function alert(title:String, message:String, 
                           okHandler:Function, cancelHandler:Function,
                           yesLabel:String = "OK", noLabel:String = "CANCEL"):AlertDialog
@@ -85,6 +106,12 @@ public class AbstractUIController extends AbstractController implements IUIContr
     public function message(message:String):MessageDialog
     {
         const dialog:MessageDialog = MessageDialog.show(message);
+        return dialog;
+    }
+    
+    public function progress(status:String = null, percent:int = 0):ProgressDialog
+    {
+        const dialog:ProgressDialog = ProgressDialog.show(status, percent);
         return dialog;
     }
     
@@ -124,6 +151,8 @@ public class AbstractUIController extends AbstractController implements IUIContr
         return data;
     }
 
+
+    
     public function createAndShowProgressPopUp(status:String = null, percent:int = 0):ProgressPopUp
     {
         const popup:ProgressPopUp = new ProgressPopUp();
@@ -167,14 +196,11 @@ public class AbstractUIController extends AbstractController implements IUIContr
         Starling.juggler.add(t1);
     }
 
-    public function showWebText(title:String, htmlText:String, backHandler:Function):WebViewPopUp
+    public function showWebText(title:String, htmlText:String, backHandler:Function):WebViewDialog
     {
-        var popup:WebViewPopUp = new WebViewPopUp();
-        popup.title = title;
-        popup.htmlText = htmlText;
-        popup.addEventListener(WebViewPopUp.EVENT_BACK, backHandler);
-        addPopUp(popup);
-        return popup;
+        var dialog:WebViewDialog = WebViewDialog.show(title, htmlText);
+        dialog.addEventListener(FrameworkEventType.BACK, backHandler);
+        return dialog;
     }
 
     public function addPopUp(popUp:DisplayObject, isModal:Boolean = true,

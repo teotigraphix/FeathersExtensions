@@ -17,15 +17,15 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.teotigraphix.app.config
+package com.teotigraphix.app.configuration
 {
 
 import com.teotigraphix.app.command.StartupFactory;
 import com.teotigraphix.app.ui.IBootstrapApplication;
 import com.teotigraphix.controller.ICommandLauncher;
 import com.teotigraphix.model.IApplicationSettings;
+import com.teotigraphix.model.ICoreModel;
 import com.teotigraphix.model.IDeviceModel;
-import com.teotigraphix.model.IFrameworkModel;
 import com.teotigraphix.model.impl.AbstractApplicationSettings;
 import com.teotigraphix.model.impl.DeviceModelImpl;
 import com.teotigraphix.service.IFileService;
@@ -33,8 +33,8 @@ import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.impl.FileServiceImpl;
 import com.teotigraphix.service.impl.LoggerImpl;
 import com.teotigraphix.ui.IUIController;
-import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.component.IScreenNavigator;
+import com.teotigraphix.ui.screen.IScreenLauncher;
 import com.teotigraphix.ui.screen.impl.NullScreenLauncher;
 
 import flash.events.EventDispatcher;
@@ -210,7 +210,7 @@ public class FrameworkContext extends Context
     protected function configureCoreNonDependencies():void
     {
         injector.mapValue(Juggler, Starling.juggler);
-        injector.mapValue(IBootstrapApplication, contextView);
+        injector.mapValue(IBootstrapApplication, contextView); 
 
         injector.mapSingletonOf(ILogger, $loggerClass);
         injector.mapSingletonOf(IFileService, _fileServiceClass);
@@ -244,11 +244,12 @@ public class FrameworkContext extends Context
         if (applicationModelClass != null)
         {
             var model:Object = injector.instantiate(applicationModelClass);
-            if (model is IFrameworkModel)
+            if (model is ICoreModel)
             {
-                mapApplicationModel(model as IFrameworkModel);
+                injector.mapValue(ICoreModel, model);
             }
-            else
+            
+            if (applicationModelAPI != null) 
             {
                 injector.mapValue(applicationModelAPI, model);
             }
@@ -256,12 +257,6 @@ public class FrameworkContext extends Context
 
         trace("    FrameworkContext.configureView()");
         configureView();
-    }
-
-    protected function mapApplicationModel(model:IFrameworkModel):void
-    {
-        injector.mapValue(IFrameworkModel, model);
-        injector.mapValue(applicationModelAPI, model);
     }
 
     /**

@@ -8,12 +8,10 @@
         
         <f:Label id="messageLabel" 
                  wordWrap="true"
-                 maxWidth="{AssetMap.dp(300)}" minHeight="{AssetMap.dp(55)}"
                  styleName="{FrameworkStyleNames.LABEL_UI_DARK}">
             
             <f:layoutData>
-                <f:AnchorLayoutData top="{AssetMap.dp(15)}" bottom="{AssetMap.dp(15)}" 
-                                    left="{AssetMap.dp(15)}" right="{AssetMap.dp(15)}"/>
+                <f:VerticalLayoutData percentWidth="100"/>
             </f:layoutData>
             
         </f:Label>
@@ -22,7 +20,6 @@
     
     <fx:Script>
         <![CDATA[
-            import com.teotigraphix.ui.theme.AssetMap;
             import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
             
             //----------------------------------

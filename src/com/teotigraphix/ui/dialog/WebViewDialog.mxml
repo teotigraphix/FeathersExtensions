@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog:Dialog xmlns:fx="http://ns.adobe.com/mxml/2009" 
+               xmlns:dialog="com.teotigraphix.ui.dialog.*" 
+               xmlns:f="library://ns.feathersui.com/mxml"
+               autoSizeMode="stage"
+               content="{webView}" xmlns:component="com.teotigraphix.ui.component.*">
+    
+    <fx:Declarations>
+        
+        <component:HGroup id="newHeader" 
+                          percentWidth="100" padding="{AssetMap.dp(8)}">
+            
+            <f:Button label="BACK" 
+                      styleName="{FrameworkStyleNames.THEME_BUTTON_RAISED}"
+                      triggered="dispatchEventWith(FrameworkEventType.BACK)"/>
+            
+        </component:HGroup>
+        
+        <f:WebView id="webView">
+            <f:layoutData>
+                <f:VerticalLayoutData percentWidth="100" percentHeight="100"/>
+            </f:layoutData>
+        </f:WebView>
+        
+    </fx:Declarations>
+    
+    <fx:Script>
+        <![CDATA[
+            import com.teotigraphix.ui.component.event.FrameworkEventType;
+            import com.teotigraphix.ui.theme.AssetMap;
+            import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+            
+            import feathers.core.PopUpManager;
+            
+            //----------------------------------
+            // text
+            //----------------------------------
+            
+            private var _htmlText:String;
+            
+            public function get htmlText():String 
+            {
+                return _htmlText;
+            }
+            
+            public function set htmlText(value:String):void
+            {
+                if (_htmlText == value)
+                    return;
+                
+                _htmlText = value;
+                invalidate("htmlText");
+            }
+            
+            
+            public static function show(title:String, htmlText:String):WebViewDialog
+            {
+                const dialog:WebViewDialog = Dialog.show(title, WebViewDialog) as WebViewDialog; 
+                dialog.title = title;
+                dialog.htmlText = htmlText;
+                return dialog;
+            }
+            
+            public static function hide(dialog:Dialog):void
+            {
+                PopUpManager.removePopUp(dialog, true);
+            }
+            
+            override protected function initialize():void
+            {
+                super.initialize();
+                
+                header.removeFromParent(true);
+                addChildAt(newHeader, 0);
+                
+                footer.visible = footer.includeInLayout = false;
+                footer.removeChildren();
+            }
+
+            override protected function draw():void
+            {   
+                super.draw();
+                
+                if (_htmlText != null && isInvalid("htmlText"))
+                {
+                    webView.loadString(_htmlText);
+                }
+            }
+            
+        ]]>
+    </fx:Script>
+    
+</dialog:Dialog>

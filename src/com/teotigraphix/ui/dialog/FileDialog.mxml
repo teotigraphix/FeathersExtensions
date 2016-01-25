@@ -11,7 +11,7 @@
         <file:FileList id="fileList"
                        change="fileList_changeHandler()">
             <file:layoutData>
-                <f:AnchorLayoutData top="0" left="0" right="0" bottom="0"/>
+                <f:VerticalLayoutData percentWidth="100" percentHeight="100"/>
             </file:layoutData>
         </file:FileList>
         

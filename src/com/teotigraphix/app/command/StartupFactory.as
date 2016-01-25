@@ -68,14 +68,13 @@ public class StartupFactory
 }
 
 import com.teotigraphix.app.command.StartupResult;
-import com.teotigraphix.app.config.ApplicationDescriptor;
+import com.teotigraphix.app.configuration.ApplicationDescriptor;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IApplicationSettings;
-import com.teotigraphix.model.IFrameworkModel;
+import com.teotigraphix.model.ICoreModel;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.model.impl.AbstractApplicationSettings;
-import com.teotigraphix.model.impl.FrameworkModelImpl;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepCommand;
@@ -172,13 +171,13 @@ final class LoadLastProjectCommand extends StepCommand
 final class LoadProjectPreferences extends StepCommand
 {
     [Inject]
-    public var model:IFrameworkModel;
+    public var model:ICoreModel;
 
     override public function execute():*
     {
         logger.startup("LoadProjectPreferences", "execute()");
 
-        var project:Project = model.project;
+        var project:Project = model.projectModel.project;
         var resource:File = project.findResource(".preferences");
 
         if (!injector.hasMapping(IProjectPreferences))
@@ -195,9 +194,9 @@ final class LoadProjectPreferences extends StepCommand
             preferences = Files.deserialize(resource);
         }
 
-        FrameworkModelImpl(model)._preferences = preferences;
+        model.setPreferences(preferences);
 
-        finished();
+        finished(); 
         return null;
     }
 }
@@ -205,7 +204,7 @@ final class LoadProjectPreferences extends StepCommand
 final class SetupDebugCommand extends StepCommand
 {
     [Inject]
-    public var model:IFrameworkModel;
+    public var model:ICoreModel;
 
     override public function execute():*
     {

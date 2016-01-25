@@ -8,9 +8,13 @@
         <f:VerticalLayout/>
     </f:layout>
 
-    <f:Label id="titleLabel"
-             styleName="{FrameworkStyleNames.THEME_FORM_TITLE_DARK}"/>
-    
+    <component:HGroup id="header" percentWidth="100">
+        
+        <f:Label id="titleLabel"
+                 styleName="{FrameworkStyleNames.THEME_FORM_TITLE_DARK}"/>
+        
+    </component:HGroup>
+
     <component:HDivider/>
     
     <f:LayoutGroup id="contentGroup">
@@ -20,7 +24,7 @@
         </f:layoutData>
         
         <f:layout>
-            <f:AnchorLayout/>
+            <f:VerticalLayout padding="{AssetMap.dp(8)}"/>
         </f:layout>
         
         <!-- content -->
@@ -47,6 +51,7 @@
    <fx:Script>
        <![CDATA[
            import com.teotigraphix.ui.component.event.FrameworkEventType;
+           import com.teotigraphix.ui.theme.AssetMap;
            import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
            
            import feathers.core.PopUpManager;
@@ -158,6 +163,8 @@
            {
                _content = value;
                invalidate("content");
+               invalidate(INVALIDATION_FLAG_LAYOUT);
+               invalidate(INVALIDATION_FLAG_SIZE);
            }
            
            //----------------------------------
@@ -173,6 +180,8 @@
            {
                _title = value;
                invalidate("title");
+               invalidate(INVALIDATION_FLAG_LAYOUT);
+               invalidate(INVALIDATION_FLAG_SIZE);
            }
 
            //----------------------------------
@@ -202,13 +211,17 @@
           
            override protected function draw():void
            {
-               super.draw();
-               
-               if (autoSizeMode == AUTO_SIZE_MODE_STAGE)
+               if (isInvalid("title"))
                {
-                   VerticalLayoutData(contentGroup.layoutData).percentHeight = 100;
+                   titleLabel.text = _title;
+                   if (_title == null)
+                   {
+                       titleLabel.visible = titleLabel.includeInLayout = false;
+                       footer.visible = footer.includeInLayout = false;
+                       divider.visible = divider.includeInLayout = false;
+                   }
                }
-               
+
                if (isInvalid("content"))
                {
                    contentGroup.removeChildren();
@@ -219,6 +232,13 @@
                    }
                }
                
+               super.draw();
+               
+               if (autoSizeMode == AUTO_SIZE_MODE_STAGE)
+               {
+                   VerticalLayoutData(contentGroup.layoutData).percentHeight = 100;
+               }
+               
                if (isInvalid("yesLabel"))
                {
                    yesButton.label = _yesLabel;
@@ -227,17 +247,6 @@
                if (isInvalid("noLabel"))
                {
                    noButton.label = _noLabel;
-               }
-               
-               if (isInvalid("title"))
-               {
-                   titleLabel.text = _title;
-                   if (_title == null)
-                   {
-                       titleLabel.visible = titleLabel.includeInLayout = false;
-                       footer.visible = footer.includeInLayout = false;
-                       divider.visible = divider.includeInLayout = false;
-                   }
                }
                
                if (isInvalid("isYesEnabled"))
