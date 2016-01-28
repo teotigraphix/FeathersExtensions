@@ -21,9 +21,10 @@ package com.teotigraphix.controller.impl
 {
 
 import com.teotigraphix.app.event.ApplicationEventType;
-import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.controller.IProjectChangeListener;
+import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.frameworks.project.Project;
+import com.teotigraphix.model.AbstractModel;
 import com.teotigraphix.model.IDeviceModel;
 
 import feathers.data.ListCollection;
@@ -52,7 +53,8 @@ public class AbstractApplicationController extends AbstractController
 
         logger.startup("AbstractApplicationController", "onRegister()");
 
-        addContextListener(ApplicationEventType.PROJECT_CHANGED, context_projectChanged);
+        addContextListener(ApplicationEventType.CONTROLLER_STARTUP, context_controllerStartupHandler);
+        addContextListener(ApplicationEventType.PROJECT_CHANGED, context_projectChangedHandler);
         addContextListener(ApplicationEventType.APPLICATION_COMPLETE, context_appCompleteHandler);
     }
 
@@ -70,9 +72,25 @@ public class AbstractApplicationController extends AbstractController
         _listeners.removeItem(listener);
     }
 
-    protected function context_projectChanged(event:Event, project:Project):void
+    protected function context_controllerStartupHandler(event:Event, project:Project):void
     {
-        logger.startup("AbstractApplicationController", "context_projectChanged()");
+        var i:int;
+        var listener:Object;
+        const len:int = _listeners.length;
+        
+        for (i = 0; i < len; i++)
+        {
+            listener = _listeners.getItemAt(i);
+            if (listener is AbstractController)
+                AbstractController(listener).onStartup();
+            else if (listener is AbstractModel)
+                AbstractModel(listener).onStartup();
+        }
+    }
+    
+    protected function context_projectChangedHandler(event:Event, project:Project):void
+    {
+        logger.startup("AbstractApplicationController", "context_projectChangedHandler()");
 
         var i:int;
         var listener:Object;

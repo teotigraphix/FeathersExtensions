@@ -296,11 +296,17 @@
            
            protected function okButton_triggeredHandler():void
            {
+               isYesEnabled = false;
+               isNoEnabled = false;
+               
                dispatchEventWith(FrameworkEventType.OK);
            }
            
            protected function cancelButton_triggeredHandler():void
            {
+               isYesEnabled = false;
+               isNoEnabled = false;
+               
                dispatchEventWith(FrameworkEventType.CANCEL);
            }
            

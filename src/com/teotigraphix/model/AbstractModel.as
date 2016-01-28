@@ -60,5 +60,9 @@ public class AbstractModel extends Actor
     protected function onRegister():void
     {
     }
+    
+    public function onStartup():void
+    {
+    }
 }
 }

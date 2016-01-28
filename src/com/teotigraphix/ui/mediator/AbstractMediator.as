@@ -60,6 +60,8 @@ public class AbstractMediator extends Mediator
 
     private var _controls:Vector.<Class>;
     private var _commands:Vector.<Class>;
+    
+    protected var isInitializing:Boolean = true;
 
     public function AbstractMediator()
     {
@@ -72,6 +74,8 @@ public class AbstractMediator extends Mediator
      */
     override public function onRegister():void
     {
+        isInitializing = true;
+        
         super.onRegister();
 
         mapCommands();
@@ -83,6 +87,8 @@ public class AbstractMediator extends Mediator
         addContextListener(FrameworkEventType.SCREEN_REDRAW, context_screenRedrawHandler);
         
         onOrientationChange(deviceModel.isLandscape, deviceModel.isTablet);
+        
+        isInitializing = false;
     }
     
     private function context_screenRedrawHandler(event:Event, data:ScreenRedrawData):void

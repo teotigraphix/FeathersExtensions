@@ -48,22 +48,7 @@ public class AbstractCommand extends Command
                                       completeHandler:Function = null,
                                       cancelHandler:Function = null):IStepSequence
     {
-
-        injector.injectInto(data);
-
-        const sequence:IStepSequence = injector.instantiate(StepSequence);
-        sequence.data = data;
-
-        if (completeHandler != null)
-            sequence.addCompleteListener(completeHandler);
-
-        if (cancelHandler != null)
-        {
-            StepSequence(sequence).failOnFault = true;
-            //StepSequence(sequence).addCancelListener(completeHandler);
-        }
-
-        return sequence;
+        return StepSequence.sequence(injector, data, completeHandler, cancelHandler);
     }
 
 }

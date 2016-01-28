@@ -30,26 +30,26 @@ public class StepSequence extends CompositeCommand implements IStepSequence, ISt
 {
     [Inject]
     public var injector:IInjector;
-
+    
     private var _data:Object;
-
+    
     public function get data():Object
     {
         return _data;
     }
-
+    
     public function set data(value:Object):void
     {
         _data = value;
         result = _data;
     }
-
+    
     public function StepSequence(data:Object = null)
     {
         super(CompositeCommandKind.SEQUENCE);
         this.data = data;
     }
-
+    
     override public function addCommand(command:ICommand):ICompositeCommand
     {
         super.addCommand(command);
@@ -59,26 +59,51 @@ public class StepSequence extends CompositeCommand implements IStepSequence, ISt
         }
         return this;
     }
-
+    
     public function addStep(clazz:Class):IStepSequence
     {
         addCommand(injector.instantiate(clazz));
         return this;
     }
-
+    
     public function commit():*
     {
         for each (var command:ICommand in commands)
         {
             IStepCommand(command).commit();
         }
-
+        
         return result;
     }
-
+    
     protected function super_addCommand(command:ICommand):ICompositeCommand
     {
         return super.addCommand(command);
+    }
+    
+    //
+    
+    public static function sequence(injector:IInjector, 
+                                    data:Object,
+                                    completeHandler:Function = null,
+                                    cancelHandler:Function = null):IStepSequence
+    {
+        
+        injector.injectInto(data);
+        
+        const sequence:IStepSequence = injector.instantiate(StepSequence);
+        sequence.data = data;
+        
+        if (completeHandler != null)
+            sequence.addCompleteListener(completeHandler);
+        
+        if (cancelHandler != null)
+        {
+            StepSequence(sequence).failOnFault = true;
+            //StepSequence(sequence).addCancelListener(completeHandler);
+        }
+        
+        return sequence;
     }
 }
 }

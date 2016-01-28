@@ -60,6 +60,8 @@ public class AbstractStartupCommand extends AbstractCommand
     {
         var main:IStepSequence = sequence(startupFactory.createResult());
         addSteps(main);
+        main.addCommand(startupFactory.createControllerStarupCommand());
+        main.addCommand(startupFactory.createFirstRunSaveCommand());
         main.addCompleteListener(sequence_completeHandler);
         main.execute();
 
@@ -78,9 +80,17 @@ public class AbstractStartupCommand extends AbstractCommand
         main.addCommand(startupFactory.createDebugSetupCommand());
         main.addCommand(startupFactory.createStartCoreServicesCommand());
         main.addCommand(startupFactory.createLoadLastProjectCommand());
+        main.addCommand(startupFactory.createSetProjectCommand());
         main.addCommand(startupFactory.createLoadProjectPreferencesCommand());
     }
-
+    
+    private function sequence_completeHandler(event:OperationEvent):void
+    {
+        logger.startup("AbstractStartupCommand", "sequence_completeHandler()");
+        dispatchApplicationComplete();
+        logger.startup("AbstractStartupCommand", "EXIT");
+    }
+    
     protected function dispatchApplicationComplete():void
     {
         if (Starling.juggler != null)
@@ -101,13 +111,6 @@ public class AbstractStartupCommand extends AbstractCommand
         logger.startup("", "============================================================");
         logger.startup("AbstractStartupCommand", "[Next Frame]");
         dispatchWith(ApplicationEventType.APPLICATION_COMPLETE);
-    }
-
-    private function sequence_completeHandler(event:OperationEvent):void
-    {
-        logger.startup("AbstractStartupCommand", "sequence_completeHandler()");
-        dispatchApplicationComplete();
-        logger.startup("AbstractStartupCommand", "EXIT");
     }
 }
 }

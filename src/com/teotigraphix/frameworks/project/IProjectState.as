@@ -22,6 +22,14 @@ package com.teotigraphix.frameworks.project
 
 public interface IProjectState
 {
+    function get isFirstRun():Boolean;
+    
     function get project():Project;
+    
+    /**
+     * Sets the isFirstRun flag to true, truw when a project is just created and has not been
+     * saved to disk.
+     */
+    function setFirstRun():void;
 }
 }

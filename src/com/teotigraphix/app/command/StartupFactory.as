@@ -21,6 +21,7 @@ package com.teotigraphix.app.command
 
 import com.teotigraphix.service.async.IStepCommand;
 
+import org.as3commons.async.command.ICommand;
 import org.robotlegs.starling.core.IInjector;
 
 public class StartupFactory
@@ -59,16 +60,32 @@ public class StartupFactory
     {
         return injector.instantiate(LoadLastProjectCommand);
     }
-
+    
+    public function createSetProjectCommand():IStepCommand
+    {
+        return injector.instantiate(SetProjectCommand);
+    }
+    
     public function createLoadProjectPreferencesCommand():IStepCommand
     {
         return injector.instantiate(LoadProjectPreferences);
+    }
+    
+    public function createControllerStarupCommand():IStepCommand
+    {
+        return injector.instantiate(ControllerStarupCommand);
+    }
+    
+    public function createFirstRunSaveCommand():ICommand
+    {
+        return injector.instantiate(FirstRunSaveCommand);
     }
 }
 }
 
 import com.teotigraphix.app.command.StartupResult;
 import com.teotigraphix.app.configuration.ApplicationDescriptor;
+import com.teotigraphix.app.event.ApplicationEventType;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IApplicationSettings;
@@ -77,10 +94,11 @@ import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.model.impl.AbstractApplicationSettings;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IProjectService;
-import com.teotigraphix.service.async.IStepCommand;
+import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepCommand;
 import com.teotigraphix.service.impl.FileServiceImpl;
 import com.teotigraphix.service.impl.ProjectServiceImpl;
+import com.teotigraphix.service.impl.ProjectServiceResult;
 import com.teotigraphix.util.Files;
 
 import flash.filesystem.File;
@@ -145,27 +163,33 @@ final class LoadLastProjectCommand extends StepCommand
     [Inject]
     public var projectService:IProjectService;
 
-    [Inject]
-    public var projectModel:IProjectModel;
-
     override public function execute():*
     {
         logger.startup("LoadLastProjectCommand", "execute()");
 
-        var command:IStepCommand = projectService.loadLastProject();
+        var command:IStepSequence = projectService.loadLastProjectAsync();
         command.addCompleteListener(this_completeHandler);
         command.execute();
     }
 
     private function this_completeHandler(event:OperationEvent):void
     {
-        var project:Project = Project(event.result);
-        logger.startup("LoadLastProjectCommand", "setting current Project");
-        projectModel.project = project;
-        StartupResult(data).project = project;
+        StartupResult(data).project = ProjectServiceResult(event.result).project;
         finished();
     }
+}
 
+final class SetProjectCommand extends StepCommand
+{
+    [Inject]
+    public var projectModel:IProjectModel;
+    
+    override public function execute():*
+    {
+        logger.startup("SetProjectCommand", "setting current Project on IProjectModel");
+        projectModel.project = StartupResult(data).project;
+        finished();
+    }
 }
 
 final class LoadProjectPreferences extends StepCommand
@@ -222,3 +246,62 @@ final class SetupDebugCommand extends StepCommand
         return super.execute();
     }
 }
+
+final class ControllerStarupCommand extends StepCommand
+{
+    [Inject]
+    public var model:ICoreModel;
+    
+    override public function execute():*
+    {
+        logger.startup("CreateControllerStarupCommand", "excute");
+        eventDispatcher.dispatchEventWith(ApplicationEventType.CONTROLLER_STARTUP);
+        finished();
+        return super.execute();
+    }
+}
+
+
+final class FirstRunSaveCommand extends StepCommand
+{
+    [Inject]
+    public var projectService:IProjectService;
+    
+    override public function execute():*
+    {
+        logger.startup("FirstRunSaveCommand", "excute");
+        
+        var o:StartupResult = data as StartupResult;
+        
+        if (!o.project.exists)
+        {
+            logger.log("ApplicationStartupCommand.StartupStep", "Saving UnititledProject to disk");
+            var sequence:IStepSequence = projectService.saveAsync();
+            sequence.addCompleteListener(this_completeHandler);
+            sequence.execute();
+        }
+        else
+        {
+            finished();
+        }
+        
+        return super.execute();
+    }
+    
+    private function this_completeHandler(event:OperationEvent):void
+    {
+        complete();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

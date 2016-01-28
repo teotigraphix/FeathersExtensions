@@ -46,6 +46,13 @@ public final class ApplicationEventType
     //public static const APPLICATION_EXIT:String = "applicationExit";
 
     /**
+     * Dispatched last int he startup routine, project will be loaded, rack state loaded from disk,
+     * the project state will be completly restored. So if any controllers/models need to create
+     * machines, create data providers, this is the time to do it. 
+     */
+    public static const CONTROLLER_STARTUP:String = "ApplicationEventType/controllerStartup";
+    
+    /**
      * Dispatched after the MVC model and Project state have been initialized and loaded.
      *
      * <p>When this event is fired, all state is ready and the main application will

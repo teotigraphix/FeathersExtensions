@@ -27,7 +27,6 @@ import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IProjectService;
-import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepSequence;
 import com.teotigraphix.util.IDUtils;
@@ -70,42 +69,49 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
     // Public IProjectService :: Methods
     //--------------------------------------------------------------------------
 
-    public function loadLastProject():IStepCommand
+    public function loadLastProjectAsync():IStepSequence
     {
-        return injector.instantiate(LoadLastProjectCommand);
+        var result:ProjectServiceResult = new ProjectServiceResult();
+        var main:IStepSequence = StepSequence.sequence(injector, result);
+        main.addStep(LoadLastProjectCommand);
+        return main;
     }
 
-    public function loadProjectAsync(file:File):IStepCommand
+    public function loadProjectAsync(file:File):IStepSequence
     {
-        var command:LoadProjectCommand = new LoadProjectCommand(file);
-        injector.injectInto(command);
-        return command;
+        var result:ProjectServiceResult = new ProjectServiceResult();
+        result.file = file;
+        var main:IStepSequence = StepSequence.sequence(injector, result);
+        main.addStep(LoadProjectCommand);
+        return main;
     }
 
-    public function createProjectAsync(name:String, path:String):IStepCommand
+    public function createProjectAsync(name:String, path:String):IStepSequence
     {
-        var command:CreateProjectCommand = new CreateProjectCommand(name, path);
-        injector.injectInto(command);
-        return command;
+        var result:ProjectServiceResult = new ProjectServiceResult();
+        result.name = name;
+        result.path = path;
+        var main:IStepSequence = StepSequence.sequence(injector, result);
+        main.addStep(CreateProjectCommand);
+        return main;
     }
 
     public function saveAsync():IStepSequence
     {
-        var sequence:IStepSequence = new StepSequence();
+        var result:ProjectServiceResult = new ProjectServiceResult();
+        var main:IStepSequence = StepSequence.sequence(injector, result);
         // saves internal state before the Project is written to disk
-        var step1:IStepSequence = projectModel.project.saveAsync();
+        main.addCommand(projectModel.project.saveAsync());
         // save the Project to disk
-        var step2:IStepCommand = injector.instantiate(SaveProjectCommand);
-        sequence.addCommand(step1);
-        sequence.addCommand(step2);
-        return sequence;
+        main.addStep(SaveProjectCommand);
+        return main;
     }
 
     //--------------------------------------------------------------------------
     // sdk_internal :: Methods
     //--------------------------------------------------------------------------
 
-    sdk_internal function save():void
+    public function save():void
     {
         var project:Project = projectModel.project;
         project.workingDirectory.createDirectory();
@@ -114,11 +120,13 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
         fileService.serialize(project.workingFile, project);
     }
 
-    sdk_internal function createProject(name:String, path:String):Project
+    public function createProject(name:String, path:String):Project
     {
         var project:Project = injector.instantiate(Project);
         var state:IProjectState = injector.getInstance(IProjectState);
-
+        
+        state.setFirstRun();
+        
         project.initialize(state,
                            IDUtils.createUID(),
                            path,
@@ -134,7 +142,6 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 }
 }
 
-import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.IProjectModel;
@@ -144,13 +151,14 @@ import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepSequence;
 import com.teotigraphix.service.async.StepCommand;
 import com.teotigraphix.service.impl.ProjectServiceImpl;
+import com.teotigraphix.service.impl.ProjectServiceResult;
 
 import flash.filesystem.File;
 
 import org.as3commons.async.command.IAsyncCommand;
 import org.as3commons.async.operation.event.OperationEvent;
 
-class CreateProjectCommand extends StepCommand implements IAsyncCommand
+class CreateProjectCommand extends StepCommand
 {
     [Inject]
     public var projectModel:IProjectModel;
@@ -158,36 +166,31 @@ class CreateProjectCommand extends StepCommand implements IAsyncCommand
     [Inject]
     public var projectService:IProjectService;
 
-    private var _name:String;
-    private var _path:String;
-
-    public function CreateProjectCommand(name:String, path:String)
-    {
-        _name = name;
-        _path = path;
-    }
-
     override public function execute():*
     {
+        var o:ProjectServiceResult = data as ProjectServiceResult;
+        
         // previous UI interaction will have already asked to save the old project
         // unload last project
-        projectModel.project = ProjectServiceImpl(projectService).sdk_internal::createProject(_name, _path);
+        o.project = ProjectServiceImpl(projectService).createProject(o.name, o.name);
 
         var command:IStepSequence = projectService.saveAsync();
-        command.addCompleteListener(onSaveCompleteHandler);
+        command.addCompleteListener(this_completeHandler);
         command.execute();
 
         return null;
     }
 
-    private function onSaveCompleteHandler(event:OperationEvent):void
+    private function this_completeHandler(event:OperationEvent):void
     {
-        complete(projectModel.project);
+        projectModel.project = (data as ProjectServiceResult).project;
+        finished();
     }
 
 }
 
-class LoadProjectCommand extends StepCommand implements IAsyncCommand
+// TODO LoadProjectCommand needs impl of file not found
+class LoadProjectCommand extends StepCommand
 {
     private static const TAG:String = "LoadProjectCommand";
 
@@ -195,54 +198,36 @@ class LoadProjectCommand extends StepCommand implements IAsyncCommand
     public var projectModel:IProjectModel;
 
     [Inject]
-    public var preferenceService:IApplicationSettings;
-
-    [Inject]
     public var fileService:IFileService;
 
-    private var _file:File;
-
-    public function LoadProjectCommand(file:File)
+    public function LoadProjectCommand()
     {
-        _file = file;
     }
-
-    override public function commit():*
-    {
-        logger.log(TAG, "commit()");
-
-        if (_file.exists)
-        {
-            logger.log(TAG, "### Loading Project: " + _file.nativePath);
-            var project:Project = fileService.wakeup(_file);
-            projectModel.project = project;
-        }
-        else
-        {
-            logger.log(TAG, "### Using default Project: " + _file.nativePath);
-        }
-
-        return project;
-    }
-
+    
     override public function execute():*
     {
         logger.log(TAG, "execute()");
-        var project:Project = commit();
-        if (project != null)
+        
+        var o:ProjectServiceResult = data as ProjectServiceResult;
+        var project:Project;
+        
+        if (o.file.exists)
         {
-            complete(project);
+            logger.log(TAG, "### Wakeup Project: " + o.file.nativePath);
+            project = fileService.wakeup(o.file);
         }
         else
         {
-            dispatchErrorEvent(new Error("File does not exist"));
+            logger.log(TAG, "### Using default Project: " + o.file.nativePath);
         }
-
+        
+        o.project = project;
+        
         return null;
     }
 }
 
-class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
+class LoadLastProjectCommand extends StepCommand
 {
     private static const TAG:String = "LoadLastProjectCommand";
 
@@ -277,10 +262,12 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
         else
         {
             logger.startup(TAG, "### Using default Project: ");
-            project = ProjectServiceImpl(projectService).sdk_internal::createProject("UntitledProject", "");
+            project = ProjectServiceImpl(projectService).createProject("UntitledProject", "");
         }
 
-        complete(project);
+        ProjectServiceResult(data).project = project;
+        
+        finished();
 
         return null;
     }
@@ -288,9 +275,6 @@ class LoadLastProjectCommand extends StepCommand implements IAsyncCommand
 
 class SaveProjectCommand extends StepCommand implements IAsyncCommand
 {
-    [Inject]
-    public var fileService:IFileService;
-
     [Inject]
     public var projectModel:IProjectModel;
 
@@ -304,7 +288,7 @@ class SaveProjectCommand extends StepCommand implements IAsyncCommand
     override public function execute():*
     {
         logger.log("SaveProjectCommand", "Save project " + projectModel.projectFile.nativePath);
-        ProjectServiceImpl(projectService).sdk_internal::save();
+        ProjectServiceImpl(projectService).save();
         eventDispatcher.dispatchEventWith(ProjectModelEventType.PROJECT_SAVE_COMPLETE, false, projectModel.project);
         complete(null, 200);
         return null;

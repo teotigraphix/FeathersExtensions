@@ -16,11 +16,13 @@
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
-package com.teotigraphix.ui.support
+package com.teotigraphix.ui.core
 {
 
 import com.teotigraphix.controller.impl.AbstractController;
 import com.teotigraphix.ui.IUIController;
+import com.teotigraphix.ui.IUIFactory;
+import com.teotigraphix.ui.IUIState;
 import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.dialog.AlertDialog;
@@ -51,8 +53,28 @@ public class AbstractUIController extends AbstractController implements IUIContr
     [Inject]
     public var root:DisplayObjectContainer;
 
+    [Inject]
+    public var _factory:IUIFactory;
+    
+    [Inject]
+    public var _state:IUIState;
+    
     private var _contentManager:CenterPopUpContentManager;
-
+    
+    //--------------------------------------------------------------------------
+    // SUBCLASS IMPLEMENTATION
+    //--------------------------------------------------------------------------
+    
+//    public function get factory():UIFactory 
+//    {
+//        return _factory as UIFactory;
+//    }
+//    
+//    public function get state():UIState 
+//    {
+//        return _state as UIState;
+//    }
+    
     public function AbstractUIController()
     {
     }
@@ -169,7 +191,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
         var dialog:MessageDialog = new MessageDialog();
         dialog.message = message;
         dialog.validate();
-        
+
         PopUpManager.addPopUp(dialog, false, false);
         
         var height:Number = dialog.height;
@@ -182,7 +204,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
         dialog.x = (swidth - width) / 2;
         
         var t1:Tween = new Tween(dialog, 0.3);
-        t1.moveTo(dialog.x, sheight - height);
+        t1.moveTo(dialog.x, sheight - height - 10);
         
         var t2:Tween = new Tween(dialog, 0.3);
         t2.delay = duration / 1000;

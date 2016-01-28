@@ -27,7 +27,6 @@ import com.teotigraphix.service.async.StepSequence;
 import com.teotigraphix.util.ISerialize;
 
 import org.as3commons.lang.Assert;
-
 import org.robotlegs.starling.core.IInjector;
 
 use namespace sdk_internal;
@@ -37,63 +36,80 @@ public class AbstractProjectState implements IProjectState, ISerialize
     //--------------------------------------------------------------------------
     // Public Inject :: Variables
     //--------------------------------------------------------------------------
-
+    
     [Transient]
     [Inject]
     public var injector:IInjector;
+    
+    [Transient]
 
+    private var _isFirstRun:Boolean = false;
+    
+    /**
+     * Whether the project has been saved and initialized with it's state.
+     */
+    public function get isFirstRun():Boolean 
+    {
+        return _isFirstRun;
+    }
+    
     //--------------------------------------------------------------------------
     // Serialized API
     //--------------------------------------------------------------------------
-
+    
     private var _project:Project;
-
+    
     //--------------------------------------------------------------------------
     // Public :: Properties
     //--------------------------------------------------------------------------
-
+    
     //----------------------------------
     // project
     //----------------------------------
-
+    
     public function get project():Project
     {
         return _project;
     }
-
+    
     public function set project(value:Project):void
     {
         _project = value;
     }
-
+    
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------
-
+    
     public function AbstractProjectState()
     {
     }
-
+    
     //--------------------------------------------------------------------------
     // Public ISerialize :: Methods
     //--------------------------------------------------------------------------
-
+    
     public function create():void
     {
     }
-
+    
     public function wakeup():void
     {
     }
-
+    
     public function sleep(preSleep:Boolean = false):void
     {
     }
-
+    
     //--------------------------------------------------------------------------
     // Public :: Methods
     //--------------------------------------------------------------------------
-
+    
+    public function setFirstRun():void
+    {
+        _isFirstRun = true;
+    }
+    
     /**
      * Saves the state async, to call this command subclasses must impl createSaveStep().
      *
@@ -115,7 +131,7 @@ public class AbstractProjectState implements IProjectState, ISerialize
         sequence.addCommand(step2);
         return sequence;
     }
-
+    
     /**
      * Optional, to save data before the save command runs.
      *
@@ -125,7 +141,7 @@ public class AbstractProjectState implements IProjectState, ISerialize
     {
         return null;
     }
-
+    
     /**
      * Required, the command that saves any data into the sate.
      *
@@ -135,7 +151,7 @@ public class AbstractProjectState implements IProjectState, ISerialize
     {
         return null;
     }
-
+    
     sdk_internal function setProject(value:Project):void
     {
         _project = value;

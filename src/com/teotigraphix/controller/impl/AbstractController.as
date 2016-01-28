@@ -31,21 +31,21 @@ public class AbstractController extends Actor
 {
     [Inject]
     public var logger:ILogger;
-
+    
     [Inject]
     public var injector:IInjector;
-
+    
     [Inject]
     override public function set eventDispatcher(value:EventDispatcher):void
     {
         super.eventDispatcher = value;
         onRegister();
     }
-
+    
     public function AbstractController()
     {
     }
-
+    
     /**
      * Removes a listener from the eventMap.
      *
@@ -56,7 +56,7 @@ public class AbstractController extends Actor
     {
         eventMap.mapListener(eventDispatcher, type, listener);
     }
-
+    
     /**
      * Adds a listener to the eventMap.
      *
@@ -67,7 +67,7 @@ public class AbstractController extends Actor
     {
         eventMap.unmapListener(eventDispatcher, type, listener);
     }
-
+    
     /**
      * Register context events with the #eventMap.
      *
@@ -76,6 +76,14 @@ public class AbstractController extends Actor
     protected function onRegister():void
     {
     }
-
+    
+    /**
+     * Called at the end of the startup sequence, create racks, model data providers
+     * or restore from fully loaded project state.
+     */
+    public function onStartup():void
+    {
+        
+    }
 }
 }

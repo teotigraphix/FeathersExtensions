@@ -24,12 +24,11 @@ import com.teotigraphix.app.configuration.Version;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.async.IStepSequence;
+import com.teotigraphix.util.IDUtils;
 import com.teotigraphix.util.ISerialize;
 
 import flash.errors.IOError;
 import flash.filesystem.File;
-
-import mx.utils.UIDUtil;
 
 import org.as3commons.lang.Assert;
 import org.as3commons.lang.StringUtils;
@@ -160,7 +159,20 @@ public final class Project implements ISerialize
     {
         _state = value;
     }
+    
+    //--------------------------------------------------------------------------
+    // API :: Properties
+    //--------------------------------------------------------------------------
+    
+    //----------------------------------
+    // isFirstRun
+    //----------------------------------
 
+    public function get isFirstRun():Boolean
+    {
+        return _state.isFirstRun;
+    }
+    
     //----------------------------------
     // workingFile
     //----------------------------------
@@ -298,7 +310,7 @@ public final class Project implements ISerialize
         }
         if (name == null)
         {
-            name = UIDUtil.createUID().substr(0, length);
+            name = IDUtils.createUID().substr(0, length);
             if (length != -1)
             {
                 name = name.substr(0, length)

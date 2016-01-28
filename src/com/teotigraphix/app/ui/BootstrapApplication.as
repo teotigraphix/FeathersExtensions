@@ -20,14 +20,17 @@
 package com.teotigraphix.app.ui
 {
 
+import flash.desktop.NativeApplication;
+import flash.events.Event;
+import flash.ui.Multitouch;
+import flash.ui.MultitouchInputMode;
+
 import feathers.core.DrawersApplication;
 import feathers.events.FeathersEventType;
 
-import flash.desktop.NativeApplication;
-import flash.events.Event;
-
 import org.robotlegs.starling.mvcs.Context;
 
+import starling.core.Starling;
 import starling.events.Event;
 
 /*

@@ -41,6 +41,10 @@ public class ProjectModelImpl extends AbstractModel implements IProjectModel
 
     [Inject]
     public var preferenceService:IApplicationSettings;
+    
+    //--------------------------------------------------------------------------
+    // Private :: Variables
+    //--------------------------------------------------------------------------
 
     private var _project:Project;
 
@@ -64,6 +68,7 @@ public class ProjectModelImpl extends AbstractModel implements IProjectModel
         {
             oldProject.close();
         }
+        
         setProject(value);
 
         projectLoadCompleteHandler();

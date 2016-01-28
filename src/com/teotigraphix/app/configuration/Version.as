@@ -25,7 +25,16 @@ public class Version
     public static const CURRENT:Version = new Version("0.0.0");
 
     private var _vid:String;
-
+    private var _tag:String;
+    
+    //--------------------------------------------------------------------------
+    // Properties
+    //--------------------------------------------------------------------------
+    
+    //----------------------------------
+    // vid
+    //----------------------------------
+    
     public function get vid():String
     {
         return _vid;
@@ -35,12 +44,35 @@ public class Version
     {
         _vid = value;
     }
+    
+    //----------------------------------
+    // tag
+    //----------------------------------
+    
+    public function get tag():String
+    {
+        return _tag;
+    }
+    
+    public function set tag(value:String):void
+    {
+        _tag = value;
+    }
+    
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
 
-    public function Version(version:String = null)
+    public function Version(version:String = null, tag:String = null)
     {
         _vid = version;
+        _tag = tag;
     }
 
+    //--------------------------------------------------------------------------
+    // Public :: Methods
+    //--------------------------------------------------------------------------
+    
     public function compareTo(that:Version):int
     {
         if (that == null)
@@ -59,6 +91,10 @@ public class Version
             if (thisPart > thatPart)
                 return 1;
         }
+        
+        // TODO impl Version compareTo() 
+//        if (_tag != that.tag)
+//            return 1;
 
         return 0;
     }
@@ -69,13 +105,13 @@ public class Version
             return true;
         if (that == null)
             return false;
-        //if (this.getClass() != that.getClass())
-        //    return false;
         return compareTo(that) == 0;
     }
 
     public function toString():String
     {
+        if (_tag != null)
+            return _vid + "-" + _tag;
         return _vid;
     }
 }
