@@ -23,6 +23,8 @@ package com.teotigraphix.app.configuration
 import com.teotigraphix.app.command.StartupFactory;
 import com.teotigraphix.app.ui.IBootstrapApplication;
 import com.teotigraphix.controller.ICommandLauncher;
+import com.teotigraphix.frameworks.project.IProjectPreferencesProvider;
+import com.teotigraphix.frameworks.project.ProjectPreferencesProvider;
 import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.ICoreModel;
 import com.teotigraphix.model.IDeviceModel;
@@ -216,6 +218,7 @@ public class FrameworkContext extends Context
         injector.mapSingletonOf(IFileService, _fileServiceClass);
         injector.mapSingletonOf(IApplicationSettings, applicationSettingsClass);
         injector.mapSingletonOf(IDeviceModel, $deviceModelClass);
+        injector.mapSingletonOf(IProjectPreferencesProvider, ProjectPreferencesProvider);
     }
 
     protected function configureCore():void

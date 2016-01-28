@@ -19,12 +19,17 @@
 package com.teotigraphix.frameworks.project
 {
 
+import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.util.Files;
 
 import flash.filesystem.File;
 
 public class AbstractProjectPreferences implements IProjectPreferences
 {
+    [Transient]
+    [Inject]
+    public var projectModel:IProjectModel;
+    
     public function AbstractProjectPreferences()
     {
     }
@@ -33,18 +38,13 @@ public class AbstractProjectPreferences implements IProjectPreferences
     // Private :: Methods
     //--------------------------------------------------------------------------
 
-    /**
-     * Can be used for a quick save.
-     *
-     * @param project
-     */
-    public function save(project:Project):void
+    public function onPropertyChange():void
     {
-        var resource:File = project.getResource(".preferences");
+        var resource:File = projectModel.project.getResource(".preferences");
         Files.serialize(this, resource);
     }
-
-    protected static function getFileOrDefault(path:String, defaultLocation:File):File
+    
+    public function getFileOrDefault(path:String, defaultLocation:File):File
     {
         if (path != null)
         {

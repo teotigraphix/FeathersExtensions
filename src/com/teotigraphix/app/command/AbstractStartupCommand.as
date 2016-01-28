@@ -64,10 +64,6 @@ public class AbstractStartupCommand extends AbstractCommand
         main.addCommand(startupFactory.createFirstRunSaveCommand());
         main.addCompleteListener(sequence_completeHandler);
         main.execute();
-
-        // TODO, This STARTUP_COMPLETE seems to do nothing right now, check to see
-        logger.startup("AbstractStartupCommand", "dispatchWith(STARTUP_COMPLETE)");
-        dispatchWith(ContextEventType.STARTUP_COMPLETE);
     }
 
     //--------------------------------------------------------------------------
@@ -76,12 +72,14 @@ public class AbstractStartupCommand extends AbstractCommand
 
     protected function addSteps(main:IStepSequence):void
     {
+        main.addCommand(startupFactory.createPauseForUICreationCompleteCommand());
         main.addCommand(startupFactory.createPrintAppVersionCommand());
         main.addCommand(startupFactory.createDebugSetupCommand());
         main.addCommand(startupFactory.createStartCoreServicesCommand());
         main.addCommand(startupFactory.createLoadLastProjectCommand());
         main.addCommand(startupFactory.createSetProjectCommand());
         main.addCommand(startupFactory.createLoadProjectPreferencesCommand());
+        main.addCommand(startupFactory.createEmptyProjectTempDirectoryCommand());
     }
     
     private function sequence_completeHandler(event:OperationEvent):void

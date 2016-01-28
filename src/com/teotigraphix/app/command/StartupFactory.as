@@ -40,7 +40,12 @@ public class StartupFactory
     {
         return new StartupResult();
     }
-
+    
+    public function createPauseForUICreationCompleteCommand():ICommand
+    {
+        return injector.instantiate(PauseForUICreationCompleteCommand);
+    }
+    
     public function createPrintAppVersionCommand():IStepCommand
     {
         return injector.instantiate(PrintAppVersionStep);
@@ -80,6 +85,12 @@ public class StartupFactory
     {
         return injector.instantiate(FirstRunSaveCommand);
     }
+    
+    public function createEmptyProjectTempDirectoryCommand():ICommand
+    {
+        return injector.instantiate(EmptyProjectTempDirectoryCommand);
+    }
+
 }
 }
 
@@ -87,6 +98,7 @@ import com.teotigraphix.app.command.StartupResult;
 import com.teotigraphix.app.configuration.ApplicationDescriptor;
 import com.teotigraphix.app.event.ApplicationEventType;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
+import com.teotigraphix.frameworks.project.IProjectPreferencesProvider;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.ICoreModel;
@@ -101,11 +113,22 @@ import com.teotigraphix.service.impl.ProjectServiceImpl;
 import com.teotigraphix.service.impl.ProjectServiceResult;
 import com.teotigraphix.util.Files;
 
+import flash.events.Event;
 import flash.filesystem.File;
 
 import org.as3commons.async.operation.event.OperationEvent;
 
 import starling.core.Starling;
+
+class PauseForUICreationCompleteCommand extends StepCommand
+{
+    override public function execute():*
+    {
+        logger.startup("PauseForUICreationCompleteCommand", "Pausing for creationComplete");
+        complete();
+        return null;
+    }
+}
 
 class PrintAppVersionStep extends StepCommand
 {
@@ -165,7 +188,7 @@ final class LoadLastProjectCommand extends StepCommand
 
     override public function execute():*
     {
-        logger.startup("LoadLastProjectCommand", "execute()");
+        logger.startup("$Startup.LoadLastProjectCommand", "execute()");
 
         var command:IStepSequence = projectService.loadLastProjectAsync();
         command.addCompleteListener(this_completeHandler);
@@ -197,6 +220,9 @@ final class LoadProjectPreferences extends StepCommand
     [Inject]
     public var model:ICoreModel;
 
+    [Inject]
+    public var provider:IProjectPreferencesProvider;
+    
     override public function execute():*
     {
         logger.startup("LoadProjectPreferences", "execute()");
@@ -218,7 +244,7 @@ final class LoadProjectPreferences extends StepCommand
             preferences = Files.deserialize(resource);
         }
 
-        model.setPreferences(preferences);
+        provider.provided = preferences;
 
         finished(); 
         return null;
@@ -295,7 +321,44 @@ final class FirstRunSaveCommand extends StepCommand
 }
 
 
-
+final class EmptyProjectTempDirectoryCommand extends StepCommand
+{
+    [Inject]
+    public var projectService:IProjectService;
+    
+    private var tempDirectory:File;
+    
+    override public function execute():*
+    {
+        logger.startup("EmptyProjectTempDirectoryCommand", "excute");
+        
+        var o:StartupResult = data as StartupResult;
+        
+        if (o.project.exists)
+        {
+            tempDirectory = o.project.getTempDirectory();
+            if (tempDirectory.exists)
+            {
+                logger.startup("EmptyProjectTempDirectoryCommand", "Deleting contents of .temp");
+                tempDirectory.addEventListener(Event.COMPLETE, this_completeHandler);
+                tempDirectory.deleteDirectoryAsync(true);
+            }
+        }
+        else
+        {
+            finished();
+        }
+        
+        return super.execute();
+    }
+    
+    private function this_completeHandler(event:Event):void
+    {
+        logger.startup("EmptyProjectTempDirectoryCommand", ".temp delete complete");
+        tempDirectory.createDirectory();
+        complete();
+    }
+}
 
 
 
