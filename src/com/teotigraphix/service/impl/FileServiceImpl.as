@@ -30,7 +30,7 @@ import flash.filesystem.File;
 
 public class FileServiceImpl extends AbstractService implements IFileService
 {
-    private static const TAG:String = "FileManager";
+    private static const TAG:String = "FileServiceImpl";
 
     [Inject]
     public var descriptor:ApplicationDescriptor;

@@ -28,8 +28,10 @@ import com.teotigraphix.frameworks.project.ProjectPreferencesProvider;
 import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.ICoreModel;
 import com.teotigraphix.model.IDeviceModel;
+import com.teotigraphix.model.ISaveStrategy;
 import com.teotigraphix.model.impl.AbstractApplicationSettings;
 import com.teotigraphix.model.impl.DeviceModelImpl;
+import com.teotigraphix.model.strategy.SaveStrategy;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.impl.FileServiceImpl;
@@ -223,6 +225,8 @@ public class FrameworkContext extends Context
 
     protected function configureCore():void
     {
+        injector.mapSingletonOf(ISaveStrategy, SaveStrategy);
+        
         injector.mapSingletonOf(StartupFactory, startupFactoryClass);
         injector.mapSingletonOf(IScreenLauncher, screenLauncherClass);
         injector.mapSingletonOf(ICommandLauncher, commandLauncherClass);

@@ -24,7 +24,6 @@ import com.teotigraphix.app.configuration.ApplicationDescriptor;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.frameworks.project.IProjectState;
 import com.teotigraphix.frameworks.project.Project;
-import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepSequence;
@@ -47,9 +46,6 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
     public var fileService:IFileService;
 
     [Inject]
-    public var projectModel:IProjectModel;
-
-    [Inject]
     public var descriptor:ApplicationDescriptor;
 
     //--------------------------------------------------------------------------
@@ -66,9 +62,12 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
     }
 
     //--------------------------------------------------------------------------
-    // Public IProjectService :: Methods
+    // API :: Methods
     //--------------------------------------------------------------------------
 
+    /**
+     * @inheritDoc 
+     */
     public function loadLastProjectAsync():IStepSequence
     {
         var result:ProjectServiceResult = new ProjectServiceResult();
@@ -77,6 +76,9 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
         return main;
     }
 
+    /**
+     * @inheritDoc 
+     */
     public function loadProjectAsync(file:File):IStepSequence
     {
         var result:ProjectServiceResult = new ProjectServiceResult();
@@ -86,6 +88,9 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
         return main;
     }
 
+    /**
+     * @inheritDoc 
+     */
     public function createProjectAsync(name:String, path:String):IStepSequence
     {
         var result:ProjectServiceResult = new ProjectServiceResult();
@@ -96,28 +101,34 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
         return main;
     }
 
-    public function saveAsync():IStepSequence
+    /**
+     * @inheritDoc 
+     */
+    public function saveAsync(project:Project):IStepSequence
     {
         var result:ProjectServiceResult = new ProjectServiceResult();
+        result.project = project;
+        
         var main:IStepSequence = StepSequence.sequence(injector, result);
         // saves internal state before the Project is written to disk
-        main.addCommand(projectModel.project.saveAsync());
+        main.addCommand(project.saveAsync());
         // save the Project to disk
         main.addStep(SaveProjectCommand);
         return main;
     }
 
     //--------------------------------------------------------------------------
-    // sdk_internal :: Methods
+    // internal :: Methods
     //--------------------------------------------------------------------------
 
-    public function save():void
+    public function save(project:Project):Boolean
     {
-        var project:Project = projectModel.project;
         project.workingDirectory.createDirectory();
         project.workingTempDirectory.createDirectory();
 
         fileService.serialize(project.workingFile, project);
+        
+        return project.workingFile.exists;
     }
 
     public function createProject(name:String, path:String):Project
@@ -142,10 +153,10 @@ public class ProjectServiceImpl extends AbstractService implements IProjectServi
 }
 }
 
+import com.teotigraphix.frameworks.errors.ProjectError;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.IProjectModel;
-import com.teotigraphix.model.event.ProjectModelEventType;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.IProjectService;
 import com.teotigraphix.service.async.IStepSequence;
@@ -158,7 +169,7 @@ import flash.filesystem.File;
 import org.as3commons.async.command.IAsyncCommand;
 import org.as3commons.async.operation.event.OperationEvent;
 
-class CreateProjectCommand extends StepCommand
+final class CreateProjectCommand extends StepCommand
 {
     [Inject]
     public var projectModel:IProjectModel;
@@ -168,14 +179,16 @@ class CreateProjectCommand extends StepCommand
 
     override public function execute():*
     {
+        var service:ProjectServiceImpl = projectService as ProjectServiceImpl;
         var o:ProjectServiceResult = data as ProjectServiceResult;
         
         // previous UI interaction will have already asked to save the old project
         // unload last project
-        o.project = ProjectServiceImpl(projectService).createProject(o.name, o.name);
+        o.project = service.createProject(o.name, o.path);
 
-        var command:IStepSequence = projectService.saveAsync();
+        var command:IStepSequence = projectService.saveAsync(o.project);
         command.addCompleteListener(this_completeHandler);
+        command.addErrorListener(this_errorHandler);
         command.execute();
 
         return null;
@@ -183,14 +196,23 @@ class CreateProjectCommand extends StepCommand
 
     private function this_completeHandler(event:OperationEvent):void
     {
-        projectModel.project = (data as ProjectServiceResult).project;
+        var o:ProjectServiceResult = data as ProjectServiceResult;
+        projectModel.project = o.project;
         finished();
     }
 
+    private function this_errorHandler(event:OperationEvent):void
+    {
+        var o:ProjectServiceResult = data as ProjectServiceResult;
+        dispatchErrorEvent(ProjectError.createFileDoesNotExistError(o.file));
+    }
 }
 
-// TODO LoadProjectCommand needs impl of file not found
-class LoadProjectCommand extends StepCommand
+//----------------------------------
+// LoadProjectCommand
+//----------------------------------
+
+final class LoadProjectCommand extends StepCommand
 {
     private static const TAG:String = "LoadProjectCommand";
 
@@ -215,19 +237,25 @@ class LoadProjectCommand extends StepCommand
         {
             logger.log(TAG, "### Wakeup Project: " + o.file.nativePath);
             project = fileService.wakeup(o.file);
+            o.project = project;
+            projectModel.project = o.project;
+            complete();
         }
         else
         {
-            logger.log(TAG, "### Using default Project: " + o.file.nativePath);
+            logger.err(TAG, "Project file not found [{0}]" + o.file.nativePath);
+            dispatchErrorEvent(ProjectError.createFileDoesNotExistError(o.file));
         }
-        
-        o.project = project;
-        
+
         return null;
     }
 }
 
-class LoadLastProjectCommand extends StepCommand
+//----------------------------------
+// LoadLastProjectCommand
+//----------------------------------
+
+final class LoadLastProjectCommand extends StepCommand
 {
     private static const TAG:String = "LoadLastProjectCommand";
 
@@ -247,6 +275,7 @@ class LoadLastProjectCommand extends StepCommand
     override public function execute():*
     {
         logger.startup(TAG, "execute()");
+        var service:ProjectServiceImpl = projectService as ProjectServiceImpl;
         var project:Project = null;
 
         var path:String = preferenceService.appLastProjectPath;
@@ -262,7 +291,7 @@ class LoadLastProjectCommand extends StepCommand
         else
         {
             logger.startup(TAG, "### Using default Project: ");
-            project = ProjectServiceImpl(projectService).createProject("UntitledProject", "");
+            project = service.createProject("UntitledProject", "");
         }
 
         ProjectServiceResult(data).project = project;
@@ -273,7 +302,11 @@ class LoadLastProjectCommand extends StepCommand
     }
 }
 
-class SaveProjectCommand extends StepCommand implements IAsyncCommand
+//----------------------------------
+// SaveProjectCommand
+//----------------------------------
+
+final class SaveProjectCommand extends StepCommand implements IAsyncCommand
 {
     [Inject]
     public var projectModel:IProjectModel;
@@ -287,10 +320,18 @@ class SaveProjectCommand extends StepCommand implements IAsyncCommand
 
     override public function execute():*
     {
-        logger.log("SaveProjectCommand", "Save project " + projectModel.projectFile.nativePath);
-        ProjectServiceImpl(projectService).save();
-        eventDispatcher.dispatchEventWith(ProjectModelEventType.PROJECT_SAVE_COMPLETE, false, projectModel.project);
-        complete(null, 200);
+        var service:ProjectServiceImpl = projectService as ProjectServiceImpl;
+        var project:Project = ProjectServiceResult(data).project;
+        
+        logger.log("SaveProjectCommand", "Save project " + project.workingFile.nativePath);
+        var success:Boolean = service.save(project);
+        if (!success)
+        {
+            dispatchErrorEvent(ProjectError.createProjectNotSavedError(project));
+            return null;
+        }
+        
+        complete();
         return null;
     }
 }

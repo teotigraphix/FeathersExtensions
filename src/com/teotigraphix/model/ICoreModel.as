@@ -7,5 +7,13 @@ public interface ICoreModel
     function get descriptor():ApplicationDescriptor;
     
     function get projectModel():IProjectModel;
+    
+    function get saveStrategy():ISaveStrategy
+    
+    //--------------------------------------------------------------------------
+    // Methods
+    //--------------------------------------------------------------------------
+    
+
 }
 }

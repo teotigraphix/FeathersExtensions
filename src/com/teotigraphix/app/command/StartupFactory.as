@@ -76,6 +76,11 @@ public class StartupFactory
         return injector.instantiate(LoadProjectPreferences);
     }
     
+    public function createSessionRackStartupCommand():IStepCommand
+    {
+        return injector.instantiate(SessionRackStartupCommand);
+    }
+    
     public function createControllerStarupCommand():IStepCommand
     {
         return injector.instantiate(ControllerStarupCommand);
@@ -99,6 +104,7 @@ import com.teotigraphix.app.configuration.ApplicationDescriptor;
 import com.teotigraphix.app.event.ApplicationEventType;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
 import com.teotigraphix.frameworks.project.IProjectPreferencesProvider;
+import com.teotigraphix.frameworks.project.IProjectState;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.ICoreModel;
@@ -273,6 +279,20 @@ final class SetupDebugCommand extends StepCommand
     }
 }
 
+final class SessionRackStartupCommand extends StepCommand
+{
+    [Inject]
+    public var model:ICoreModel;
+    
+    override public function execute():*
+    {
+        logger.startup("SessionRackStartupCommand", "excute");
+
+        finished();
+        return super.execute();
+    }
+}
+
 final class ControllerStarupCommand extends StepCommand
 {
     [Inject]
@@ -293,16 +313,22 @@ final class FirstRunSaveCommand extends StepCommand
     [Inject]
     public var projectService:IProjectService;
     
+    [Inject]
+    public var projectModel:IProjectModel;
+    
     override public function execute():*
     {
         logger.startup("FirstRunSaveCommand", "excute");
         
         var o:StartupResult = data as StartupResult;
         
-        if (!o.project.exists)
+        var project:Project = o.project;
+        var state:IProjectState = project.state;
+        
+        if (state.isFirstRun)
         {
             logger.log("ApplicationStartupCommand.StartupStep", "Saving UnititledProject to disk");
-            var sequence:IStepSequence = projectService.saveAsync();
+            var sequence:IStepSequence = projectService.saveAsync(projectModel.project);
             sequence.addCompleteListener(this_completeHandler);
             sequence.execute();
         }
@@ -342,6 +368,11 @@ final class EmptyProjectTempDirectoryCommand extends StepCommand
                 logger.startup("EmptyProjectTempDirectoryCommand", "Deleting contents of .temp");
                 tempDirectory.addEventListener(Event.COMPLETE, this_completeHandler);
                 tempDirectory.deleteDirectoryAsync(true);
+            }
+            else
+            {
+                tempDirectory.createDirectory();
+                finished();
             }
         }
         else

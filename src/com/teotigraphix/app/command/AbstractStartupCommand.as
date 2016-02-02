@@ -28,7 +28,6 @@ import flash.events.Event;
 import flash.events.IEventDispatcher;
 
 import org.as3commons.async.operation.event.OperationEvent;
-import org.robotlegs.starling.base.ContextEventType;
 
 import starling.core.Starling;
 
@@ -80,9 +79,10 @@ public class AbstractStartupCommand extends AbstractCommand
         main.addCommand(startupFactory.createSetProjectCommand());
         main.addCommand(startupFactory.createLoadProjectPreferencesCommand());
         main.addCommand(startupFactory.createEmptyProjectTempDirectoryCommand());
+        main.addCommand(startupFactory.createSessionRackStartupCommand());
     }
     
-    private function sequence_completeHandler(event:OperationEvent):void
+    protected function sequence_completeHandler(event:OperationEvent):void
     {
         logger.startup("AbstractStartupCommand", "sequence_completeHandler()");
         dispatchApplicationComplete();

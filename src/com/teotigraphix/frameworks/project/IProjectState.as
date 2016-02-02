@@ -27,7 +27,7 @@ public interface IProjectState
     function get project():Project;
     
     /**
-     * Sets the isFirstRun flag to true, truw when a project is just created and has not been
+     * Sets the isFirstRun flag to true, true when a project is just created and has not been
      * saved to disk.
      */
     function setFirstRun():void;

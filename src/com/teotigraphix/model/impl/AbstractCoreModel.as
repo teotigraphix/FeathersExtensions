@@ -2,11 +2,12 @@ package com.teotigraphix.model.impl
 {
 import com.teotigraphix.app.configuration.ApplicationDescriptor;
 import com.teotigraphix.controller.ICommandLauncher;
-import com.teotigraphix.frameworks.project.IProjectPreferences;
+import com.teotigraphix.frameworks.project.IProjectPreferencesProvider;
 import com.teotigraphix.model.AbstractModel;
 import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.ICoreModel;
 import com.teotigraphix.model.IProjectModel;
+import com.teotigraphix.model.ISaveStrategy;
 import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.screen.IScreenLauncher;
 
@@ -30,8 +31,12 @@ public class AbstractCoreModel extends AbstractModel implements ICoreModel
     [Inject]
     public var _projectModel:IProjectModel;
     
-    protected var _preferences:IProjectPreferences;
+    [Inject]
+    public var _saveStrategy:ISaveStrategy;
     
+    [Inject]
+    public var _projectPreferencesProvider:IProjectPreferencesProvider;
+
     //--------------------------------------------------------------------------
     // API :: Properties
     //--------------------------------------------------------------------------
@@ -61,14 +66,17 @@ public class AbstractCoreModel extends AbstractModel implements ICoreModel
     }
     
     //----------------------------------
-    // ProjectPreferences
+    // saveStrategy
     //----------------------------------
     
-    public function setPreferences(value:IProjectPreferences):void
+    /**
+     * @inheritDoc
+     */
+    public function get saveStrategy():ISaveStrategy
     {
-        _preferences = value;
+        return _saveStrategy;
     }
-    
+
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------

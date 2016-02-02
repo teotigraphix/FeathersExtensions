@@ -20,6 +20,7 @@
 package com.teotigraphix.service
 {
 
+import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.service.async.IStepSequence;
 
 import flash.filesystem.File;
@@ -27,7 +28,17 @@ import flash.filesystem.File;
 public interface IProjectService
 {
     /**
-     * The 'complete' result is a newly created Project or Project loaded from disk.
+     * @param name The name of the project directory.
+     * @param relativePath The path from the root project directory.
+     */
+    function createProjectAsync(name:String, relativePath:String):IStepSequence;
+    
+    /**
+     * The 'complete' result is a ProjectServiceResult with the newly created or loaded Project
+     * from disk. The 'error' result is a ProjectError.
+     * 
+     * @see OperationEvent.COMPLETE
+     * @see com.teotigraphix.frameworks.errors.ProjectError.FILE_DOES_NOT_EXIST
      */
     function loadLastProjectAsync():IStepSequence;
 
@@ -36,14 +47,14 @@ public interface IProjectService
      * @param file The serialized file that resiseds within the same named directory.
      */
     function loadProjectAsync(file:File):IStepSequence;
-
+    
     /**
-     * @param name The name of the project directory.
-     * @param relativePath The path from the root project directory.
+     * Saves the Project and ProjectState to disk.
+     * 
+     * @param project The Project to save.
+     * @see OperationEvent.COMPLETE
+     * @see com.teotigraphix.frameworks.errors.ProjectError.PROJECT_NOT_SAVED 
      */
-    function createProjectAsync(name:String, relativePath:String):IStepSequence;
-
-    function saveAsync():IStepSequence;
-
+    function saveAsync(project:Project):IStepSequence;
 }
 }
