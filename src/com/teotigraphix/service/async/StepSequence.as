@@ -60,6 +60,21 @@ public class StepSequence extends CompositeCommand implements IStepSequence, ISt
         return this;
     }
     
+    public function add(clazzOrCommand:*):IStepSequence
+    {
+        if (clazzOrCommand is Class)
+        {
+            addCommand(injector.instantiate(clazzOrCommand));
+        }
+        else
+        {
+            addCommand(clazzOrCommand);
+        }
+        return this;
+    }
+    
+    
+    
     public function addStep(clazz:Class):IStepSequence
     {
         addCommand(injector.instantiate(clazz));

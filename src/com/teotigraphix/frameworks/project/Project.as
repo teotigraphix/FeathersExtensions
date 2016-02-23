@@ -24,6 +24,7 @@ import com.teotigraphix.app.configuration.Version;
 import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.async.IStepSequence;
+import com.teotigraphix.util.Files;
 import com.teotigraphix.util.IDUtils;
 import com.teotigraphix.util.ISerialize;
 
@@ -31,7 +32,6 @@ import flash.errors.IOError;
 import flash.filesystem.File;
 
 import org.as3commons.lang.Assert;
-import org.as3commons.lang.StringUtils;
 import org.robotlegs.starling.core.IInjector;
 
 use namespace sdk_internal;
@@ -57,9 +57,7 @@ public final class Project implements ISerialize
     //--------------------------------------------------------------------------
 
     private var _uid:String;
-    private var _path:String = "";
-    private var _name:String = "UntitledProject";
-    private var _extension:String;
+    private var _nativePath:String;
     private var _version:Version;
     private var _state:IProjectState;
 
@@ -82,54 +80,20 @@ public final class Project implements ISerialize
     }
 
     //----------------------------------
-    // path
+    // nativePath
     //----------------------------------
 
     /**
-     * The relative path from the Application's project directory.
+     * The native path where the actual serialized file exists from the last save.
      */
-    public function get path():String
+    public function get nativePath():String
     {
-        return _path;
+        return _nativePath;
     }
 
-    public function set path(value:String):void
+    public function set nativePath(value:String):void
     {
-        _path = value;
-    }
-
-    //----------------------------------
-    // name
-    //----------------------------------
-
-    /**
-     * Returns the name of the project, the path and name are used to assemble the
-     * native location within the application.
-     */
-    public function get name():String
-    {
-        return _name;
-    }
-
-    // /root/documents/MyApp/Projects/[MyPath/possible sub dir]/[MyName].[myextension]
-
-    public function set name(value:String):void
-    {
-        _name = value;
-    }
-
-    //----------------------------------
-    // extension
-    //----------------------------------
-
-    public function get extension():String
-    {
-        return _extension;
-    }
-
-    public function set extension(value:String):void
-    {
-        _extension = value;
+        _nativePath = value;
     }
 
     //----------------------------------
@@ -174,34 +138,53 @@ public final class Project implements ISerialize
     }
     
     //----------------------------------
-    // workingFile
+    // nativeFile
     //----------------------------------
 
-    /**
-     * Returns the project's serialized file.
-     *
-     * Projects\UntitledProject
-     */
-    public function get workingFile():File
+    public function get nativeFile():File
     {
-        return workingDirectory.resolvePath(_name + "." + _extension);
+        return new File(_nativePath);
     }
-
+    
     //----------------------------------
-    // workingDirectory
+    // name
+    //----------------------------------
+    
+    public function get name():String
+    {
+        return Files.getBaseName(nativeFile);
+    }
+    
+    //----------------------------------
+    // extension
+    //----------------------------------
+    
+    public function get extension():String
+    {
+        return nativeFile.extension;
+    }
+    
+    //----------------------------------
+    // exists
+    //----------------------------------
+    
+    public function get exists():Boolean
+    {
+        return nativeFile.exists;
+    }
+    
+    //----------------------------------
+    // metadataDirectory
     //----------------------------------
 
     /**
      * Returns the project's working directory.
      *
-     * Projects\UntitledProject\UntitledProject.test
+     * ApplicationDirectory/Projects/.metadata/[Project.uid]/
      */
-    public function get workingDirectory():File
+    public function get metadataDirectory():File
     {
-        var path:String = _name;
-        if (StringUtils.trimToNull(_path) != null)
-            path = _path + File.separator + path; // foo/bar/ProjectName
-        return fileService.projectDirectory.resolvePath(path);
+        return fileService.projectMetadataDirectory.resolvePath(_uid);
     }
 
     //----------------------------------
@@ -211,23 +194,14 @@ public final class Project implements ISerialize
     /**
      * Returns the project's working .temp directory.
      *
-     * Projects\UntitledProject\.temp
+     * ApplicationDirectory/Projects/.metadata/[Project.uid]/.temp
      */
-    public function get workingTempDirectory():File
+    public function get tempDirectory():File
     {
-        return workingDirectory.resolvePath(TEMP_DIR);
-    }
-
-    //----------------------------------
-    // workingTempDirectory
-    //----------------------------------
-
-    /**
-     * Whether the Project's working file exists on disk.
-     */
-    public function get exists():Boolean
-    {
-        return workingFile.exists;
+        var directory:File = metadataDirectory.resolvePath(TEMP_DIR);
+        if (!directory.exists)
+            directory.createDirectory();
+        return directory;
     }
 
     //--------------------------------------------------------------------------
@@ -243,58 +217,38 @@ public final class Project implements ISerialize
     //--------------------------------------------------------------------------
 
     /**
-     * Returns a directory or file from within the project's root directory.
-     * <p>
-     * Does not create a directory.
+     * Returns a directory or file from within the project's metadata directory.
+     * 
+     * <p>Does not create a directory.</p>
      *
      * @param relativePath The resource path.
      */
     public function findResource(relativePath:String):File
     {
-        return workingDirectory.resolvePath(relativePath);
+        return metadataDirectory.resolvePath(relativePath);
     }
 
     /**
-     * Returns a file from within the project's root directory.
+     * Returns a file from within the project's metadata directory.
      *
      * @param relativePath The resource path.
+     * @param shouldCreate Creates a directory if it doesn't exist.
      */
-    public function getResource(relativePath:String):File
+    public function getResource(relativePath:String, shouldCreate:Boolean = false):File
     {
         var resource:File = findResource(relativePath);
-        return resource;
-    }
-
-    /**
-     * Returns a directory from within the project's root directory.
-     * <p>
-     * Create the directory if not exists.
-     *
-     * @param relativePath The resource path.
-     */
-    public function getDirectoryResource(relativePath:String):File
-    {
-        var resource:File = findResource(relativePath);
-        if (!resource.exists)
-            resource.createDirectory();
-        return resource;
-    }
-
-    /**
-     * Returns the .temp project directory and creates it if needed.
-     */
-    public function getTempDirectory():File
-    {
-        var directory:File = workingTempDirectory;
-        if (!directory.exists)
+        if (shouldCreate && !resource.exists)
         {
-            directory.createDirectory();
+            resource.createDirectory();
         }
-        return directory;
+        return resource;
     }
 
     /**
-     * Returns a new project temp file located at AppRoot/ProjectName/.temp/tempName.tmp.
+     * Returns a new project temp file located at 
+     * ApplicationDirectory/Projects/.metadata/[Project.uid]/.temp/name.tmp.
+     * 
+     * <p>Does not create a directory.</p>
      *
      * @param name The name of the temp file with extension, if null a random name is created
      * and .tmp is the extension.
@@ -303,11 +257,8 @@ public final class Project implements ISerialize
      */
     public function getTempFile(name:String = null, length:int = -1):File
     {
-        var directory:File = workingTempDirectory;
-        if (!directory.exists)
-        {
-            directory.createDirectory();
-        }
+        var directory:File = tempDirectory;
+
         if (name == null)
         {
             name = IDUtils.createUID().substr(0, length);
@@ -326,19 +277,11 @@ public final class Project implements ISerialize
     }
 
     /**
-     * Returns the project's native path based on the application's Project
-     * directory and this project's path, name and type(file type extension).
-     */
-    public function getNativePath():String
-    {
-        return workingFile.nativePath;
-    }
-
-    /**
      * Closes the project and disposes resources and references.
      */
     public function close():void
     {
+        injector = null;
         fileService = null;
     }
 
@@ -364,26 +307,26 @@ public final class Project implements ISerialize
         }
     }
 
-    public function wakeup():void
+    public function serialize():void
     {
         if (_state is ISerialize)
         {
             injector.injectInto(_state);
-            ISerialize(_state).wakeup();
+            ISerialize(_state).serialize();
         }
     }
 
-    public function sleep(preSleep:Boolean = false):void
+    public function deserialize(preSleep:Boolean = false):void
     {
         if (_state is ISerialize)
         {
-            ISerialize(_state).sleep(preSleep);
+            ISerialize(_state).deserialize(preSleep);
         }
     }
 
     public function toString():String
     {
-        return "Project{_uid=" + String(_uid) + ",_name=" + String(_name) + "}";
+        return "Project{_uid=" + String(_uid) + ",_name=" + String(_nativePath) + "}";
     }
 
     //--------------------------------------------------------------------------
@@ -392,9 +335,7 @@ public final class Project implements ISerialize
 
     sdk_internal function initialize(state:IProjectState = null,
                                      uid:String = null,
-                                     path:String = null,
-                                     name:String = null,
-                                     extension:String = null,
+                                     file:File = null,
                                      version:Version = null):void
     {
         Assert.notNull(state, "IProjectState must not be null");
@@ -404,9 +345,7 @@ public final class Project implements ISerialize
         AbstractProjectState(_state).setProject(this);
 
         _uid = uid;
-        _path = path;
-        _name = name;
-        _extension = extension;
+        _nativePath = file.nativePath;
         _version = version;
     }
 

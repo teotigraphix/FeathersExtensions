@@ -6,14 +6,13 @@ import flash.filesystem.File;
 
 public class ProjectServiceResult
 {
-    public var name:String;
-    public var path:String;
     public var file:File;
     
     public var project:Project;
     
-    public function ProjectServiceResult()
+    public function ProjectServiceResult(file:File)
     {
+        this.file = file;
     }
 }
 }

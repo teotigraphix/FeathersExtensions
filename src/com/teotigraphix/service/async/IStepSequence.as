@@ -30,6 +30,8 @@ public interface IStepSequence extends ICompositeCommand
 
     function commit():*;
 
+    function add(clazzOrCommand:*):IStepSequence;
+    
     function addStep(clazz:Class):IStepSequence;
 }
 }

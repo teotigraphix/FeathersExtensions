@@ -53,12 +53,33 @@ public interface IFileService
     function get packagesDirectory():File;
 
     /**
+     * Returns ApplicationDirectory/Projects/.metadata.
+     */
+    function get projectMetadataDirectory():File;
+    
+    /**
      * Returns something like /storage/sdcard0/MyApp/Projects.
      */
     function get projectDirectory():File;
 
     function get preferenceBinFile():File;
 
+    /**
+     * Returns a file located in the App/Projects directory with option reletive path.
+     * 
+     * @param nameWithoutExtension The new project name without extension.
+     * @param reletivePath The option path in the Projects directory.
+     */
+    function getProjectFile(nameWithoutExtension:String, reletivePath:String = null):File
+    
+    /**
+    * Returns a File located in the App/Projects directory with a name like UntitledProject1.
+    * 
+    * <p>The service will scan that directory to make sure there are no conflicts before assigning
+    * the new untitled name.</p>
+     */
+    function getNextUntitledProjectFile():File;
+    
     /**
      * Creates a file in the app's .cache directory, the path can resolve to a file.extension
      * if useID is false, if useID is true, the path needs to be a directory and a generated UID
@@ -76,13 +97,34 @@ public interface IFileService
                        recursive:Boolean = false,
                        directoriesOnTop:Boolean = true,
                        excludeDirectories:Boolean = false):Vector.<File>;
+    
+    function copy(data:Object):*;
+    
+    /**
+     * Instantiates an ISerialize instance, calls it's create() method and then saves it
+     * to disk at the file location.
+     * 
+     * @param file The serialized file location.
+     * @param clazz The class to instantiate that implements ISerialize.
+     * @return The instantiated and saved ISerialize instance.
+     */
+    function instantiate(file:File, clazz:Class):*;
 
-    function wakeup(file:File):*;
-
-    function sleep(file:File, data:Object):void;
-
+    /**
+     * Puts an ISerialize instance to sleep on disk by calling sleep(pre|post) before
+     * and after the serialization.
+     * 
+     * @param file The serialized file location.
+     * @param data The ISerialize instance.
+     */
     function serialize(file:File, data:Object):void;
-
+    
+    /**
+     * Wakes up an ISerialize instance from disk and calls wakeup() on it.
+     * 
+     * @param file The serialized file location.
+     * @return The instantiated and woken up ISerialize instance.
+     */
     function deserialize(file:File):*;
 
     function readString(file:File):String;

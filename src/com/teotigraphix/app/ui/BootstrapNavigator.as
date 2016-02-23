@@ -20,16 +20,19 @@
 package com.teotigraphix.app.ui
 {
 
+import com.teotigraphix.app.event.ApplicationEventData;
+import com.teotigraphix.app.event.ApplicationEventType;
+
+import flash.events.KeyboardEvent;
+import flash.ui.Keyboard;
+
 import feathers.controls.StackScreenNavigator;
 import feathers.events.FeathersEventType;
 import feathers.utils.display.getDisplayObjectDepthFromStage;
 
-import flash.events.KeyboardEvent;
-
-import flash.ui.Keyboard;
-
 import starling.core.Starling;
 import starling.events.Event;
+import starling.events.EventDispatcher;
 
 
 public class BootstrapNavigator extends StackScreenNavigator implements IBootstrapNavigator
@@ -37,6 +40,20 @@ public class BootstrapNavigator extends StackScreenNavigator implements IBootstr
     public var backButtonHandler:Function;
     public var menuButtonHandler:Function;
     public var searchButtonHandler:Function;
+    
+    private var _eventDispatcher:EventDispatcher;    
+
+    [Bindable("eventDispatcherChange")]
+    public function get eventDispatcher():EventDispatcher
+    {
+        return _eventDispatcher;
+    }
+
+    public function set eventDispatcher(value:EventDispatcher):void
+    {
+        _eventDispatcher = value;
+        dispatchEventWith("eventDispatcherChange");
+    }
 
     public function BootstrapNavigator()
     {
@@ -46,6 +63,8 @@ public class BootstrapNavigator extends StackScreenNavigator implements IBootstr
         addEventListener(FeathersEventType.CREATION_COMPLETE, this_creationCompleteHandler);
         addEventListener(Event.ADDED_TO_STAGE, this_addedToStageHandler);
         addEventListener(Event.REMOVED_FROM_STAGE, this_removedToStageHandler);
+        
+        backButtonHandler = this_backButtonHandler;
     }
 
     /**
@@ -107,6 +126,14 @@ public class BootstrapNavigator extends StackScreenNavigator implements IBootstr
         }
     }
 
+    private function this_backButtonHandler():void
+    {
+        trace("BootstrapNavigator.this_backButtonHandler()");
+        var data:ApplicationEventData = ApplicationEventData.create();
+        eventDispatcher.dispatchEventWith(ApplicationEventType.BACK_CHANGE, false, data);
+        eventDispatcher.dispatchEventWith(ApplicationEventType.BACK_CHANGED, false, data);
+    }
+    
     private function this_initializeHandler(event:Event):void
     {
         trace("BootstrapNavigator.INITIALIZE()");

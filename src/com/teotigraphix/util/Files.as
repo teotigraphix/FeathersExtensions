@@ -27,6 +27,26 @@ import flash.utils.ByteArray;
 
 public final class Files
 {
+    public static function getTempDirectory():File
+    {
+        return File.applicationStorageDirectory.resolvePath(".temp");
+    }
+    
+    public static function getTempFile(extension:String = null, path:String = null):File
+    {
+        var name:String = IDUtils.createUID();
+        if (extension != null)
+            name = name + "." + extension;
+        var file:File = getTempDirectory();
+        if (path != null)
+        {
+            file = file.resolvePath(path);
+            if (!file.exists)
+                file.createDirectory();
+        }
+        return file.resolvePath(name);
+    }
+    
     public static function getBaseName(file:File):String
     {
         if (file.isDirectory)

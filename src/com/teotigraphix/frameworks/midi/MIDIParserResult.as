@@ -114,6 +114,21 @@ public class MIDIParserResult
     //--------------------------------------------------------------------------
 
     /**
+     * Returns a PatternInfo for the track at the specified index, NOT specific to
+     * the track's channel that was parsed in the midi file.
+     * 
+     * @param index The track array index.
+     * @return PatternInfo or null if the track does not exist.
+     */
+    public function getPatternInfo(index:int):PatternInfo
+    {
+        var track:MIDITrackInfo = getTrack(index);
+        if (track != null)
+            return track.createPatternInfo();
+        return null;
+    }
+    
+    /**
      * Returns the MidiTrackInfo for the channel index, null if the track does not exist.
      *
      * @param index The track's channel index.

@@ -18,9 +18,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.teotigraphix.frameworks.project
 {
+import com.teotigraphix.ui.state.ProjectPreferencesTemplateUI;
 
 public interface IProjectPreferences
 {
-
+    function get template():ProjectPreferencesTemplateUI;
 }
 }

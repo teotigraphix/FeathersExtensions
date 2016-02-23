@@ -22,8 +22,13 @@ package com.teotigraphix.service.impl
 
 import com.teotigraphix.service.ILogger;
 
+import starling.events.EventDispatcher;
+
 public class LoggerImpl implements ILogger
 {
+    [Inject]
+    public var eventDispatcher:EventDispatcher;
+    
     public function LoggerImpl()
     {
     }

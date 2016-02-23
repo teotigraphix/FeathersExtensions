@@ -128,6 +128,12 @@ public class MIDITrackInfo
             addNote(_track.channel, start, end, note.pitch, note.velocity / 127);
         }
     }
+    
+    public function createPatternInfo():PatternInfo
+    {
+        var info:PatternInfo = new PatternInfo(this);
+        return info;
+    }
 
     //public function createFrom(notes:Vector.<MIDINoteInfo>):MidiTrack
     //{

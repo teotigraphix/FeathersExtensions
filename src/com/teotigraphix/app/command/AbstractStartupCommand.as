@@ -21,7 +21,7 @@ package com.teotigraphix.app.command
 {
 
 import com.teotigraphix.app.event.ApplicationEventType;
-import com.teotigraphix.controller.command.AbstractCommand;
+import com.teotigraphix.controller.command.core.AbstractCommand;
 import com.teotigraphix.service.async.IStepSequence;
 
 import flash.events.Event;
@@ -37,12 +37,14 @@ public class AbstractStartupCommand extends AbstractCommand
     // Inject
     //--------------------------------------------------------------------------
 
+    public function get flashDispatcher():IEventDispatcher 
+    {
+        return injector.getInstance(IEventDispatcher); 
+    }
+    
     [Inject]
-    public var flashDispatcher:IEventDispatcher;
-
-    [Inject]
-    public var startupFactory:StartupFactory;
-
+    public var startupFactory:IStartupFactory;    
+    
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------
@@ -57,10 +59,17 @@ public class AbstractStartupCommand extends AbstractCommand
 
     override public function execute():void
     {
-        var main:IStepSequence = sequence(startupFactory.createResult());
+        var main:IStepSequence;
+        main = sequence(startupFactory.createResult());
         addSteps(main);
-        main.addCommand(startupFactory.createControllerStarupCommand());
-        main.addCommand(startupFactory.createFirstRunSaveCommand());
+        
+        var factory:AbstractProjectStartupFactory = startupFactory as AbstractProjectStartupFactory;
+        if (factory != null)
+        {
+            main.addCommand(factory.createControllerStarupCommand());
+            main.addCommand(factory.createFirstRunSaveCommand());
+        }
+        
         main.addCompleteListener(sequence_completeHandler);
         main.execute();
     }
@@ -75,11 +84,20 @@ public class AbstractStartupCommand extends AbstractCommand
         main.addCommand(startupFactory.createPrintAppVersionCommand());
         main.addCommand(startupFactory.createDebugSetupCommand());
         main.addCommand(startupFactory.createStartCoreServicesCommand());
-        main.addCommand(startupFactory.createLoadLastProjectCommand());
-        main.addCommand(startupFactory.createSetProjectCommand());
-        main.addCommand(startupFactory.createLoadProjectPreferencesCommand());
-        main.addCommand(startupFactory.createEmptyProjectTempDirectoryCommand());
-        main.addCommand(startupFactory.createSessionRackStartupCommand());
+        addBeforeProjectSteps(main);
+        
+        var factory:AbstractProjectStartupFactory = startupFactory as AbstractProjectStartupFactory;
+        if (factory != null)
+        {
+            main.addCommand(factory.createLoadLastProjectCommand());
+            main.addCommand(factory.createLoadProjectPreferencesCommand());
+            main.addCommand(factory.createSetProjectCommand());
+            main.addCommand(factory.createEmptyProjectTempDirectoryCommand());
+        }
+    }
+    
+    protected function addBeforeProjectSteps(main:IStepSequence):void
+    {
     }
     
     protected function sequence_completeHandler(event:OperationEvent):void
@@ -93,7 +111,7 @@ public class AbstractStartupCommand extends AbstractCommand
     {
         if (Starling.juggler != null)
         {
-            Starling.juggler.delayCall(delayedComplete, 1);
+            Starling.juggler.delayCall(delayedComplete, 0.01);
         }
         else
         {

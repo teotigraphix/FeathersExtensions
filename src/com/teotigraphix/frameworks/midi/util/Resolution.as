@@ -115,20 +115,26 @@ public class Resolution
      * Returns a local step based off the pattern length and resolution.
      *
      * @param beat (0..31)
-     * @param numBars (1,2,4,8)
+     * @param barCount (1,2,4,8)
      * @param resolution
      */
-    public static function getLocalStep(beat:Number, numBars:int, resolution:Resolution):int
+    public static function getLocalStep(beat:Number, barCount:int, resolution:Resolution):int
     {
         var localBeat:Number = toMeasureBeat(beat);
         var step:int = Resolution.toStep(localBeat, resolution);
         return step;
     }
 
-    public static function getGlobalStep(beat:Number, numBars:int, resolution:Resolution):int
+    public static function getGlobalStep(beat:Number, barCount:int, resolution:Resolution):int
     {
-        var localBeat:Number = toLocalBeat(beat, numBars);
+        var localBeat:Number = toLocalBeat(beat, barCount);
         return toStep(localBeat, resolution);
+    }
+    
+    public static function getGlobalPercentage(startBeat:Number, beat:Number, barCount:int, resolution:Resolution):Number
+    {
+        var step:int = Resolution.getGlobalStep(beat - startBeat, barCount, resolution);
+        return  step / (barCount * Resolution.toSteps(resolution));
     }
 
     /**

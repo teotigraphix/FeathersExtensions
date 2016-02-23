@@ -4,6 +4,7 @@
 package com.teotigraphix.frameworks.midi
 {
 
+[Serializable]
 public final class MIDINoteInfo
 {
     public var channel:int;

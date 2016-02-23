@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<f:LayoutGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                xmlns:s="library://ns.adobe.com/flex/spark" 
+                xmlns:f="library://ns.feathersui.com/mxml">
+
+    <f:layout>
+        <f:HorizontalLayout verticalAlign="middle" gap="8"/>
+    </f:layout>
+    
+    <f:Button id="saveButton"
+              styleName="{FrameworkStyleNames.SAVE_BUTTON}"
+              triggered="dispatchEventWith(EVENT_SAVE)">
+        <f:layoutData>
+            <f:HorizontalLayoutData/>
+        </f:layoutData>
+    </f:Button>
+    
+    <f:Label id="nameLabel"
+             styleName="{FrameworkStyleNames.PROJECT_NAME_LABEL}">
+        <f:layoutData>
+            <f:HorizontalLayoutData percentWidth="100"/>
+        </f:layoutData>
+    </f:Label>
+    
+    <fx:Script>
+        <![CDATA[
+            import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+            
+            public static const EVENT_SAVE:String = "save";
+        ]]>
+    </fx:Script>
+    
+</f:LayoutGroup>

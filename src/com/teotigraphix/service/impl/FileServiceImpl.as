@@ -25,8 +25,10 @@ import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.async.IStepCommand;
 import com.teotigraphix.util.Files;
 import com.teotigraphix.util.IDUtils;
+import com.teotigraphix.util.ISerialize;
 
 import flash.filesystem.File;
+import flash.utils.ByteArray;
 
 public class FileServiceImpl extends AbstractService implements IFileService
 {
@@ -70,7 +72,12 @@ public class FileServiceImpl extends AbstractService implements IFileService
     {
         return descriptor.projectDirectory;
     }
-
+    
+    public function get projectMetadataDirectory():File
+    {
+        return projectDirectory.resolvePath(".metadata");
+    }
+    
     public function get preferenceBinFile():File
     {
         return descriptor.preferenceBinFile;
@@ -88,6 +95,25 @@ public class FileServiceImpl extends AbstractService implements IFileService
         checkAndCreatePublicApplicationDirectory();
 
         logger.startup(TAG, " applicationDirectory: " + applicationDirectory.nativePath);
+    }
+    
+    public function getProjectFile(nameWithoutExtension:String, reletivePath:String = null):File
+    {
+        var file:File = projectDirectory;
+        if (reletivePath != null)
+        {
+            file = file.resolvePath(reletivePath);
+        }
+        
+        file = file.resolvePath(nameWithoutExtension + "." + descriptor.extension);
+        
+        return file;
+    }
+    
+    public function getNextUntitledProjectFile():File
+    {
+        var file:File = getProjectFile(getNextUntitledProjectName());
+        return file;
     }
     
     /**
@@ -124,24 +150,54 @@ public class FileServiceImpl extends AbstractService implements IFileService
         writeStringToFile(file, data);
     }
 
+    public function instantiate(file:File, clazz:Class):*
+    {
+        var instance:ISerialize = injector.instantiate(clazz);
+        if (instance is ISerialize)
+        {
+            ISerialize(instance).create();
+        }
+        serialize(file, instance);
+        return instance;
+    }
+    
     public function serialize(file:File, data:Object):void
     {
-        Files.serialize(data, file);
+        if (data is ISerialize)
+        {
+            ISerialize(data).deserialize(true);
+        }
+        
+        const bytes:ByteArray = new ByteArray();
+        
+        bytes.writeObject(data);
+        Files.writeBinaryFile(file, bytes);
+        
+        if (data is ISerialize)
+        {
+            ISerialize(data).deserialize();
+        }
     }
 
     public function deserialize(file:File):*
     {
-        return Files.deserialize(file);
-    }
+        const data:ByteArray = Files.readBinaryFile(file);
+        
+        var instance:* = data.readObject();
+        injector.injectInto(instance);
+        
+        if (instance is ISerialize)
+        {
+            ISerialize(instance).serialize();
+        }
 
-    public function wakeup(file:File):*
-    {
-        return deserialize(file);
+        return instance;
     }
-
-    public function sleep(file:File, data:Object):void
+    
+    public function copy(data:Object):*
     {
-        serialize(file, data);
+        var instance:* = Files.copy(data);
+        return instance;
     }
 
     public function listFiles(directory:File,
@@ -179,6 +235,7 @@ public class FileServiceImpl extends AbstractService implements IFileService
         if (!applicationDirectory.exists)
         {
             applicationDirectory.createDirectory();
+            
             if (!applicationDirectory.exists)
                 logger.err(TAG, applicationDirectory.nativePath + " was not created");
             logger.startup(TAG, "!!! Created application directory.");
@@ -188,7 +245,27 @@ public class FileServiceImpl extends AbstractService implements IFileService
             logger.startup(TAG, "!!! Application directory exists.");
         }
     }
-
+    
+    private function getNextUntitledProjectName():String
+    {
+        // gets the last number found
+        var index:int = 0;
+        var files:Array = projectDirectory.getDirectoryListing();
+        for each (var file:File in files) 
+        {
+            if (file.isDirectory)
+                continue;
+            
+            var name:String = Files.getBaseName(file);
+            var parts:Array = name.split(" ");
+            if (parts[0] != "UntitledProject")
+                continue;
+            
+            index = Math.max(parseInt(parts[1]), index);
+        }
+        return "UntitledProject " + (index + 1);
+    }
+    
     private function foo():void
     {
 

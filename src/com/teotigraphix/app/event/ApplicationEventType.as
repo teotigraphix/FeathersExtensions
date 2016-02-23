@@ -25,7 +25,9 @@ package com.teotigraphix.app.event
  */
 public final class ApplicationEventType
 {
-
+    public static const LOG_STARTUP_MESSAGE:String = "ApplicationEventType/logStartupMessage";
+    public static const MARK_PROJECT_DIRTY:String = "ApplicationEventType/markProjectDirty";
+    
     ///**
     // * Dispatched through Starling when the "rootCreated" event is fired
     // * after LoaderInfo.COMPLETE and Starling.startup() have been called.
@@ -77,7 +79,28 @@ public final class ApplicationEventType
      * @data <code>com.teotigraphix.frameworks.project.Project</code>
      */
     public static const PROJECT_CHANGED:String = "ApplicationEventType/projectChanged";
-
+    
+    /**
+     * Dispatched after a Project has been loaded and set on the ProjectModel AND
+     * the ProjectController is done configuring models. UI mediators listen to this and refresh
+     * their views.
+     *
+     * @data <code>com.teotigraphix.frameworks.project.IProjectState</code>
+     */
+    public static const STATE_CHANGED:String = "ApplicationEventType/projectStateChanged";
+    
+    /**
+     * Dispatched before BACK_CHANGED.
+     * @see ApplicationEventData 
+     */
+    public static const BACK_CHANGE:String = "ApplicationEventType/backChange";
+    
+    /**
+     * Dispatched after BACK_CHANGE, all listeners should check ApplicationEventData.isBackHandled.
+     * @see ApplicationEventData 
+     */
+    public static const BACK_CHANGED:String = "ApplicationEventType/backChanged";
+    
     public static const BACK:String = "ApplicationEventType/back";
     public static const BACK_TO:String = "ApplicationEventType/backTo";
 }

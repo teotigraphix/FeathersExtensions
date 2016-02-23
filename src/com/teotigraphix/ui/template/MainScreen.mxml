@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<f:Screen xmlns:f="library://ns.feathersui.com/mxml"
+          xmlns:fx="http://ns.adobe.com/mxml/2009" 
+          xmlns:component="com.teotigraphix.ui.component.*" 
+          xmlns:main="com.teotigraphix.ui.template.main.*">
+
+    <f:layout>
+        <f:VerticalLayout/>
+    </f:layout>
+
+    <main:ApplicationActionBar id="actionBar">
+        <main:layoutData>
+            <f:VerticalLayoutData percentWidth="100"/>
+        </main:layoutData>
+    </main:ApplicationActionBar>
+
+    <component:HGroup percentWidth="100" percentHeight="100">
+
+        <main:ApplicationToolBar id="toolBar">
+            <main:layoutData>
+                <f:HorizontalLayoutData percentHeight="100"/>
+            </main:layoutData>
+        </main:ApplicationToolBar>
+
+        <f:StackScreenNavigator id="contentNavigator">
+            <f:layoutData>
+                <f:HorizontalLayoutData percentWidth="100" percentHeight="100"/>
+            </f:layoutData>
+
+        </f:StackScreenNavigator>
+
+        <main:ApplicationContentToolBar>
+            <main:layoutData>
+                <f:HorizontalLayoutData percentHeight="100"/>
+            </main:layoutData>
+        </main:ApplicationContentToolBar>
+
+    </component:HGroup>
+
+    <main:ApplicationStatusBar id="statusBar">
+        <main:layoutData>
+            <f:VerticalLayoutData percentWidth="100"/>
+        </main:layoutData>
+    </main:ApplicationStatusBar>
+
+</f:Screen>

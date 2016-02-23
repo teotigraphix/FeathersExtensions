@@ -19,7 +19,7 @@
 package com.teotigraphix.ui.core
 {
 
-import com.teotigraphix.controller.impl.AbstractController;
+import com.teotigraphix.controller.core.AbstractController;
 import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.IUIFactory;
 import com.teotigraphix.ui.IUIState;
@@ -35,6 +35,7 @@ import com.teotigraphix.ui.popup.CenterPopUpContentManager;
 import com.teotigraphix.ui.popup.ProgressPopUp;
 import com.teotigraphix.ui.theme.AssetMap;
 
+import flash.desktop.NativeApplication;
 import flash.filesystem.File;
 
 import feathers.controls.Alert;
@@ -65,15 +66,15 @@ public class AbstractUIController extends AbstractController implements IUIContr
     // SUBCLASS IMPLEMENTATION
     //--------------------------------------------------------------------------
     
-//    public function get factory():UIFactory 
-//    {
-//        return _factory as UIFactory;
-//    }
-//    
-//    public function get state():UIState 
-//    {
-//        return _state as UIState;
-//    }
+    public function get uiFactory():IUIFactory
+    {
+        return _factory;
+    }
+    
+    public function get uiState():IUIState 
+    {
+        return _state;
+    }
     
     public function AbstractUIController()
     {
@@ -83,6 +84,16 @@ public class AbstractUIController extends AbstractController implements IUIContr
     {
         super.onRegister();
     }
+    
+    override public function onStartup():void
+    {
+        super.onStartup();
+        
+        AbstractUIState(_state).onStartup();
+        AbstractUIFactory(_factory).onStartup();
+    }
+    
+    
     
     public function browseForFile(data:FileListData,
                                   okHandler:Function, cancelHandler:Function):FileDialog
@@ -101,8 +112,12 @@ public class AbstractUIController extends AbstractController implements IUIContr
     {
         const alert:Alert = Alert.show(message, title,
             new ListCollection([{label: yesLabel}, {label: noLabel}]));
-        alert.icon = AssetMap.createImage(iconSkin);
-        alert.icon.width = alert.icon.height = AssetMap.size(60);
+        if (iconSkin != null)
+        {
+            alert.icon = AssetMap.createImage(iconSkin);
+            alert.icon.width = alert.icon.height = AssetMap.size(60);
+        }
+
         alert.addEventListener(Event.CLOSE, function (event:Event, data:Object):void {
             if (data.label == yesLabel)
                 okHandler();
@@ -260,6 +275,11 @@ public class AbstractUIController extends AbstractController implements IUIContr
         }
         _contentManager.isModal = true;
         _contentManager.open(content, DisplayObject(root));
+    }
+    
+    public function exit():void
+    {
+        NativeApplication.nativeApplication.exit();
     }
 
     private function contentManager_cancelHandler(event:Event):void

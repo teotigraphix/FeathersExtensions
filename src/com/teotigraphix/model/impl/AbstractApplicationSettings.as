@@ -33,8 +33,10 @@ public class AbstractApplicationSettings extends AbstractModel implements IAppli
 {
     private const TAG:String = "AbstractApplicationSettings";
 
-    private static const GLOBAL_LAST_PROJECT:String = "Application/lastProject";
-
+    private static const TAG_LAST_PROJECT:String = "Application/lastProject";
+    private static const TAG_PROJECT_BROWSE:String = "Application/projectBrowse";
+    private static const TAG_FPS:String = "Application/fps";
+    
     //--------------------------------------------------------------------------
     // Public Inject :: Variables
     //--------------------------------------------------------------------------
@@ -52,35 +54,55 @@ public class AbstractApplicationSettings extends AbstractModel implements IAppli
     private var _map:Object;
 
     //--------------------------------------------------------------------------
-    // Public IPreferenceService :: Properties
+    // API :: Properties
     //--------------------------------------------------------------------------
 
     //----------------------------------
-    // appLastProjectPath
+    // appLastProjectFile
     //----------------------------------
 
-    public function get appLastProjectPath():String
+    public function get appLastProjectFile():File
     {
-        return getString(GLOBAL_LAST_PROJECT, null);
+        var path:String = getString(TAG_LAST_PROJECT, null);
+        if (path == null)
+            return null;
+        return new File(path);
     }
 
-    public function set appLastProjectPath(value:String):void
+    public function set appLastProjectFile(value:File):void
     {
-        put(GLOBAL_LAST_PROJECT, value);
+        put(TAG_LAST_PROJECT, value.nativePath);
     }
-
+    
+    //----------------------------------
+    // projectBrowseDirectory
+    //----------------------------------
+    
+    public function get projectBrowseDirectory():File
+    {
+        var path:String = getString(TAG_PROJECT_BROWSE, null);
+        if (path == null)
+            return File.documentsDirectory;
+        return new File(path);
+    }
+    
+    public function set projectBrowseDirectory(value:File):void
+    {
+        put(TAG_PROJECT_BROWSE, value.nativePath);
+    }
+    
     //----------------------------------
     // fps
     //----------------------------------
 
     public function get fps():int
     {
-        return getInt("fps", descriptor.fps);
+        return getInt(TAG_FPS, descriptor.fps);
     }
 
     public function set fps(value:int):void
     {
-        put("fps", value);
+        put(TAG_FPS, value);
         Starling.current.nativeStage.frameRate = value;
     }
 
@@ -166,7 +188,14 @@ public class AbstractApplicationSettings extends AbstractModel implements IAppli
             return defaultValue;
         return _map[key] as Boolean;
     }
-
+    
+    public function getObject(key:String, defaultValue:Object = null):*
+    {
+        if (_map[key] == null)
+            return defaultValue;
+        return _map[key];
+    }
+    
     public function flush():void
     {
         logger.debug(TAG, "flush()");

@@ -76,7 +76,10 @@ public class NumericStepperFactory extends AbstractThemeFactory
         backgroundFocusedSkin.width = properties.controlSize;
         backgroundFocusedSkin.height = properties.controlSize;
         input.backgroundFocusedSkin = backgroundFocusedSkin;
-
+        
+        input.isEditable = false;
+        input.isFocusEnabled = false;
+        
         input.minWidth = input.minHeight = properties.controlSize;
         input.minTouchWidth = input.minTouchHeight = properties.gridSize;
         input.gap = properties.smallGutterSize;

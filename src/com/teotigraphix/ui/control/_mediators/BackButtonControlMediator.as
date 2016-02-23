@@ -19,9 +19,8 @@
 package com.teotigraphix.ui.control._mediators
 {
 
-import com.teotigraphix.ui.screen.IScreenLauncher;
-import com.teotigraphix.ui.control.*;
-import com.teotigraphix.ui.mediator.AbstractMediator;
+import com.teotigraphix.ui.control.BackButtonControl;
+import com.teotigraphix.ui.core.AbstractMediator;
 
 import starling.events.Event;
 
@@ -29,9 +28,6 @@ public class BackButtonControlMediator extends AbstractMediator
 {
     [Inject]
     public var control:BackButtonControl;
-
-    [Inject]
-    public var screenLauncher:IScreenLauncher;
 
     public function BackButtonControlMediator()
     {

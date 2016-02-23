@@ -20,9 +20,12 @@ package com.teotigraphix.frameworks.project
 {
 
 import com.teotigraphix.model.IProjectModel;
+import com.teotigraphix.ui.state.ProjectPreferencesTemplateUI;
 import com.teotigraphix.util.Files;
 
 import flash.filesystem.File;
+
+import starling.events.EventDispatcher;
 
 public class AbstractProjectPreferences implements IProjectPreferences
 {
@@ -30,16 +33,45 @@ public class AbstractProjectPreferences implements IProjectPreferences
     [Inject]
     public var projectModel:IProjectModel;
     
+    [Transient]
+    [Inject]
+    public var eventDispatcher:EventDispatcher;
+
+    private var _template:ProjectPreferencesTemplateUI;
+
+    //----------------------------------
+    // template
+    //----------------------------------
+    
+    public function get template():ProjectPreferencesTemplateUI
+    {
+        return _template;
+    }
+    
+    public function set template(value:ProjectPreferencesTemplateUI):void
+    {
+        _template = value;
+    }
+    
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+    
     public function AbstractProjectPreferences()
     {
+        _template = new ProjectPreferencesTemplateUI();
     }
 
     //--------------------------------------------------------------------------
     // Private :: Methods
     //--------------------------------------------------------------------------
 
-    public function onPropertyChange():void
+    public function onPropertyChange(eventName:String = null, data:Object = null):void
     {
+        if (eventName != null)
+        {
+            eventDispatcher.dispatchEventWith(eventName, false, data);
+        }
         var resource:File = projectModel.project.getResource(".preferences");
         Files.serialize(this, resource);
     }

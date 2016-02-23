@@ -19,15 +19,21 @@
 
 package com.teotigraphix.model
 {
+import flash.filesystem.File;
 
 public interface IApplicationSettings
 {
     // Global preferences shared by all applications
 
-    function get appLastProjectPath():String;
+    function get appLastProjectFile():File;
+    function set appLastProjectFile(value:File):void
 
-    function set appLastProjectPath(value:String):void
-
+    function get projectBrowseDirectory():File;
+    function set projectBrowseDirectory(value:File):void;
+        
+    function get fps():int;
+    function set fps(value:int):void;
+        
     // API
 
     function put(key:String, value:Object):void;

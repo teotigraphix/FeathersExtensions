@@ -38,8 +38,10 @@ public class AbstractModel extends Actor
     [Inject]
     public var injector:IInjector;
 
-    [Inject]
-    public var flashDispatcher:IEventDispatcher;
+    public function get flashDispatcher():IEventDispatcher 
+    {
+        return injector.getInstance(IEventDispatcher);
+    }
 
     [Inject]
     override public function set eventDispatcher(value:EventDispatcher):void
@@ -51,7 +53,10 @@ public class AbstractModel extends Actor
     override protected function dispatchWith(type:String, bubbles:Boolean = false, data:Object = null):void
     {
         super.dispatchWith(type, bubbles, data);
-        flashDispatcher.dispatchEvent(new Event(type, bubbles));
+        if (injector.hasMapping(IEventDispatcher))
+        {
+            flashDispatcher.dispatchEvent(new Event(type, bubbles));
+        }
     }
 
     /**
@@ -61,6 +66,11 @@ public class AbstractModel extends Actor
     {
     }
     
+    /**
+     * Called right after the last step runs in the ApplicationStartupCommand.
+     * 
+     * All actors that need to initialize once per app session, can do the initialization here. 
+     */
     public function onStartup():void
     {
     }

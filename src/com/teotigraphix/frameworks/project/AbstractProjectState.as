@@ -93,11 +93,11 @@ public class AbstractProjectState implements IProjectState, ISerialize
     {
     }
     
-    public function wakeup():void
+    public function serialize():void
     {
     }
     
-    public function sleep(preSleep:Boolean = false):void
+    public function deserialize(preSleep:Boolean = false):void
     {
     }
     

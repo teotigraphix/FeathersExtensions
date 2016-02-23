@@ -28,10 +28,9 @@ import flash.filesystem.File;
 public interface IProjectService
 {
     /**
-     * @param name The name of the project directory.
-     * @param relativePath The path from the root project directory.
+     * @param file The nativePath without exteniosn of the new project.
      */
-    function createProjectAsync(name:String, relativePath:String):IStepSequence;
+    function createProjectAsync(file:File):IStepSequence;
     
     /**
      * The 'complete' result is a ProjectServiceResult with the newly created or loaded Project

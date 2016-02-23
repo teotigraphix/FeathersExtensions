@@ -22,8 +22,6 @@ package com.teotigraphix.model
 
 import com.teotigraphix.frameworks.project.Project;
 
-import flash.filesystem.File;
-
 /**
  * @see IModel
  */
@@ -43,23 +41,5 @@ public interface IProjectModel
     function get project():Project;
 
     function set project(value:Project):void;
-
-    //----------------------------------
-    // projectFile
-    //----------------------------------
-
-    /**
-     * The native application's Project serialized file state.
-     */
-    function get projectFile():File;
-
-    //----------------------------------
-    // projectDirectory
-    //----------------------------------
-
-    /**
-     * the Project's native directory that holds all libraries, assets and state binaries.
-     */
-    function get projectDirectory():File;
 }
 }

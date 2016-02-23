@@ -6,16 +6,17 @@ package com.teotigraphix.ui.theme.framework
 
 import com.teotigraphix.ui.component.HGroup;
 import com.teotigraphix.ui.component.file.FileList;
-import com.teotigraphix.ui.screen.impl.FileExplorerScreen;
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.AssetMap;
+
+import flash.filesystem.File;
 
 import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.List;
 import feathers.layout.FlowLayout;
 import feathers.layout.HorizontalLayout;
-
-import flash.filesystem.File;
 
 import starling.display.DisplayObject;
 
@@ -40,7 +41,6 @@ public class FileListFactory extends AbstractThemeFactory
         setStyle(List, setListStyles, FileList.LIST_STYLE_NAME);
         setStyle(Label, setStatusStyles, FileList.STATUS_STYLE_NAME);
         setStyle(LayoutGroup, set_ActionHeaderStyles, FileList.STYLE_ACTION_GROUP);
-        setStyle(HGroup, set_HeaderStyles, FileExplorerScreen.STYLE_HEADER);
     }
 
     public function set_ActionHeaderStyles(group:LayoutGroup):void

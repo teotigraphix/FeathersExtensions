@@ -34,14 +34,14 @@ public interface ISerialize
     /**
      * Called when the parent project has just been deserialized.
      */
-    function wakeup():void;
+    function serialize():void;
 
     /**
      * Called when the parent project is getting ready to serialize, preSleep (true) or right after
      * the project has been serialized, preSleep (true).
      *
-     * @param preSleep Before serialization (false), after serialization (true).
+     * @param preSerialize Before serialization (false), after serialization (true).
      */
-    function sleep(preSleep:Boolean = false):void;
+    function deserialize(preSerialize:Boolean = false):void;
 }
 }

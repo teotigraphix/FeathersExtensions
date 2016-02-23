@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<f:LayoutGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                xmlns:s="library://ns.adobe.com/flex/spark" 
+                xmlns:f="library://ns.feathersui.com/mxml">
+
+    <f:ToggleButton id="actionsButton"
+                    styleName="{FrameworkStyleNames.ACTIONS_BUTTON}"
+                    triggered="dispatchEventWith(EVENT_ACTION_TRIGGER)">
+        
+    </f:ToggleButton>
+    
+    <fx:Script>
+        <![CDATA[
+            import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+
+            public static const EVENT_ACTION_TRIGGER:String = "actionTrigger";
+        ]]>
+    </fx:Script>
+    
+</f:LayoutGroup>

@@ -22,15 +22,12 @@ package com.teotigraphix.app.ui
 
 import flash.desktop.NativeApplication;
 import flash.events.Event;
-import flash.ui.Multitouch;
-import flash.ui.MultitouchInputMode;
 
 import feathers.core.DrawersApplication;
 import feathers.events.FeathersEventType;
 
 import org.robotlegs.starling.mvcs.Context;
 
-import starling.core.Starling;
 import starling.events.Event;
 
 /*
@@ -126,8 +123,12 @@ public class BootstrapApplication extends DrawersApplication implements IBootstr
     {
         if (event.target != this)
             return;
-
+        
+        trace("BootstrapApplication.ADDED_TO_STAGE()");
+        trace("Start context");
         context.startup();
+        context.eventDispatcher.dispatchEventWith("showLoadingScreen");
+        trace("<<<<<<<<<<<<<<<<<<<<<<< Start context");
     }
 
     private function this_initializeHandler(event:starling.events.Event):void

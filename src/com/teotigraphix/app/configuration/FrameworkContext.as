@@ -20,11 +20,19 @@
 package com.teotigraphix.app.configuration
 {
 
-import com.teotigraphix.app.command.StartupFactory;
+import com.teotigraphix.app.command.AbstractProjectStartupFactory;
+import com.teotigraphix.app.command.IStartupFactory;
+import com.teotigraphix.app.command.UncaughtErrorCommand;
+import com.teotigraphix.app.ui.BootstrapNavigator;
 import com.teotigraphix.app.ui.IBootstrapApplication;
 import com.teotigraphix.controller.ICommandLauncher;
+import com.teotigraphix.frameworks.project.AbstractProjectConfigurator;
+import com.teotigraphix.frameworks.project.IProjectConfigurator;
+import com.teotigraphix.frameworks.project.IProjectPreferences;
 import com.teotigraphix.frameworks.project.IProjectPreferencesProvider;
+import com.teotigraphix.frameworks.project.IProjectStateProvider;
 import com.teotigraphix.frameworks.project.ProjectPreferencesProvider;
+import com.teotigraphix.frameworks.project.ProjectStateProvider;
 import com.teotigraphix.model.IApplicationSettings;
 import com.teotigraphix.model.ICoreModel;
 import com.teotigraphix.model.IDeviceModel;
@@ -36,13 +44,16 @@ import com.teotigraphix.service.IFileService;
 import com.teotigraphix.service.ILogger;
 import com.teotigraphix.service.impl.FileServiceImpl;
 import com.teotigraphix.service.impl.LoggerImpl;
+import com.teotigraphix.ui.IScreenLauncher;
 import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.component.IScreenNavigator;
-import com.teotigraphix.ui.screen.IScreenLauncher;
-import com.teotigraphix.ui.screen.impl.NullScreenLauncher;
+import com.teotigraphix.ui.state.ProjectPreferencesTemplateUI;
 
+import flash.display.LoaderInfo;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
+import flash.events.UncaughtErrorEvent;
+import flash.net.registerClassAlias;
 
 import org.robotlegs.starling.base.ContextEventType;
 import org.robotlegs.starling.core.ICommandMap;
@@ -57,6 +68,9 @@ import starling.display.DisplayObjectContainer;
 
 public class FrameworkContext extends Context
 {
+    registerClassAlias("$.1", IProjectPreferences);
+    registerClassAlias("$.2", ProjectPreferencesTemplateUI);
+    
     //----------------------------------
     // Minimal Impl
     //----------------------------------
@@ -76,16 +90,31 @@ public class FrameworkContext extends Context
     // App Config
     //----------------------------------
 
-    public var startupFactoryClass:Class = StartupFactory;
+    public var startupFactoryClass:Class = AbstractProjectStartupFactory;
 
     public var applicationModelAPI:Class;
     public var applicationModelClass:Class;
-
+    public var projectConfiguratorClass:Class = AbstractProjectConfigurator;
+    
     //----------------------------------
     // App UI
     //----------------------------------
 
-    public var navigator:IScreenNavigator;
+    private var _navigator:IScreenNavigator;
+
+    public function get navigator():IScreenNavigator
+    {
+        return _navigator;
+    }
+
+    public function set navigator(value:IScreenNavigator):void
+    {
+        _navigator = value;
+        if (_navigator is BootstrapNavigator)
+        {
+            BootstrapNavigator(_navigator).eventDispatcher = this;
+        }
+    }
 
     public var applicationClass:Class;
     public var applicationMediatorClass:Class;
@@ -94,7 +123,7 @@ public class FrameworkContext extends Context
     // App Controller
     //----------------------------------
 
-    public var screenLauncherClass:Class = NullScreenLauncher;
+    public var screenLauncherClass:Class;
     public var commandLauncherClass:Class;
     public var uiControllerClass:Class;
 
@@ -159,7 +188,8 @@ public class FrameworkContext extends Context
 
         trace("    FrameworkContext.configureDescriptor()");
         injector.mapSingletonOf(ApplicationDescriptor, applicationDescriptorClass);
-
+        injector.mapSingletonOf(IApplicationPermissions, ApplicationPermissions);
+        
         trace("    FrameworkContext.configureCore()");
         configureCoreNonDependencies();
 
@@ -220,14 +250,26 @@ public class FrameworkContext extends Context
         injector.mapSingletonOf(IFileService, _fileServiceClass);
         injector.mapSingletonOf(IApplicationSettings, applicationSettingsClass);
         injector.mapSingletonOf(IDeviceModel, $deviceModelClass);
+        
         injector.mapSingletonOf(IProjectPreferencesProvider, ProjectPreferencesProvider);
+        injector.mapSingletonOf(IProjectStateProvider, ProjectStateProvider);
+        injector.mapSingletonOf(IProjectConfigurator, projectConfiguratorClass);
+        
+        if (Starling.current != null)
+        {
+            var loaderInfo:LoaderInfo = Starling.current.nativeStage.loaderInfo
+            Starling.current.nativeStage.loaderInfo.content.loaderInfo.uncaughtErrorEvents.addEventListener(
+                UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorEvents_uncaughtErrorEventHandler);
+            
+            commandMap.mapEvent(UncaughtErrorEvent.UNCAUGHT_ERROR, UncaughtErrorCommand);
+        }
     }
 
     protected function configureCore():void
     {
         injector.mapSingletonOf(ISaveStrategy, SaveStrategy);
         
-        injector.mapSingletonOf(StartupFactory, startupFactoryClass);
+        injector.mapSingletonOf(IStartupFactory, startupFactoryClass);
         injector.mapSingletonOf(IScreenLauncher, screenLauncherClass);
         injector.mapSingletonOf(ICommandLauncher, commandLauncherClass);
         injector.mapSingletonOf(IUIController, uiControllerClass);
@@ -316,6 +358,22 @@ public class FrameworkContext extends Context
         trace("    FrameworkContext.dispatchEventWith(STARTUP)");
         // launches the startupCommandClass
         dispatchEventWith(ContextEventType.STARTUP);
+    }
+    
+    private function uncaughtErrorEvents_uncaughtErrorEventHandler(event:UncaughtErrorEvent):void
+    {
+        event.preventDefault();
+        trace("    FrameworkContext.uncaughtErrorEvents_uncaughtErrorEventHandler()", event);
+        var error:* = event.error;
+        if(error is Error)
+        {
+            var errorError:Error = Error(error);
+            dispatchEventWith(UncaughtErrorEvent.UNCAUGHT_ERROR, false, errorError.message);
+        }
+        else
+        {
+            dispatchEventWith(UncaughtErrorEvent.UNCAUGHT_ERROR, false, error);
+        }
     }
 }
 }

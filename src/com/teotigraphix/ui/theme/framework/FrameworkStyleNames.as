@@ -24,6 +24,14 @@ package com.teotigraphix.ui.theme.framework
  */
 public class FrameworkStyleNames
 {
+    // Template Names
+    
+    public static const ACTIONS_BUTTON:String = "actions-button";
+    public static const SAVE_BUTTON:String = "save-button";
+    public static const PROJECT_NAME_LABEL:String = "project-name-label";
+    public static const LOGO_BUTTON:String = "logo-button";
+    
+    //
     public static const TOOL_TIP_LABEL:String = "tool-tip-label";
 
     public static const THEME_BUTTON_RAISED:String = "theme-button-raised";

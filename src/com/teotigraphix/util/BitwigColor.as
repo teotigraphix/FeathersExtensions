@@ -199,7 +199,7 @@ public class BitwigColor
 
     public static function fromId(id:int):BitwigColor
     {
-        for each (var color:BitwigColor in _values)
+        for each (var color:BitwigColor in values)
         {
             if (color.id == id)
                 return color;

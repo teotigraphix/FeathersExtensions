@@ -18,9 +18,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.teotigraphix.controller
 {
+import flash.filesystem.File;
 
 public interface ICommandLauncher
 {
-
+    
+    function saveProject():void;
+    function loadProject(file:File = null):void;
+    function newProject(name:String = null):void;
 }
 }

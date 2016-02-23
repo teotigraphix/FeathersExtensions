@@ -21,12 +21,12 @@ package com.teotigraphix.model.impl
 {
 
 import com.teotigraphix.app.event.ApplicationEventType;
+import com.teotigraphix.frameworks.project.IProjectStateProvider;
 import com.teotigraphix.frameworks.project.Project;
-import com.teotigraphix.model.*;
-import com.teotigraphix.service.IFileService;
+import com.teotigraphix.model.AbstractModel;
 import com.teotigraphix.model.IApplicationSettings;
-
-import flash.filesystem.File;
+import com.teotigraphix.model.IProjectModel;
+import com.teotigraphix.service.IFileService;
 
 public class ProjectModelImpl extends AbstractModel implements IProjectModel
 {
@@ -40,7 +40,10 @@ public class ProjectModelImpl extends AbstractModel implements IProjectModel
     public var fileService:IFileService;
 
     [Inject]
-    public var preferenceService:IApplicationSettings;
+    public var applicationSettings:IApplicationSettings;
+    
+    [Inject]
+    public var projectStateProvider:IProjectStateProvider;
     
     //--------------------------------------------------------------------------
     // Private :: Variables
@@ -74,24 +77,6 @@ public class ProjectModelImpl extends AbstractModel implements IProjectModel
         projectLoadCompleteHandler();
     }
 
-    //----------------------------------
-    // projectFile
-    //----------------------------------
-
-    public function get projectFile():File
-    {
-        return _project.workingFile;
-    }
-
-    //----------------------------------
-    // projectDirectory
-    //----------------------------------
-
-    public function get projectDirectory():File
-    {
-        return _project.workingDirectory;
-    }
-
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------
@@ -115,6 +100,7 @@ public class ProjectModelImpl extends AbstractModel implements IProjectModel
         else
         {
             logger.log(TAG, "!!!! Set Project: " + project.name);
+            projectStateProvider.provided = project.state;
             _project = project;
             injector.injectInto(_project);
         }
@@ -124,7 +110,7 @@ public class ProjectModelImpl extends AbstractModel implements IProjectModel
     {
         if (_project != null)
         {
-            preferenceService.appLastProjectPath = _project.getNativePath();
+            applicationSettings.appLastProjectFile = _project.nativeFile;
             logger.log(TAG, "Dispatching PROJECT_CHANGED event: " + _project.toString());
             dispatchWith(ApplicationEventType.PROJECT_CHANGED, false, _project);
         }

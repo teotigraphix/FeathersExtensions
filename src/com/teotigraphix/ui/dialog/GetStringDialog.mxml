@@ -24,14 +24,20 @@
             
             import feathers.core.PopUpManager;
             
+            private var _text:String;
+            private var _prompt:String;
+            private var _allowPromptAsText:Boolean;
+            
             //----------------------------------
             // text
             //----------------------------------
-            
-            private var _text:String;
-            
+
             public function get text():String 
             {
+                if (_allowPromptAsText && _text == null)
+                {
+                    return _prompt;
+                }
                 return _text;
             }
             
@@ -41,15 +47,13 @@
                     return;
                 
                 _text = value;
-                invalidate("text");
+                invalidate(INVALIDATION_FLAG_DATA);
             }
 
             //----------------------------------
             // prompt
             //----------------------------------
-            
-            private var _prompt:String;
-            
+
             public function get prompt():String 
             {
                 return _prompt;
@@ -61,13 +65,30 @@
                     return;
                 
                 _prompt = value;
-                invalidate("prompt");
+                invalidate(INVALIDATION_FLAG_DATA);
             }
             
-            public static function show(title:String, prompt:String):GetStringDialog
+            //----------------------------------
+            // allowPromptAsText
+            //----------------------------------
+            
+            public function get allowPromptAsText():Boolean
+            {
+                return _allowPromptAsText;
+            }
+            
+            public function set allowPromptAsText(value:Boolean):void
+            {
+                _allowPromptAsText = value;
+                invalidate(INVALIDATION_FLAG_DATA);
+            }
+            
+            
+            public static function show(title:String, prompt:String, allowPromptAsText:Boolean = false):GetStringDialog
             {
                 const dialog:GetStringDialog = Dialog.show(title, GetStringDialog) as GetStringDialog; 
                 dialog.prompt = prompt;
+                dialog.allowPromptAsText = allowPromptAsText;
                 return dialog;
             }
             
@@ -87,21 +108,25 @@
             {   
                 super.draw();
                 
-                if (isInvalid("text"))
+                if (isInvalid(INVALIDATION_FLAG_DATA))
                 {
                     textInput.text = _text;
-                }
-                
-                if (isInvalid("prompt"))
-                {
                     textInput.prompt = _prompt;
+                    if (_allowPromptAsText && _prompt != null)
+                    {
+                        isYesEnabled = true;
+                    }
                 }
             }
             
             private function textInput_changeHandler():void
             {
                 _text = textInput.text;
-                isYesEnabled = (_text != null && _text != "");
+                
+                if (!_allowPromptAsText)
+                {
+                    isYesEnabled = (_text != null && _text != "");
+                }
             }
             
         ]]>

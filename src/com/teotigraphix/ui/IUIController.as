@@ -21,13 +21,27 @@ package com.teotigraphix.ui
 import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.dialog.FileDialog;
 import com.teotigraphix.ui.dialog.GetStringDialog;
+import com.teotigraphix.ui.dialog.ProgressDialog;
+
+import feathers.controls.Alert;
 
 public interface IUIController
 {
     function browseForFile(data:FileListData, yesHandler:Function, noHandler:Function):FileDialog;
     
+    function showAlert(title:String, message:String, iconSkin:String,
+                       okHandler:Function, cancelHandler:Function,
+                       yesLabel:String = "OK", noLabel:String = "CANCEL"):Alert;
+    
+    function progress(status:String = null, percent:int = 0):ProgressDialog;
+    
     function getString(title:String, prompt:String, yesHandler:Function, noHandler:Function):GetStringDialog;
     
     function notifyToast(message:String, icon:String = null, duration:Number = 3000):void;
+    
+    /**
+     *  Exists the native application.
+     */
+    function exit():void;
 }
 }

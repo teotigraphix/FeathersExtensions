@@ -30,6 +30,7 @@ import org.as3commons.async.operation.event.CancelableOperationEvent;
 import org.as3commons.async.operation.impl.AbstractProgressOperation;
 import org.robotlegs.starling.core.IInjector;
 
+import starling.core.Starling;
 import starling.events.EventDispatcher;
 
 /**
@@ -113,7 +114,17 @@ public class StepCommand extends AbstractProgressOperation implements IStepComma
     protected function complete(result:* = null, delay:Number = 10, repeatCount:int = 1):void
     {
         this.result = result;
-        pauseComplete(delay, repeatCount);
+        
+        if (Starling.juggler != null)
+        {
+            Starling.juggler.delayCall(function ():void {
+                dispatchCompleteEvent(this.result); 
+            }, delay / 1000);
+        }
+        else
+        {
+            pauseComplete(delay, repeatCount);
+        }
     }
 
     protected function monitorForComplete(monitoredData:Object, delay:Number = 0, repeatCount:int = 1):void
