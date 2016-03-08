@@ -20,7 +20,6 @@ package com.teotigraphix.ui.theme.framework
 {
 
 import com.teotigraphix.ui.component.HGroup;
-import com.teotigraphix.ui.component.VGroup;
 import com.teotigraphix.ui.control.BackButtonControl;
 import com.teotigraphix.ui.dialog.Dialog;
 import com.teotigraphix.ui.dialog.FileDialog;
@@ -116,10 +115,10 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         HorizontalLayout(actionBar.layout).verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
 
         actionBar.minWidth = properties.gridSize;
-        actionBar.minHeight = dp(48);//properties.gridSize;
+        actionBar.minHeight = 48;//properties.gridSize;
 
         var hl:HorizontalLayout = actionBar.layout as HorizontalLayout;
-        hl.paddingLeft = hl.paddingRight = dp(8); //properties.smallGutterSize;
+        hl.paddingLeft = hl.paddingRight = 8; //properties.smallGutterSize;
         //actionBar.gap = properties.smallGutterSize;
         //actionBar.titleGap = properties.smallGutterSize;
 
@@ -130,13 +129,13 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
     private function set_divider(group:HGroup):void
     {
         group. percentWidth = 100;
-        var quad:Quad = new Quad(size(1), size(1), 0xCCCCCC);
+        var quad:Quad = new Quad(1, 1, 0xCCCCCC);
         group.backgroundSkin = quad;
     }
 
     private function theme_dialogContentGroup(group:Dialog):void
     {
-        group.minWidth = dp(300);
+        group.minWidth = 300;
        // FileDialog(group).padding = dp(2);
         group.backgroundSkin = create9ScaleImage('background-popup-skin', 4, 4, 24, 24);
     }
@@ -144,26 +143,26 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
     private function theme_textInputDarkStyles(textInput:TextInput):void
     {
         theme.textInput.setDarkTextInputStyles(textInput);
-        textInput.padding = dp(8);
+        textInput.padding = 8;
     }
 
     private function theme_formTitleDarkStyles(label:Label):void
     {
         theme.label.set_themeHeadingDarkStyles(label);
-        label.padding = dp(16);
+        label.padding =16;
     }
 
     public function theme_toolTipLabelStyles(label:Label):void
     {
         theme.label.setLabelDarkStyles(label);
-        label.padding = dp(8);
+        label.padding = 8;
     }
 
     public function theme_formButtonFooter(group:HGroup):void
     {
         group.percentWidth = 100;
-        group.padding = dp(8);
-        group.gap = dp(8);
+        group.padding = 8;
+        group.gap = 8;
         group.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_RIGHT;
         group.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
     }
@@ -175,9 +174,9 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         button.defaultLabelProperties.elementFormat = font.darkUIElementFormat;
         button.disabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
         
-        button.minWidth = dp(64);
-        button.height = dp(36);
-        button.paddingLeft = button.paddingRight = dp(8);
+        button.minWidth = 64;
+        button.height = 36;
+        button.paddingLeft = button.paddingRight = 8;
     }
     
     public function setFormOkButtonStyles(button:Button):void
@@ -187,9 +186,9 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         button.defaultLabelProperties.elementFormat = font.darkUIElementFormat;
         button.disabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
         
-        button.minWidth = dp(64);
-        button.height = dp(36);
-        button.paddingLeft = button.paddingRight = dp(8);
+        button.minWidth = 64;
+        button.height = 36;
+        button.paddingLeft = button.paddingRight = 8;
         button.label = "OK";
     }
 
@@ -200,9 +199,9 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         button.defaultLabelProperties.elementFormat = font.darkUIElementFormat;
         button.disabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
         
-        button.minWidth = dp(64);
-        button.height = dp(36);
-        button.paddingLeft = button.paddingRight = dp(8);
+        button.minWidth = 64;
+        button.height = 36;
+        button.paddingLeft = button.paddingRight = 8;
         button.label = "CANCEL";
     }
 
@@ -214,10 +213,10 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         button.downIcon = createImage("back-button-down-icon");
         button.hasLabelTextRenderer = false;
 
-        button.paddingTop = size(4);
-        button.paddingBottom = size(4);
-        button.paddingLeft = size(4);
-        button.paddingRight = size(4);
+        button.paddingTop = 4;
+        button.paddingBottom = 4;
+        button.paddingLeft = 4;
+        button.paddingRight = 4;
         button.gap = 0;
         button.minGap = 0;
         button.minWidth = button.minHeight = 0;

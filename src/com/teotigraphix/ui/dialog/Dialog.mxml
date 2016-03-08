@@ -24,7 +24,7 @@
         </f:layoutData>
         
         <f:layout>
-            <f:VerticalLayout padding="{AssetMap.dp(8)}"/>
+            <f:VerticalLayout padding="8"/>
         </f:layout>
         
         <!-- content -->
@@ -51,7 +51,6 @@
    <fx:Script>
        <![CDATA[
            import com.teotigraphix.ui.component.event.FrameworkEventType;
-           import com.teotigraphix.ui.theme.AssetMap;
            import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
            
            import feathers.core.PopUpManager;

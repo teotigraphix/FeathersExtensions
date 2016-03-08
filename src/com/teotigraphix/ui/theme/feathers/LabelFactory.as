@@ -89,7 +89,7 @@ public class LabelFactory extends AbstractThemeFactory
      */
     public function set_themeHeadingDarkStyles(label:Label):void
     {
-        label.textRendererProperties.elementFormat = theme.fonts.headerDarkElementFormat;
+        label.textRendererProperties.elementFormat = theme.fonts.headerElementFormat;
         label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
     }
 
@@ -155,8 +155,8 @@ public class LabelFactory extends AbstractThemeFactory
      */
     public function setHeading1DarkLabelStyles(label:Label):void
     {
-        label.textRendererProperties.elementFormat = theme.fonts.headerDarkElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.headerDarkElementFormat;
+        label.textRendererProperties.elementFormat = theme.fonts.headerElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.headerDisabledElementFormat;
     }
 
     /**

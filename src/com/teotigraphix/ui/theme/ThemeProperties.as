@@ -24,49 +24,7 @@ import starling.events.EventDispatcher;
 
 public class ThemeProperties extends EventDispatcher
 {
-    private static var _gap:Number;
-    private static var _gapx2:Number;
-    private static var _padding:Number;
-    
     private static var dispatcher:EventDispatcher;
-    
-    [Bindable("change")]
-    public static function get gap():Number
-    {
-        return _gap;
-    }
-
-    public static function set gap(value:Number):void
-    {
-        _gap = value;
-        dispatcher.dispatchEventWith("change");
-    }
-    
-    [Bindable("change")]
-    public static function get gapx2():Number
-    {
-        return _gapx2;
-    }
-
-    public static function set gapx2(value:Number):void
-    {
-        _gapx2 = value;
-        dispatcher.dispatchEventWith("change");
-    }
-    
-    [Bindable("change")]
-    public static function get padding():Number
-    {
-        return _padding;
-    }
-
-    public static function set padding(value:Number):void
-    {
-        _padding = value;
-        dispatcher.dispatchEventWith("change");
-    }
-
-    public var scale:Number;
 
     /**
      * The size, in pixels, of major regions in the grid. Used for sizing
@@ -130,8 +88,6 @@ public class ThemeProperties extends EventDispatcher
         scrollBarGutterSize = 2;
         wideControlSize = gridSize * 3 + gutterSize * 2;
         borderSize = 1;
-        
-        
     }
 }
 }

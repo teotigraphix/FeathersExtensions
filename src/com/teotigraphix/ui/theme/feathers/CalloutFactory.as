@@ -57,7 +57,7 @@ public class CalloutFactory extends AbstractThemeFactory
     {
         super.initializeDimensions();
 
-        calloutBackgroundMinSize = Math.round(11 * properties.scale);
+        this.calloutBackgroundMinSize = 12;
         this.calloutArrowOverlapGap = -2;
     }
 
@@ -102,7 +102,7 @@ public class CalloutFactory extends AbstractThemeFactory
         callout.leftArrowSkin = leftArrowSkin;
         callout.leftArrowGap = this.calloutArrowOverlapGap;
 
-        callout.padding = dp(4);//properties.smallGutterSize;
+        callout.padding = properties.smallGutterSize;
     }
 }
 }

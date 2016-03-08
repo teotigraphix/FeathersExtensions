@@ -45,7 +45,7 @@ public class FileListFactory extends AbstractThemeFactory
 
     public function set_ActionHeaderStyles(group:LayoutGroup):void
     {
-        FlowLayout(group.layout).padding = dp(8);
+        FlowLayout(group.layout).padding = 8;
     }
 
     public function set_HeaderStyles(group:HGroup):void
@@ -53,7 +53,7 @@ public class FileListFactory extends AbstractThemeFactory
         group.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
         group.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_LEFT;
         group.backgroundSkin = AssetMap.create9ScaleImage('application-header-skin', 5, 5, 50, 50);
-        group.padding = dp(16);
+        group.padding = 16;
     }
 
     public function setListStyles(list:List):void
@@ -64,7 +64,7 @@ public class FileListFactory extends AbstractThemeFactory
     public function setStatusStyles(label:Label):void
     {
         theme.label.set_label20Dark(label);
-        label.padding = dp(4);
+        label.padding = 4;
     }
 
     public function setFileListStyles(list:FileList):void
@@ -76,10 +76,10 @@ public class FileListFactory extends AbstractThemeFactory
         list.showFiles = true;
         //list.iconFunction = iconFunction;
 
-        list.homeButton.defaultIcon = AssetMap.createScaledImage("file-list-folder-home-icon");
+        list.homeButton.defaultIcon = AssetMap.createImage("file-list-folder-home-icon");
 
-        list.upButton.defaultIcon = AssetMap.createScaledImage("file-list-up-icon");
-        list.upButton.disabledIcon = AssetMap.createScaledImage("file-list-up-disabled-icon");
+        list.upButton.defaultIcon = AssetMap.createImage("file-list-up-icon");
+        list.upButton.disabledIcon = AssetMap.createImage("file-list-up-disabled-icon");
 
         //list.backButton.defaultIcon = AssetMap.createScaledImage("file-list-back-icon");
         //list.backButton.disabledIcon = AssetMap.createScaledImage("file-list-back-disabled-icon");
@@ -87,10 +87,10 @@ public class FileListFactory extends AbstractThemeFactory
         //list.nextButton.defaultIcon = AssetMap.createScaledImage("file-list-forward-icon");
         //list.nextButton.disabledIcon = AssetMap.createScaledImage("file-list-forward-disabled-icon");
 
-        list.newButton.defaultIcon = AssetMap.createScaledImage("file-list-folder-new-icon");
-        list.newButton.disabledIcon = AssetMap.createScaledImage("file-list-folder-new-disabled-icon");
+        list.newButton.defaultIcon = AssetMap.createImage("file-list-folder-new-icon");
+        list.newButton.disabledIcon = AssetMap.createImage("file-list-folder-new-disabled-icon");
 
-        list.refreshButton.defaultIcon = AssetMap.createScaledImage("file-list-refresh-icon");
+        list.refreshButton.defaultIcon = AssetMap.createImage("file-list-refresh-icon");
 
         sizeFileListIcon(list.homeButton.defaultIcon);
 

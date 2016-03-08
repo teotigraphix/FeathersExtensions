@@ -123,22 +123,7 @@ public class AbstractThemeFactory extends EventDispatcher
     {
         return new SimpleScrollBar();
     }
-
-    protected static function dp(dimension:Number):Number
-    {
-        return AssetMap.dp(dimension);
-    }
-
-    protected static function size(dimension:Number):Number
-    {
-        return AssetMap.size(dimension);
-    }
-
-    protected static function createScaledImage(name:String, isRuntime:Boolean = false):Image
-    {
-        return AssetMap.createScaledImage(name, isRuntime);
-    }
-
+    
     protected static function createImage(name:String, isRuntime:Boolean = false):Image
     {
         return AssetMap.createImage(name, isRuntime);

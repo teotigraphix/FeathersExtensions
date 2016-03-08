@@ -43,101 +43,108 @@ public class FontFactory extends AbstractThemeFactory
     public static const DARK_PROPMT_TEXT_COLOR:uint = 0xAAA9A9;
     
     public static var THEME_FONT_COLOR:uint = 0x00BCD4;
-
+    
     /**
      * The name of the embedded font used by controls in this theme. Comes
      * in normal and bold weights.
      */
     public static var FONT_NAME:String = "SourceSansPro";
-
+    
     /**
      * An ElementFormat with a theme tint meant for UI controls.
      */
     public var themeLargeElementFormat:ElementFormat;
-
+    
     /**
      * The smallest font.
      */
     public var extraSmallFontSize:int;
-
+    
     /**
      * A smaller font size for details.
      */
     public var smallFontSize:int;
-
+    
     /**
      * A normal font size.
      */
     public var regularFontSize:int;
-
+    
     /**
      * A larger font size for headers.
      */
     public var largeFontSize:int;
-
+    
     /**
      * An extra large font size.
      */
     public var extraLargeFontSize:int;
-
+    
     /**
      * An extra large font size. (48)
      */
     public var extraExtraLargeFontSize:int;
-
+    
+    /**
+     * The font size used for text inputs that use StageText.
+     * 
+     * @see #stageTextScale
+     */
+    public var inputFontSize:int;
+    
     //----------------------------------
     // ElementFormat
     //----------------------------------
-
+    
     public var defaultButtonElementFormat:ElementFormat;
     public var defaultButtonDisableElementFormat:ElementFormat;
-
+    
     /**
      * The FTE FontDescription used for text of a normal weight.
      */
     public var regularFontDescription:FontDescription;
-
+    
     /**
      * The FTE FontDescription used for text of a bold weight.
      */
     public var boldFontDescription:FontDescription;
-
+    
     /**
      * ScrollText uses TextField instead of FTE, so it has a separate TextFormat.
      */
     public var scrollTextTextFormat:TextFormat;
-
+    
     /**
      * ScrollText uses TextField instead of FTE, so it has a separate disabled TextFormat.
      */
     public var scrollTextDisabledTextFormat:TextFormat;
-
+    
     /**
      * An ElementFormat used for Header components.
      */
     public var headerElementFormat:ElementFormat;
-    public var headerDarkElementFormat:ElementFormat;
-
+    public var headerDisabledElementFormat:ElementFormat;
+    
     /**
      * An ElementFormat with a dark tint meant for UI controls.
      */
     public var darkUIElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a light tint meant for UI controls.
      */
     public var lightUIElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a highlighted tint meant for selected UI controls.
      */
     public var selectedUIElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a light tint meant for disabled UI controls.
      */
     public var lightUIDisabledElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a dark tint meant for disabled UI controls.
      */
@@ -148,147 +155,145 @@ public class FontFactory extends AbstractThemeFactory
      * An ElementFormat with a dark tint meant for larger UI controls.
      */
     public var largeUIDarkElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a light tint meant for larger UI controls.
      */
     public var largeUILightElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a highlighted tint meant for larger UI controls.
      */
     public var largeUISelectedElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a dark tint meant for larger disabled UI controls.
      */
     public var largeUIDarkDisabledElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a light tint meant for larger disabled UI controls.
      */
     public var largeUILightDisabledElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a dark tint meant for larger text.
      */
     public var largeDarkElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a light tint meant for larger text.
      */
     public var largeLightElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat meant for larger disabled text.
      */
     public var largeDisabledElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a dark tint meant for regular text.
      */
     public var darkElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a light tint meant for regular text.
      */
     public var lightElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat meant for regular, disabled text.
      */
     public var disabledElementFormat:ElementFormat;
-
+    
     public var smallDarkElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat with a light tint meant for smaller text.
      */
     public var smallLightElementFormat:ElementFormat;
-
+    
     /**
      * An ElementFormat meant for smaller, disabled text.
      */
     public var smallDisabledElementFormat:ElementFormat;
-
+    
     ///
     public var extraSmallDarkElementFormat:ElementFormat;
     public var extraSmallDarkDisabledElementFormat:ElementFormat;
-
+    
     public function FontFactory(theme:AbstractTheme)
     {
         super(theme);
     }
-
+    
     /**
      * Initializes font sizes and formats.
      */
     override public function initializeFonts():void
     {
-        extraSmallFontSize = Math.round(16 * theme.scale);
-        smallFontSize = Math.round(20 * theme.scale);
-        regularFontSize = Math.round(24 * theme.scale);
-        largeFontSize = Math.round(28 * theme.scale);
-        extraLargeFontSize = Math.round(36 * theme.scale);
-        extraExtraLargeFontSize = Math.round(48 * theme.scale);
-
+        extraSmallFontSize = 8;
+        smallFontSize = 10;
+        regularFontSize = 12;
+        largeFontSize = 14;
+        extraLargeFontSize = 18;
+        extraExtraLargeFontSize = 48;
+        
+        inputFontSize = Math.round(12 * theme.stageTextScale);
+        
+        
         //these are for components that don't use FTE
         scrollTextTextFormat = new TextFormat("_sans", regularFontSize, LIGHT_TEXT_COLOR);
         scrollTextDisabledTextFormat = new TextFormat("_sans", regularFontSize, DISABLED_TEXT_COLOR);
-
-        regularFontDescription = new FontDescription(FONT_NAME, FontWeight.NORMAL, FontPosture.NORMAL,
-                FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
-        boldFontDescription = new FontDescription(FONT_NAME, FontWeight.BOLD, FontPosture.NORMAL,
-                FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
-
-        extraSmallDarkElementFormat = new ElementFormat(regularFontDescription, extraSmallFontSize, DARK_TEXT_COLOR);
-        extraSmallDarkDisabledElementFormat = new ElementFormat(regularFontDescription, extraSmallFontSize, DARK_DISABLED_TEXT_COLOR);
-
-        // Small
-        smallLightElementFormat = new ElementFormat(regularFontDescription, smallFontSize, LIGHT_TEXT_COLOR);
-        smallDarkElementFormat = new ElementFormat(boldFontDescription, smallFontSize, DARK_TEXT_COLOR);
-        smallDisabledElementFormat = new ElementFormat(regularFontDescription, smallFontSize, DISABLED_TEXT_COLOR);
-
-        // UI Regular font size
+        
+        regularFontDescription = new FontDescription(FONT_NAME, FontWeight.NORMAL, FontPosture.NORMAL, FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
+        boldFontDescription = new FontDescription(FONT_NAME, FontWeight.BOLD, FontPosture.NORMAL, FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
+        
+        headerElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, LIGHT_TEXT_COLOR);
+        headerDisabledElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, DISABLED_TEXT_COLOR);
+        
         darkUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_TEXT_COLOR);
         lightUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, LIGHT_TEXT_COLOR);
         selectedUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, SELECTED_TEXT_COLOR);
         lightUIDisabledElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DISABLED_TEXT_COLOR);
         darkUIDisabledElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_DISABLED_TEXT_COLOR);
-        darkUIPromptElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_PROPMT_TEXT_COLOR);
         
-        // UI Large
         largeUIDarkElementFormat = new ElementFormat(boldFontDescription, largeFontSize, DARK_TEXT_COLOR);
         largeUILightElementFormat = new ElementFormat(boldFontDescription, largeFontSize, LIGHT_TEXT_COLOR);
         largeUISelectedElementFormat = new ElementFormat(boldFontDescription, largeFontSize, SELECTED_TEXT_COLOR);
-        largeUIDarkDisabledElementFormat = new ElementFormat(boldFontDescription, largeFontSize,
-                DARK_DISABLED_TEXT_COLOR);
+        largeUIDarkDisabledElementFormat = new ElementFormat(boldFontDescription, largeFontSize, DARK_DISABLED_TEXT_COLOR);
         largeUILightDisabledElementFormat = new ElementFormat(boldFontDescription, largeFontSize, DISABLED_TEXT_COLOR);
-
+        
         darkElementFormat = new ElementFormat(regularFontDescription, regularFontSize, DARK_TEXT_COLOR);
         lightElementFormat = new ElementFormat(regularFontDescription, regularFontSize, LIGHT_TEXT_COLOR);
         disabledElementFormat = new ElementFormat(regularFontDescription, regularFontSize, DISABLED_TEXT_COLOR);
-
+        
+        smallLightElementFormat = new ElementFormat(regularFontDescription, smallFontSize, LIGHT_TEXT_COLOR);
+        smallDisabledElementFormat = new ElementFormat(regularFontDescription, smallFontSize, DISABLED_TEXT_COLOR);
+        
         largeDarkElementFormat = new ElementFormat(regularFontDescription, largeFontSize, DARK_TEXT_COLOR);
         largeLightElementFormat = new ElementFormat(regularFontDescription, largeFontSize, LIGHT_TEXT_COLOR);
         largeDisabledElementFormat = new ElementFormat(regularFontDescription, largeFontSize, DISABLED_TEXT_COLOR);
-
-        headerElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, LIGHT_TEXT_COLOR);
-        headerDarkElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, DARK_TEXT_COLOR);
-
+        
+        
+        
+        
+        
+        
+        
         // ME
         defaultButtonElementFormat = darkUIElementFormat;
         defaultButtonDisableElementFormat = darkUIDisabledElementFormat;
-
+        
         themeLargeElementFormat = new ElementFormat(regularFontDescription, largeFontSize, THEME_FONT_COLOR);
     }
-
+    
     override public function initializeGlobals():void
     {
         FeathersControl.defaultTextRendererFactory = textRendererFactory;
         FeathersControl.defaultTextEditorFactory = textEditorFactory;
     }
-
+    
     /**
      * The default global text renderer factory for this theme creates a
      * TextBlockTextRenderer.
@@ -297,7 +302,7 @@ public class FontFactory extends AbstractThemeFactory
     {
         return new TextBlockTextRenderer();
     }
-
+    
     /**
      * The default global text editor factory for this theme creates a
      * StageTextTextEditor.

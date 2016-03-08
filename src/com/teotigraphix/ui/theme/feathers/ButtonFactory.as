@@ -148,9 +148,9 @@ public class ButtonFactory extends AbstractThemeFactory
         //button.minGap = properties.smallGutterSize;
         button.minWidth = button.minHeight = properties.controlSize;
         //button.minWidth = dp(64);
-        button.height = dp(36);
-        button.padding = dp(8);
-        button.gap = dp(8);
+        button.height = 36;
+        button.padding = 8;
+        button.gap = 8;
         button.minTouchWidth = properties.gridSize;
         button.minTouchHeight = properties.gridSize;
     }

@@ -13,6 +13,7 @@ import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.utils.getQualifiedClassName;
 
+import starling.core.Starling;
 import starling.text.BitmapFont;
 import starling.text.TextField;
 import starling.textures.Texture;
@@ -467,7 +468,7 @@ public class DynamicAtlas
                 subText.@frameLabel=itm.frameName;
             xml.appendChild(subText);
         }
-        texture=Texture.fromBitmapData(canvasData, false);
+        texture=Texture.fromBitmapData(canvasData, false, false, Starling.current.nativeStage.contentsScaleFactor);
         atlas=new TextureAtlas(texture, xml);
 
         _items.length=0;
@@ -602,7 +603,7 @@ public class DynamicAtlas
 
         xml.appendChild(charsNode);
 
-        texture=Texture.fromBitmapData(canvasData, false);
+        texture=Texture.fromBitmapData(canvasData, false, false, Starling.current.nativeStage.contentsScaleFactor);
         TextField.registerBitmapFont(new BitmapFont(texture, xml));
 
         _items.length=0;

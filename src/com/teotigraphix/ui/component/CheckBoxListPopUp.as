@@ -79,11 +79,11 @@ public class CheckBoxListPopUp extends Panel
 
             _selectAllButton = new Button();
             _selectAllButton.label = "All";
-            _selectAllButton.width = AssetMap.size(100);
+            _selectAllButton.width = 100;
 
             _selectNoneButton = new Button();
             _selectNoneButton.label = "None";
-            _selectNoneButton.width = AssetMap.size(100);
+            _selectNoneButton.width = 100;
 
             _selectAllButton.addEventListener(Event.TRIGGERED, selectAllButton_triggeredHandler);
             _selectNoneButton.addEventListener(Event.TRIGGERED, selectNoneButton_triggeredHandler);
@@ -102,16 +102,16 @@ public class CheckBoxListPopUp extends Panel
             var footer:LayoutGroup = new LayoutGroup();
             var fl:HorizontalLayout = new HorizontalLayout();
             fl.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_CENTER;
-            fl.padding = AssetMap.size(10);
+            fl.padding = 10;
             footer.layout = fl;
 
             _okButton = new Button();
             _okButton.label = "OK";
-            _okButton.width = AssetMap.size(200);
+            _okButton.width = 200;
 
             _cancelButton = new Button();
             _cancelButton.label = "Cancel";
-            _cancelButton.width = AssetMap.size(200);
+            _cancelButton.width = 200;
 
             footer.addChild(_okButton);
             footer.addChild(_cancelButton);

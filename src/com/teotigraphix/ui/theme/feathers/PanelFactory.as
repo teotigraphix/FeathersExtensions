@@ -77,7 +77,7 @@ public class PanelFactory extends AbstractThemeFactory
         header.gap = properties.smallGutterSize;
         header.titleGap = properties.smallGutterSize;
 
-        header.titleProperties.elementFormat = font.headerDarkElementFormat;
+        header.titleProperties.elementFormat = font.headerElementFormat;
     }
 
     //-------------------------

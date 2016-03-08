@@ -132,7 +132,7 @@ public class AlertFactory extends AbstractThemeFactory
         header.gap = properties.smallGutterSize;
         header.titleGap = properties.smallGutterSize;
 
-        header.titleProperties.elementFormat = theme.fonts.headerDarkElementFormat;
+        header.titleProperties.elementFormat = theme.fonts.headerElementFormat;
     }
 
     protected static function popUpOverlayFactory():DisplayObject

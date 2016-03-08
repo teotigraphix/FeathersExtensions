@@ -35,11 +35,6 @@ public final class AssetMap
     public static var atlas:TextureAtlas;
     public static var runtimeAtlas:TextureAtlas;
     
-    
-    public static var scale:Number;
-    
-    public static var densityPixelRatio:Number;
-    
     public static var theme:StyleNameFunctionTheme;
     
     //public static var scaleManager:ScreenDensityScaleFactorManager;
@@ -63,13 +58,6 @@ public final class AssetMap
         return new Image(texture);
     }
     
-    public static function createScaledImage(name:String, isRuntime:Boolean = false):Image
-    {
-        const image:Image = createImage(name, isRuntime);
-        image.scaleX = image.scaleY = AssetMap.scale;
-        return image;
-    }
-    
     public static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Image
     {
         var image:Image = createImage(name, isRuntime);
@@ -87,16 +75,6 @@ public final class AssetMap
         var t:Texture = selectedAtlas.getTexture(name);
         textures[name] = t;
         return t;
-    }
-    
-    public static function size(size:Number):Number
-    {
-        return Math.round(size * scale);
-    }
-    
-    public static function dp(size:Number):Number
-    {
-        return Math.round(size * densityPixelRatio);
     }
 }
 }

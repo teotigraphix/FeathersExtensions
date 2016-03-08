@@ -60,11 +60,9 @@ import com.teotigraphix.util.Files;
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
-import flash.display.Stage;
 import flash.filesystem.File;
 import flash.utils.ByteArray;
 
-import feathers.system.DeviceCapabilities;
 import feathers.themes.StyleNameFunctionTheme;
 
 import starling.core.Starling;
@@ -72,9 +70,6 @@ import starling.textures.TextureAtlas;
 
 public class AbstractTheme extends StyleNameFunctionTheme
 {
-
-    public var scale:Number = 1;
-
     public var properties:ThemeProperties;
     public var fonts:FontFactory;
     public var shared:SharedFactory;
@@ -195,8 +190,6 @@ public class AbstractTheme extends StyleNameFunctionTheme
     {
         _scaleToDPI = scaleToDPI;
 
-        _dp = calculateScaleFactor();
-
         properties = new ThemeProperties(this);
         createFactories();
         addFactories();
@@ -210,12 +203,16 @@ public class AbstractTheme extends StyleNameFunctionTheme
      */
     override public function dispose():void
     {
-        if (atlas)
+        if(this.atlas)
         {
-            atlas.dispose();
-            atlas = null;
+            //if anything is keeping a reference to the texture, we don't
+            //want it to keep a reference to the theme too.
+            this.atlas.texture.root.onRestore = null;
+            
+            this.atlas.dispose();
+            this.atlas = null;
         }
-
+        
         //don't forget to call super.dispose()!
         super.dispose();
     }
@@ -355,31 +352,6 @@ public class AbstractTheme extends StyleNameFunctionTheme
      */
     protected function initializeScale():void
     {
-//        AssetMap.densityPixelRatio = dp;
-//        var scaledDPI:int = DeviceCapabilities.dpi / Starling.contentScaleFactor;
-//        this._originalDPI = scaledDPI;
-//        if (_scaleToDPI)
-//        {
-//            if (DeviceCapabilities.isTablet(Starling.current.nativeStage))
-//            {
-//                _originalDPI = SharedFactory.ORIGINAL_DPI_IPAD_RETINA;
-//            }
-//            else
-//            {
-//                _originalDPI = SharedFactory.ORIGINAL_DPI_IPHONE_RETINA;
-//            }
-//        }
-//        scale = scaledDPI / _originalDPI;
-//        if (scale < 0.3)
-//        {
-//           // scale = 1;
-//           // AssetMap.densityPixelRatio = _dp = 1.5;
-//        }
-//        properties.scale = scale;
-        
-        AssetMap.densityPixelRatio = 1;
-        properties.scale = 1;
-        
         var starling:Starling = Starling.current;
         var nativeScaleFactor:Number = 1;
         if(starling.supportHighResolutions)
@@ -467,63 +439,5 @@ public class AbstractTheme extends StyleNameFunctionTheme
         for each (var factory:AbstractThemeFactory in _factories)
             factory.initializeStyleProviders();
     }
-
-    protected function calculateScaleFactor():Number
-    {
-        var nativeStage:Stage = Starling.current.nativeStage;
-        var screenDensity:Number = DeviceCapabilities.dpi;
-        //workaround because these rules derived from Android's behavior
-        //would "incorrectly" give iPads a lower scale factor than iPhones
-        //when both devices have the same scale factor natively.
-        //if(Capabilities.version.indexOf("IOS") >= 0 && DeviceCapabilities.isTablet(nativeStage))
-        //{
-        //    screenDensity *= IOS_TABLET_DENSITY_SCALE_FACTOR;
-        //}
-        var bucket:ScreenDensityBucket = BUCKETS[0];
-        if (screenDensity <= bucket.density)
-        {
-            return bucket.scale;
-        }
-        var previousBucket:ScreenDensityBucket = bucket;
-        var bucketCount:int = BUCKETS.length;
-        for (var i:int = 1; i < bucketCount; i++)
-        {
-            bucket = BUCKETS[i];
-            if (screenDensity > bucket.density)
-            {
-                previousBucket = bucket;
-                continue;
-            }
-            var midDPI:Number = (bucket.density + previousBucket.density) / 2;
-            if (screenDensity < midDPI)
-            {
-                return previousBucket.scale;
-            }
-            return bucket.scale;
-        }
-        return bucket.scale;
-    }
 }
 }
-
-class ScreenDensityBucket
-{
-    public function ScreenDensityBucket(dpi:Number, scale:Number)
-    {
-        this.density = dpi;
-        this.scale = scale;
-    }
-
-    public var density:Number;
-    public var scale:Number;
-}
-
-var BUCKETS:Vector.<ScreenDensityBucket> = new <ScreenDensityBucket>
-        [
-            new ScreenDensityBucket(120, 0.75), //ldpi
-            new ScreenDensityBucket(160, 1), //mdpi
-            new ScreenDensityBucket(240, 1.5), //hdpi
-            new ScreenDensityBucket(320, 2), //xhdpi
-            new ScreenDensityBucket(480, 3), //xxhdpi
-            new ScreenDensityBucket(640, 4) ///xxxhpi
-        ];

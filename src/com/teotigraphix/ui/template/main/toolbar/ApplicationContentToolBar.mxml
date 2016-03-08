@@ -5,13 +5,11 @@
     
     <f:layout>
         <f:VerticalLayout verticalAlign="middle" horizontalAlign="center"
-                          gap="{AssetMap.size(16)}"/>
+                          gap="16"/>
     </f:layout>
     
     <fx:Script>
         <![CDATA[
-            import com.teotigraphix.ui.theme.AssetMap;
-            
             import feathers.skins.IStyleProvider;
 
             public static var globalStyleProvider:IStyleProvider;

@@ -22,7 +22,7 @@
 <component:HGroup xmlns:f="library://ns.feathersui.com/mxml"
                   xmlns:fx="http://ns.adobe.com/mxml/2009"
                   xmlns:component="com.teotigraphix.ui.component.*"
-                  padding="{AssetMap.dp(8)}">
+                  padding="8">
 
     <component:VGroup percentWidth="100">
 
@@ -42,9 +42,8 @@
     <!-- controlFactory -->
 
     <fx:Script><![CDATA[
-        import com.teotigraphix.ui.theme.AssetMap;
         import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
-
+        
         import feathers.core.FeathersControl;
         import feathers.skins.IStyleProvider;
 

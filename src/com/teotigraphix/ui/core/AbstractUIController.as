@@ -119,7 +119,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
         if (iconSkin != null)
         {
             alert.icon = AssetMap.createImage(iconSkin);
-            alert.icon.width = alert.icon.height = AssetMap.size(60);
+            alert.icon.width = alert.icon.height = 60;
         }
         
         alert.addEventListener(Event.CLOSE, function (event:Event, data:Object):void {

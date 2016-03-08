@@ -101,8 +101,8 @@ public class AbstractApplicationTemplateFactory extends AbstractThemeFactory
         var vl:VerticalLayout = toolBar.layout as VerticalLayout;
         vl.verticalAlign = "middle";
         vl.horizontalAlign = "center";
-        vl.gap = dp(16);
-        vl.padding = dp(8);
+        vl.gap = 16;
+        vl.padding = 8;
     }
     
     protected function set_applicationContentToolBarStyle(toolBar:ApplicationContentToolBar):void
@@ -113,8 +113,8 @@ public class AbstractApplicationTemplateFactory extends AbstractThemeFactory
         var vl:VerticalLayout = toolBar.layout as VerticalLayout;
         vl.verticalAlign = "middle";
         vl.horizontalAlign = "center";
-        vl.gap = dp(16);
-        vl.padding = dp(8);
+        vl.gap = 16;
+        vl.padding = 8;
     }
     
     protected function setStyles(actionBar:ApplicationActionBar):void
@@ -122,8 +122,8 @@ public class AbstractApplicationTemplateFactory extends AbstractThemeFactory
         actionBar.backgroundSkin = create9ScaleImage(FrameworkSkinNames.APPLICATION_HEADER_SKIN, 5, 5, 50, 50, true);
         var hl:HorizontalLayout = actionBar.layout as HorizontalLayout;
         //header.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
-        hl.padding = dp(8);
-        hl.gap = dp(16);
+        hl.padding = 8;
+        hl.gap = 16;
     }
     
     protected function set_statusBarStyles(statusBar:ApplicationStatusBar):void
@@ -131,34 +131,34 @@ public class AbstractApplicationTemplateFactory extends AbstractThemeFactory
         statusBar.backgroundSkin = create9ScaleImage(
             FrameworkSkinNames.APPLICATION_STATUS_BAR_BACKGROUND_SKIN, 4, 4, 40, 40, true);
         
-        statusBar.minHeight = dp(40);
+        statusBar.minHeight = 40;
         
         var hl:HorizontalLayout = statusBar.layout as HorizontalLayout;
-        hl.padding = dp(4);
-        hl.gap = dp(8);
+        hl.padding = 4;
+        hl.gap = 8;
     }    
     
     protected function set_actionsButtonStyle(button:ToggleButton):void
     {
         button.hasLabelTextRenderer = false;
         button.stateToSkinFunction = null;
-        button.defaultIcon = createScaledImage(FrameworkSkinNames.ACTIONS_UP_ICON);
-        button.defaultSelectedIcon = createScaledImage(FrameworkSkinNames.ACTIONS_SELECTED_ICON);
+        button.defaultIcon = createImage(FrameworkSkinNames.ACTIONS_UP_ICON);
+        button.defaultSelectedIcon = createImage(FrameworkSkinNames.ACTIONS_SELECTED_ICON);
     }
     
     protected function set_saveButtonStyle(button:Button):void
     {
         button.hasLabelTextRenderer = false;
         button.stateToSkinFunction = null;
-        button.defaultIcon = createScaledImage(FrameworkSkinNames.ACTION_SAVE_ENABLED_ICON);
-        button.disabledIcon = createScaledImage(FrameworkSkinNames.ACTION_SAVE_DISABLED_ICON);
+        button.defaultIcon = createImage(FrameworkSkinNames.ACTION_SAVE_ENABLED_ICON);
+        button.disabledIcon = createImage(FrameworkSkinNames.ACTION_SAVE_DISABLED_ICON);
     }
 
     protected function set_logoStyle(button:Button):void
     {
         button.hasLabelTextRenderer = false;
         button.stateToSkinFunction = null;
-        button.defaultIcon = createScaledImage(FrameworkSkinNames.LOGO_60);
+        button.defaultIcon = createImage(FrameworkSkinNames.LOGO_60);
     }
 }
 }

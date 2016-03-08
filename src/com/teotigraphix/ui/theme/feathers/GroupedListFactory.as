@@ -235,7 +235,6 @@ public class GroupedListFactory extends AbstractThemeFactory
     protected function imageLoaderFactory():ImageLoader
     {
         var image:ImageLoader = new ImageLoader();
-        image.textureScale = properties.scale;
         return image;
     }
 }

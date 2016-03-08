@@ -116,7 +116,6 @@ public class ListFactory extends AbstractThemeFactory
     public function imageLoaderFactory():ImageLoader
     {
         var image:ImageLoader = new ImageLoader();
-        image.textureScale = theme.scale;
         return image;
     }
 }

@@ -20,7 +20,6 @@ package com.teotigraphix.ui.popup
 {
 
 import com.teotigraphix.ui.component.event.FrameworkEventType;
-import com.teotigraphix.ui.theme.AssetMap;
 
 import feathers.controls.ButtonGroup;
 import feathers.controls.Header;
@@ -77,7 +76,7 @@ public class NamePopUp extends Panel
 
         layout = new AnchorLayout();
 
-        const padding:Number = AssetMap.size(10);
+        const padding:Number = 10;
 
         _textInput = new TextInput();
         _textInput.layoutData = new AnchorLayoutData(padding, padding, padding, padding);

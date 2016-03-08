@@ -67,7 +67,6 @@ public class PageIndicatorFactory extends AbstractThemeFactory
     {
         var symbol:ImageLoader = new ImageLoader();
         symbol.source = pageIndicatorNormalSkinTexture;
-        symbol.textureScale = properties.scale;
         return symbol;
     }
 
@@ -75,7 +74,6 @@ public class PageIndicatorFactory extends AbstractThemeFactory
     {
         var symbol:ImageLoader = new ImageLoader();
         symbol.source = pageIndicatorSelectedSkinTexture;
-        symbol.textureScale = properties.scale;
         return symbol;
     }
 }

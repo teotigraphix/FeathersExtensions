@@ -175,7 +175,6 @@ public class SharedFactory extends AbstractThemeFactory
     public function imageLoaderFactory():ImageLoader
     {
         var image:ImageLoader = new ImageLoader();
-        image.textureScale = properties.scale;
         return image;
     }
 
