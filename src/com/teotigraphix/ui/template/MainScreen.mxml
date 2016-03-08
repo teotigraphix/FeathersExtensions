@@ -2,7 +2,8 @@
 <f:Screen xmlns:f="library://ns.feathersui.com/mxml"
           xmlns:fx="http://ns.adobe.com/mxml/2009" 
           xmlns:component="com.teotigraphix.ui.component.*" 
-          xmlns:main="com.teotigraphix.ui.template.main.*">
+          xmlns:main="com.teotigraphix.ui.template.main.*" 
+          xmlns:toolbar="com.teotigraphix.ui.template.main.toolbar.*">
 
     <f:layout>
         <f:VerticalLayout/>
@@ -16,11 +17,11 @@
 
     <component:HGroup percentWidth="100" percentHeight="100">
 
-        <main:ApplicationToolBar id="toolBar">
-            <main:layoutData>
+        <toolbar:ApplicationToolBar id="toolBar">
+            <toolbar:layoutData>
                 <f:HorizontalLayoutData percentHeight="100"/>
-            </main:layoutData>
-        </main:ApplicationToolBar>
+            </toolbar:layoutData>
+        </toolbar:ApplicationToolBar>
 
         <f:StackScreenNavigator id="contentNavigator">
             <f:layoutData>
@@ -29,11 +30,11 @@
 
         </f:StackScreenNavigator>
 
-        <main:ApplicationContentToolBar>
-            <main:layoutData>
+        <toolbar:ApplicationContentToolBar id="contentToolBar">
+            <toolbar:layoutData>
                 <f:HorizontalLayoutData percentHeight="100"/>
-            </main:layoutData>
-        </main:ApplicationContentToolBar>
+            </toolbar:layoutData>
+        </toolbar:ApplicationContentToolBar>
 
     </component:HGroup>
 

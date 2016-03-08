@@ -1,14 +1,17 @@
-package com.teotigraphix.ui.template.main._mediators
+package com.teotigraphix.ui.template.main.toolbar._mediators
 {
 import com.teotigraphix.ui.core.AbstractMediator;
-import com.teotigraphix.ui.template.main.ApplicationLogoControl;
+import com.teotigraphix.ui.template.main.toolbar.ApplicationToolBar;
 
-import starling.events.Event;
-
-public class ApplicationLogoControlMediator extends AbstractMediator
+public class ApplicationToolBarMediator extends AbstractMediator
 {
     [Inject]
-    public var view:ApplicationLogoControl;
+    public var view:ApplicationToolBar;
+
+    public function ApplicationToolBarMediator()
+    {
+        super();
+    }
     
     //--------------------------------------------------------------------------
     // Methods
@@ -18,9 +21,12 @@ public class ApplicationLogoControlMediator extends AbstractMediator
     {
     }
     
+    override protected function refreshView():void
+    {
+    }
+
     override protected function setupViewListeners():void
     {
-        addViewListener(ApplicationLogoControl.EVENT_LOGO_TRIGGER, view_logoTriggeredHandler);
     }
     
     override protected function setupContextListeners():void
@@ -30,11 +36,6 @@ public class ApplicationLogoControlMediator extends AbstractMediator
     //--------------------------------------------------------------------------
     // View
     //--------------------------------------------------------------------------
-    
-    private function view_logoTriggeredHandler(event:Event):void
-    {
-        screenLauncher.goToSettings();
-    }
     
     //--------------------------------------------------------------------------
     // Context

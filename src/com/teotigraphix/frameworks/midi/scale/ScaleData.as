@@ -4,6 +4,8 @@
 package com.teotigraphix.frameworks.midi.scale
 {
 
+import feathers.data.ListCollection;
+
 public class ScaleData
 {
     public static const NOTE_NAMES:Vector.<String> = new <String>[
@@ -16,21 +18,17 @@ public class ScaleData
     // Serialized :: API
     //--------------------------------------------------------------------------
 
-    private var _gridSize:int;
-    private var _scaleIndex:int;
-    private var _scale:ScaleReference;
+    private var _gridSize:int = 8;
+    private var _scaleID:int;
     private var _rootKey:int = 0;
     private var _octave:int;
-    private var _midiBase:int = 24;
 
     //--------------------------------------------------------------------------
     // Private :: Variables
     //--------------------------------------------------------------------------
 
     private var _scales:Vector.<ScaleItem>;
-
-    private var _shift:int;
-    private var _initialized:Boolean;
+    private var _midiBase:int = 12;
 
     //----------------------------------
     // gridSize
@@ -43,44 +41,70 @@ public class ScaleData
 
     public function set gridSize(value:int):void
     {
+        if (_gridSize == value)
+            return;
+        
         _gridSize = value;
+        
+        generateScales();
     }
 
-    //----------------------------------
-    // scaleIndex
-    //----------------------------------
-
-    public function get scaleIndex():int
-    {
-        return _scaleIndex;
-    }
-
-    public function set scaleIndex(value:int):void
-    {
-        _scaleIndex = value;
-    }
+//    //----------------------------------
+//    // scaleIndex
+//    //----------------------------------
+//
+//    public function get scaleIndex():int
+//    {
+//        return _scaleIndex;
+//    }
+//
+//    public function set scaleIndex(value:int):void
+//    {
+//        _scaleIndex = value;
+//    }
 
     //----------------------------------
     // scaleId
     //----------------------------------
 
-    /**
-     * @see com.teotigraphix.frameworks.midi.scale.ScaleReference#id
-     */
-    public function get scaleId():int
+    public function get scale():ScaleReference
     {
-        return _scale.id;
+        return ScaleReference.fromId(_scaleID);
+    }
+    
+    public function setScale(value:ScaleReference):void
+    {
+        var index:int = indexOfScale(value);
+        if (index == -1)
+            return;
+        //_scaleIndex = index;
+        //_scale = intervals[_scaleIndex];
+    }
+    
+    public function get scaleID():int
+    {
+        return _scaleID;
     }
 
-    public function set scaleId(value:int):void
+    public function set scaleID(value:int):void
     {
-        _scale = ScaleReference.fromId(value);
+        _scaleID = value;
     }
 
     //----------------------------------
     // rootKey
     //----------------------------------
-
+    
+    public function get rootKeyReference():NoteReference
+    {
+        return NoteReference.getNote(_rootKey);
+    }
+    
+    public function get rootKeyName():String
+    {
+        return rootKeyReference.baseName + "" + _octave;
+    }
+    
     /**
      * Sets the root key, 0 == C.
      */
@@ -107,57 +131,38 @@ public class ScaleData
     {
         _octave = value;
     }
-
+    
     //----------------------------------
     // midiBase
     //----------------------------------
-
+    
     public function get midiBase():int
     {
         return _midiBase;
     }
-
+    
     public function set midiBase(value:int):void
     {
         _midiBase = value;
     }
-
+    
     //--------------------------------------------------------------------------
     // Internal
     //--------------------------------------------------------------------------
-
+    
     public function get scales():Vector.<ScaleItem>
     {
         return _scales;
     }
-
+    
     public function get noteIndex():int
     {
         return NoteReference.getNoteIndex(getRootKey());
     }
-
-    internal function get rootNoteReference():NoteReference
-    {
-        return NoteReference.getNote(_rootKey);
-    }
-
-    internal function get rootNoteName():String
-    {
-        return rootNoteReference.baseName + "" + _octave;
-    }
-
+    
     public function ScaleData()
     {
-    }
-
-    public function initialize(gridSize:int):void
-    {
-        _gridSize = gridSize;
-        generateScales();
-        setScale(ScaleReference.Major);
-        setRootKey(NoteReference.C);
-        octave = 0;
-        _shift = 3; // TODO figure out how this works when creating scales
+        intervals = ScaleReference.values;
     }
 
     public function wakeup():void
@@ -165,16 +170,27 @@ public class ScaleData
         generateScales();
     }
 
-    public function getSequencerRangeTextV2():String
+    public function getCurrentSequencerRangeText():String
     {
         var sequencerMatrix:Vector.<int> = getNotes();
         return getSequencerRangeText(sequencerMatrix[0],
                                      sequencerMatrix[sequencerMatrix.length - 1]);
     }
+    
+    public function getNoteNameDataProvider():ListCollection
+    {
+        var result:ListCollection = new ListCollection();
+        var notes:Vector.<int> = getNotes();
+        for (var i:int = 0; i < notes.length; i++) 
+        {
+            result.addItem(formatNoteAndOctave(notes[i], 0) + "");
+        }
+        return result;
+    }
 
     public function getSequencerRangeText(from:int, to:int):String
     {
-        return formatNoteAndOctave(from, 0) + " to " + formatDrumNote(to/*, -2*/);
+        return formatNoteAndOctave(from, 0) + " to " + formatNoteAndOctave(to, 0);
     }
 
     /**
@@ -192,13 +208,7 @@ public class ScaleData
     public function formatNoteAndOctave(note:int, octaveOffset:int):String
     {
         return NOTE_NAMES[Math.abs(note % 12)]
-                + int(Math.floor(note / 12) + octaveOffset - 2);
-    }
-
-    public function formatNoteAndOctave2(note:int):String
-    {
-        return NOTE_NAMES[Math.abs(note % 12)]
-                + "" + int(Math.floor(note / 12) - 1);
+                + (int)(Math.floor(note / 12) + octaveOffset - 1);
     }
 
     /**
@@ -214,22 +224,12 @@ public class ScaleData
             midiRoot = _midiBase + (12 * _octave);
 
         var matrix:Vector.<int> = getActiveMatrix();
-        var noteMap:Vector.<int> = initArray(-1, rows);
+        var result:Vector.<int> = new Vector.<int>(rows, true);
+        
         for (var note:int = 0; note < rows; note++)
         {
             var n:int = matrix[note] + rootKey + midiRoot;
-            noteMap[note] = n < 0 || n > 256 ? -1 : n;
-        }
-        return noteMap;
-    }
-
-    public function getNoteNames():Vector.<String>
-    {
-        var result:Vector.<String> = new <String>[];
-        var matrix:Vector.<int> = getNotes();
-        for each (var midi:int in matrix)
-        {
-            result.push(formatNoteAndOctave2(midi));
+            result[note] = n < 0 || n > 256 ? -1 : n;
         }
         return result;
     }
@@ -244,54 +244,53 @@ public class ScaleData
         _rootKey = value.baseNumber;
     }
 
-    public function getScale():ScaleReference
-    {
-        return _scale;
-    }
 
-    public function setScale(value:ScaleReference):void
-    {
-        var index:int = indexOfScale(value);
-        if (index == -1)
-            return;
-        _scaleIndex = index;
-        _scale = intervals[_scaleIndex];
-    }
 
+    public function formatNote(note:int):String
+    {
+        return NOTE_NAMES[note % 12] + (int)((2 - Math.floor(note / 12) + _octave));
+    }
+    
     public function incOctave():void
     {
+        var notes:Vector.<int> = getNotes();
+        if (notes[notes.length - 1] > 120)
+            return;
         octave = _octave + 1;
     }
 
     public function decOctave():void
     {
+        if (_octave == -1)
+            return;
         octave = _octave - 1;
-    }
-
-    internal function formatNote(note:int):String
-    {
-        return NOTE_NAMES[note % 12] + (int)((2 - Math.floor(note / 12) + _octave));
     }
 
     // TODO if performance problem, this could be cached and refreshed when rootKey or scaleIndex changes
 
-    internal function formatDrumNote(note:int):String
-    {
-        return formatNoteAndOctave(note, 0);
-    }
-
-    internal function getPitch(row:int):int
+    public function getPitch(row:int):int
     {
         var sequencerMatrix:Vector.<int> = getNotes();
         return sequencerMatrix[row];
     }
 
-    internal function getActiveMatrix():Vector.<int>
+    public function getActiveMatrix2(scale:ScaleReference):Vector.<int>
     {
-        if (!_initialized)
+        if (_scales == null)
+        {
             generateScales();
-        //return _chromatic ? _scales[_scaleIndex].chromaticMatrix : _scales[_scaleIndex].matrix;
-        return _scales[_scaleIndex].matrix;
+        }
+        for (var i:int = 0; i < _scales.length; i++) 
+        {
+            if (_scales[i].scaleID == scale.id)
+                return _scales[i].matrix;
+        }
+        return null;
+    }
+    
+    public function getActiveMatrix():Vector.<int>
+    {
+        return null;//_scales[_scaleIndex].matrix;
     }
 
     private function indexOfScale(reference:ScaleReference):int
@@ -303,48 +302,58 @@ public class ScaleData
         }
         return -1;
     }
-
+    
+    public function getInfoText():String
+    {
+        return rootKeyReference.baseName + " ";// + _scale.label;
+    }
+    
+    //--------------------------------------------------------------------------
+    // Internal :: Methods
+    //--------------------------------------------------------------------------
+    
+    private function generateScales():void
+    {
+        _scales = new Vector.<ScaleItem>(intervals.length);
+        
+        var len:int = intervals.length;
+        for (var i:int = 0; i < len; i++)
+        {
+            _scales[i] = createScale(intervals[i]);
+        }
+    }
+    
+    
     private function createScale(scale:ScaleReference):ScaleItem
     {
         var capacity:int = _gridSize * _gridSize;
-
+        
         var notes:Vector.<int> = scale.intervals;
-
+        
         var len:int = notes.length;
         var matrix:Vector.<int> = new Vector.<int>(_gridSize);
-        //var chromaticMatrix:Vector.<int> = new Vector.<int>(capacity);
-
+        
+        var shift:int = 3; // figure this out!
+        
         var index:int = 0;
-        //for (var row:int = 0; row < _gridSize; row++)
-        //{
         for (var column:int = 0; column < _gridSize; column++)
         {
-            var y:int = 0;//row;
+            var y:int = 0;
             var x:int = column;
-            var offset:int = y * _shift + x;
+            var offset:int = y * shift + x;
             matrix[index] = (int)((Math.floor(offset / len)) * 12 + notes[offset % len]);
-            // TODO chromaticMatrix[index] = (y * (_shift == _gridSize ? _gridSize : notes[_shift % len]) + x);
             index++;
         }
-        //}
-        return new ScaleItem(scale.id, scale.name, matrix, null);
+        return new ScaleItem(scale.name, scale.id, matrix);
     }
-
-    private function generateScales():void
+    
+    public function getNoteNames():Vector.<String>
     {
-        intervals = ScaleReference.values;
-        _scales = new Vector.<ScaleItem>(intervals.length);
-        for (var i:int = 0; i < intervals.length; i++)
-            _scales[i] = createScale(intervals[i]);
-        _initialized = true;
-    }
-
-    private static function initArray(value:int, length:int):Vector.<int>
-    {
-        var result:Vector.<int> = new Vector.<int>(length, true);
-        for (var i:int = 0; i < length; i++)
+        var result:Vector.<String> = new <String>[];
+        var matrix:Vector.<int> = getNotes();
+        for each (var midi:int in matrix)
         {
-            result[i] = value;
+            result.push(formatNote(midi));
         }
         return result;
     }

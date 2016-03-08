@@ -1,5 +1,6 @@
 package com.teotigraphix.model.strategy
 {
+import com.teotigraphix.app.event.ApplicationEventType;
 import com.teotigraphix.frameworks.project.IProjectPreferencesProvider;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.model.ISaveStrategy;
@@ -82,10 +83,15 @@ public class SaveStrategy extends Actor implements ISaveStrategy
     {
         super();
     }
-    
+
     //--------------------------------------------------------------------------
     // API :: Methods
     //--------------------------------------------------------------------------
+    
+    public function dirty():void
+    {
+        isDirty = true;
+    }
     
     public function resetDirty():void
     {
@@ -95,6 +101,8 @@ public class SaveStrategy extends Actor implements ISaveStrategy
     public function saveAsync():IStepSequence
     {
         logger.log(TAG, "saveAsync()");
+        dispatchWith(ApplicationEventType.APPLICATION_PRE_SAVE);
+        
         var sequence:IStepSequence = projectService.saveAsync(projectModel.project);
         sequence.addCompleteListener(this_saveCompleteHandler);
         return sequence;
@@ -112,6 +120,7 @@ public class SaveStrategy extends Actor implements ISaveStrategy
     private function this_saveCompleteHandler(event:OperationEvent):void
     {
         isDirty = false;
+        dispatchWith(ApplicationEventType.APPLICATION_SAVE_COMPLETED);
     }
     
     private function context_dirtyEventHandler(event:Event):void

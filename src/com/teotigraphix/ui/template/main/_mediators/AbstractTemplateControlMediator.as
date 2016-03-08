@@ -2,16 +2,18 @@ package com.teotigraphix.ui.template.main._mediators
 {
 import com.teotigraphix.ui.core.AbstractMediator;
 import com.teotigraphix.ui.event.ScreenLauncherEventType;
-import com.teotigraphix.ui.template.main.ScreenToolBar;
 
 import feathers.data.ListCollection;
 
+import starling.display.DisplayObjectContainer;
 import starling.events.Event;
 
-public class ScreenToolBarMediator extends AbstractMediator
+public class AbstractTemplateControlMediator extends AbstractMediator
 {
-    [Inject]
-    public var view:ScreenToolBar;
+    public function AbstractTemplateControlMediator()
+    {
+        super();
+    }
     
     //--------------------------------------------------------------------------
     // Methods
@@ -28,8 +30,8 @@ public class ScreenToolBarMediator extends AbstractMediator
     
     override protected function setupContextListeners():void
     {
-        addContextListener(ScreenLauncherEventType.SELECTED_CONTENT_INDEX_CHANGED, 
-            context_selectedContentIndexChangedHandler);
+        addContextListener(ScreenLauncherEventType.CONTENT_SCREEN_ID_CHANGED, 
+            context_contentScreenIDChangedHandler);
     }
     
     //--------------------------------------------------------------------------
@@ -40,22 +42,29 @@ public class ScreenToolBarMediator extends AbstractMediator
     // Context
     //--------------------------------------------------------------------------
     
-    private function context_selectedContentIndexChangedHandler(event:Event, screenID:String):void
+    private function context_contentScreenIDChangedHandler(event:Event, contentScreenID:String):void
     {
-        redraw(screenID);
+        //var screenID:String = uiState.contentScreenIndexToID(contentScreenIndex);
+        redraw(contentScreenID);
     }
     
-    private function redraw(screenID:String):void
+    protected function redraw(screenID:String):void
     {
-        view.removeChildren();
+        var parent:DisplayObjectContainer = getViewComponent() as DisplayObjectContainer;
+        parent.removeChildren();
         
-        var collection:ListCollection = uiState.createScreenToolsDataProvider(screenID);
+        var collection:ListCollection = createDataProvider(screenID);
         
         for (var i:int = 0; i < collection.length; i++) 
         {
             var item:Object = collection.getItemAt(i);
-            view.addChild(item.control);
+            parent.addChild(item.control);
         }
+    }
+    
+    protected function createDataProvider(screenID:String):ListCollection
+    {
+        return null;
     }
 }
 }

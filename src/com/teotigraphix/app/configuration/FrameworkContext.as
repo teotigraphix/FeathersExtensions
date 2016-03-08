@@ -26,11 +26,14 @@ import com.teotigraphix.app.command.UncaughtErrorCommand;
 import com.teotigraphix.app.ui.BootstrapNavigator;
 import com.teotigraphix.app.ui.IBootstrapApplication;
 import com.teotigraphix.controller.ICommandLauncher;
+import com.teotigraphix.frameworks.midi.scale.ScaleData;
+import com.teotigraphix.frameworks.midi.scale.ScaleItem;
 import com.teotigraphix.frameworks.project.AbstractProjectConfigurator;
 import com.teotigraphix.frameworks.project.IProjectConfigurator;
 import com.teotigraphix.frameworks.project.IProjectPreferences;
 import com.teotigraphix.frameworks.project.IProjectPreferencesProvider;
 import com.teotigraphix.frameworks.project.IProjectStateProvider;
+import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.frameworks.project.ProjectPreferencesProvider;
 import com.teotigraphix.frameworks.project.ProjectStateProvider;
 import com.teotigraphix.model.IApplicationSettings;
@@ -68,8 +71,14 @@ import starling.display.DisplayObjectContainer;
 
 public class FrameworkContext extends Context
 {
-    registerClassAlias("$.1", IProjectPreferences);
-    registerClassAlias("$.2", ProjectPreferencesTemplateUI);
+    registerClassAlias("$.0", Version);
+    registerClassAlias("$.1", Project);
+    registerClassAlias("$.2", IProjectPreferences);
+    registerClassAlias("$.3", ProjectPreferencesTemplateUI);
+    
+    
+    registerClassAlias("$.00", ScaleData);
+    registerClassAlias("$.01", ScaleItem);
     
     //----------------------------------
     // Minimal Impl

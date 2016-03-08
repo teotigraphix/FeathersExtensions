@@ -35,14 +35,41 @@ public class AbstractModel extends Actor
     [Inject]
     public var logger:ILogger;
 
-    [Inject]
-    public var injector:IInjector;
+    private var _injector:IInjector;
 
+    //--------------------------------------------------------------------------
+    // Properties
+    //--------------------------------------------------------------------------
+    
+    //----------------------------------
+    // injector
+    //----------------------------------
+    
+    [Inject]
+    public function get injector():IInjector
+    {
+        return _injector;
+    }
+
+    public function set injector(value:IInjector):void
+    {
+        _injector = value;
+        onInject();
+    }
+    
+    //----------------------------------
+    // flashDispatcher
+    //----------------------------------
+    
     public function get flashDispatcher():IEventDispatcher 
     {
         return injector.getInstance(IEventDispatcher);
     }
-
+    
+    //----------------------------------
+    // flashDispatcher
+    //----------------------------------
+    
     [Inject]
     override public function set eventDispatcher(value:EventDispatcher):void
     {
@@ -57,6 +84,13 @@ public class AbstractModel extends Actor
         {
             flashDispatcher.dispatchEvent(new Event(type, bubbles));
         }
+    }
+    
+    /**
+     * Create non circular injects with injector.
+     */
+    protected function onInject():void
+    {
     }
 
     /**

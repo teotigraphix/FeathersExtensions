@@ -18,12 +18,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.teotigraphix.ui
 {
+import com.teotigraphix.ui.component.ColorChipPicker;
 import com.teotigraphix.ui.component.file.FileListData;
 import com.teotigraphix.ui.dialog.FileDialog;
 import com.teotigraphix.ui.dialog.GetStringDialog;
 import com.teotigraphix.ui.dialog.ProgressDialog;
 
 import feathers.controls.Alert;
+
+import starling.display.DisplayObject;
 
 public interface IUIController
 {
@@ -38,6 +41,10 @@ public interface IUIController
     function getString(title:String, prompt:String, yesHandler:Function, noHandler:Function):GetStringDialog;
     
     function notifyToast(message:String, icon:String = null, duration:Number = 3000):void;
+    
+    function showCalloutColorChipPicker(origin:DisplayObject, 
+                                        changeHandler:Function, 
+                                        closeHandler:Function):ColorChipPicker;
     
     /**
      *  Exists the native application.

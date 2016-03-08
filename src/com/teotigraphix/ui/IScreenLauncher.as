@@ -29,6 +29,8 @@ public interface IScreenLauncher
     function get contentNavigator():StackScreenNavigator;
     function set contentNavigator(value:StackScreenNavigator):void;
     
+    function setContentScreenIndex(contentIndex:int):void;
+    
     /**
      * @see com.teotigraphix.ui.screen.core.ScreenRedrawData
      */

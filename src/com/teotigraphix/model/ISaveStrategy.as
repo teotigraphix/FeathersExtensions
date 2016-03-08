@@ -11,6 +11,8 @@ public interface ISaveStrategy
     
     function set dirtyEvents(value:Vector.<String>):void;
     
+    function dirty():void;
+    
     /**
      * Resets the isDirty flag without an event. 
      */

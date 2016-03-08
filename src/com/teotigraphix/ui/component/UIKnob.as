@@ -199,10 +199,16 @@ public class UIKnob extends FeathersControl
         if (!noEvent)
             dispatchEventWith(Event.CHANGE);
 
+        internalValueChange();
+        
         //Pools.free(changeEvent);
         return !cancelled;
     }
-
+    
+    protected function internalValueChange():void
+    {
+    }
+    
     protected function autoSizeIfNeeded():Boolean
     {
         var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN

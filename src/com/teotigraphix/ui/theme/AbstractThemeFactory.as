@@ -20,11 +20,14 @@
 package com.teotigraphix.ui.theme
 {
 
+import flash.display.DisplayObject;
+import flash.geom.Rectangle;
+
 import feathers.controls.SimpleScrollBar;
 import feathers.display.Scale9Image;
 import feathers.textures.Scale9Textures;
 
-import flash.geom.Rectangle;
+import org.as3commons.lang.StringUtils;
 
 import starling.display.Image;
 import starling.events.EventDispatcher;
@@ -36,6 +39,8 @@ public class AbstractThemeFactory extends EventDispatcher
     public var theme:AbstractTheme;
     public var properties:ThemeProperties;
     private var _atlas:TextureAtlas;
+    private var _runtimeAtlas:TextureAtlas;
+    
 
     public final function get font():FontFactory
     {
@@ -56,7 +61,17 @@ public class AbstractThemeFactory extends EventDispatcher
     {
         _atlas = value;
     }
-
+    
+    public function get runtimeAtlas():TextureAtlas
+    {
+        return _runtimeAtlas;
+    }
+    
+    public function set runtimeAtlas(value:TextureAtlas):void
+    {
+        _runtimeAtlas = value;
+    }
+    
     public function AbstractThemeFactory(theme:AbstractTheme)
     {
         this.theme = theme;
@@ -85,6 +100,10 @@ public class AbstractThemeFactory extends EventDispatcher
     public function initializeStage():void
     {
     }
+    
+    public function initializeSkins(skins:Vector.<DisplayObject>):void
+    {
+    }
 
     public function initializeStyleProviders():void
     {
@@ -102,9 +121,9 @@ public class AbstractThemeFactory extends EventDispatcher
         }
     }
 
-    public static function createScale9Textures(name:String, rectangle:Rectangle):Scale9Textures
+    public static function createScale9Textures(name:String, rectangle:Rectangle, isRuntime:Boolean = false):Scale9Textures
     {
-        return AssetMap.createScale9Textures(name, rectangle);
+        return AssetMap.createScale9Textures(name, rectangle, isRuntime);
     }
 
     protected static function scrollBarFactory():SimpleScrollBar
@@ -122,24 +141,61 @@ public class AbstractThemeFactory extends EventDispatcher
         return AssetMap.size(dimension);
     }
 
-    protected static function createScaledImage(name:String):Image
+    protected static function createScaledImage(name:String, isRuntime:Boolean = false):Image
     {
-        return AssetMap.createScaledImage(name);
+        return AssetMap.createScaledImage(name, isRuntime);
     }
 
-    protected static function createImage(name:String):Image
+    protected static function createImage(name:String, isRuntime:Boolean = false):Image
     {
-        return AssetMap.createImage(name);
+        return AssetMap.createImage(name, isRuntime);
     }
 
-    protected static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int):Scale9Image
+    protected static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Scale9Image
     {
-        return AssetMap.create9ScaleImage(name, x, y, width, height);
+        return AssetMap.create9ScaleImage(name, x, y, width, height, isRuntime);
     }
 
-    protected static function getTexture(name:String):Texture
+    protected static function getTexture(name:String, isRuntime:Boolean = false):Texture
     {
-        return AssetMap.getTexture(name);
+        return AssetMap.getTexture(name, isRuntime);
     }
+    
+    // NOT IMPL
+    
+    public function loadPartsAs9ScaleImage(instance:Object, clazz:Class, rectangle:Rectangle):void
+    {
+        for each (var partName:String in clazz["parts"])
+        {
+            var styleName:String = capitalizeDash(partName);
+            instance[styleName] = AssetMap.create9ScaleImage(clazz["cssName"] + "-" + partName + "-skin",
+                rectangle.x, rectangle.y, rectangle.width,
+                rectangle.height);
+        }
+    }
+    
+    public function loadPartsAsImage(instance:Object, clazz:Class):void
+    {
+        for each (var partName:String in clazz["parts"])
+        {
+            var styleName:String = capitalizeDash(partName);
+            instance[styleName] = AssetMap.createImage(clazz["cssName"] + "-" + partName + "-skin");
+        }
+    }
+    
+    public static function capitalizeDash(text:String):String
+    {
+        var split:Array = text.split("-");
+        if (split.length == 1)
+            return text + "Skin";
+        
+        var result:String = split.shift();
+        for each (var chunk:String in split)
+        {
+            result += StringUtils.titleize(chunk);
+        }
+        return result + "Skin";
+    }
+
 }
 }

@@ -22,15 +22,23 @@ package com.teotigraphix.ui.theme.feathers
 
 import com.teotigraphix.ui.component.SimpleButton;
 import com.teotigraphix.ui.component.UIToggleButton;
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.AssetMap;
+import com.teotigraphix.ui.theme.SharedFactory;
 import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
+import com.teotigraphix.ui.theme.framework.skins.ButtonSkin;
+
+import flash.display.DisplayObject;
+import flash.geom.Rectangle;
+import flash.text.engine.ElementFormat;
 
 import feathers.controls.Button;
 import feathers.controls.ToggleButton;
 import feathers.skins.SmartDisplayObjectStateValueSelector;
 import feathers.textures.Scale9Textures;
 
-import flash.text.engine.ElementFormat;
+import starling.textures.Texture;
 
 public class ButtonFactory extends AbstractThemeFactory
 {
@@ -50,7 +58,13 @@ public class ButtonFactory extends AbstractThemeFactory
     {
         super(theme);
     }
-
+    
+    public static const BUTTON_RAISED_UP_SKIN:String = "button-raised-up-skin";
+    public static const BUTTON_RAISED_DOWN_SKIN:String = "button-raised-down-skin";
+    public static const BUTTON_RAISED_DISABLED_SKIN:String = "button-raised-disabled-skin";
+    public static const BUTTON_RAISED_SELECTED_UP_SKIN:String = "button-raised-selected-up-skin";
+    public static const BUTTON_RAISED_SELECTED_DISABLED_SKIN:String = "button-raised-selected-disabled-skin";
+    
     override public function initializeTextures():void
     {
         buttonUpSkinTextures = AssetMap.createScale9Textures("button-up-skin",
@@ -64,16 +78,16 @@ public class ButtonFactory extends AbstractThemeFactory
         buttonSelectedDisabledSkinTextures = AssetMap.createScale9Textures("button-selected-disabled-skin",
                                                                            SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
 
-        buttonRaisedUpSkinTextures = AssetMap.createScale9Textures("button-raised-up-skin",
-                                                                   SharedFactory.BUTTON_SCALE9_GRID);
-        buttonRaisedDownSkinTextures = AssetMap.createScale9Textures("button-raised-down-skin",
-                                                                     SharedFactory.BUTTON_SCALE9_GRID);
-        buttonRaisedDisabledSkinTextures = AssetMap.createScale9Textures("button-raised-disabled-skin",
-                                                                         SharedFactory.BUTTON_SCALE9_GRID);
-        buttonRaisedSelectedUpSkinTextures = AssetMap.createScale9Textures("button-raised-selected-up-skin",
-                                                                     SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
-        buttonRaisedSelectedDisabledSkinTextures = AssetMap.createScale9Textures("button-raised-selected-disabled-skin",
-                                                                           SharedFactory.BUTTON_SELECTED_SCALE9_GRID);
+        buttonRaisedUpSkinTextures = AssetMap.createScale9Textures(
+            BUTTON_RAISED_UP_SKIN, SharedFactory.BUTTON_SCALE9_GRID, true);
+        buttonRaisedDownSkinTextures = AssetMap.createScale9Textures(
+            BUTTON_RAISED_DOWN_SKIN, SharedFactory.BUTTON_SCALE9_GRID, true);
+        buttonRaisedDisabledSkinTextures = AssetMap.createScale9Textures(
+            BUTTON_RAISED_DISABLED_SKIN, SharedFactory.BUTTON_SCALE9_GRID, true);
+        buttonRaisedSelectedUpSkinTextures = AssetMap.createScale9Textures(
+            BUTTON_RAISED_SELECTED_UP_SKIN, SharedFactory.BUTTON_SELECTED_SCALE9_GRID, true);
+        buttonRaisedSelectedDisabledSkinTextures = AssetMap.createScale9Textures(
+            BUTTON_RAISED_SELECTED_DISABLED_SKIN, SharedFactory.BUTTON_SELECTED_SCALE9_GRID, true);
     }
 
     override public function initializeStyleProviders():void
@@ -148,11 +162,48 @@ public class ButtonFactory extends AbstractThemeFactory
         button.stateToSkinFunction = skinSelector.updateValue;
         setBaseButtonStyles(button);
     }
+    
+    override public function initializeSkins(skins:Vector.<DisplayObject>):void
+    {
+        var buttonRaised:ButtonSkin = new ButtonSkin();
+        buttonRaised.setSize(60, 60);
+        buttonRaised.name = BUTTON_RAISED_UP_SKIN;
+        skins.push(buttonRaised);
+        
+        var buttonRaisedDown:ButtonSkin = new ButtonSkin();
+        buttonRaisedDown.fillColor = 0x80DEEA;
+        buttonRaisedDown.setSize(60, 60);
+        buttonRaisedDown.name = BUTTON_RAISED_DOWN_SKIN;
+        skins.push(buttonRaisedDown);
+        
+        var buttonRaisedDisabled:ButtonSkin = new ButtonSkin();
+        buttonRaisedDisabled.fillColor = 0xCCCCCC;
+        buttonRaisedDisabled.setSize(60, 60);
+        buttonRaisedDisabled.name = BUTTON_RAISED_DISABLED_SKIN;
+        skins.push(buttonRaisedDisabled);
+        
+        var buttonRaisedSelectedUp:ButtonSkin = new ButtonSkin();
+        buttonRaisedSelectedUp.fillColor = 0x80DEEA;
+        buttonRaisedSelectedUp.setSize(60, 60);
+        buttonRaisedSelectedUp.name = BUTTON_RAISED_SELECTED_UP_SKIN;
+        skins.push(buttonRaisedSelectedUp);
+        
+        var buttonRaisedSelectedDisabled:ButtonSkin = new ButtonSkin();
+        buttonRaisedSelectedDisabled.fillColor = 0xCCCCCC;
+        buttonRaisedSelectedDisabled.setSize(60, 60);
+        buttonRaisedSelectedDisabled.name = BUTTON_RAISED_SELECTED_DISABLED_SKIN;
+        skins.push(buttonRaisedSelectedDisabled);
+    }
+    
+    
 
     public function setButtonRaisedStyles(button:Button):void
     {
         var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
         skinSelector.defaultValue = buttonRaisedUpSkinTextures;
+        //skinSelector.defaultValue = createScale9Textures(
+        //    "button-raised-up-skin", SharedFactory.BUTTON_SCALE9_GRID, true);
+        
         skinSelector.setValueForState(buttonRaisedDownSkinTextures, Button.STATE_DOWN, false);
         skinSelector.setValueForState(buttonRaisedDisabledSkinTextures, Button.STATE_DISABLED, false);
         if (button is ToggleButton)
@@ -170,8 +221,8 @@ public class ButtonFactory extends AbstractThemeFactory
         skinSelector.displayObjectProperties =
         {
             width: properties.controlSize,
-            height: properties.controlSize,
-            textureScale: theme.scale
+            height: properties.controlSize//,
+            //textureScale: theme.scale
         };
         button.stateToSkinFunction = skinSelector.updateValue;
 

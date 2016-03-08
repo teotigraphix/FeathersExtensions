@@ -44,6 +44,7 @@ import org.robotlegs.starling.mvcs.Mediator;
 import starling.display.DisplayObject;
 import starling.display.DisplayObjectContainer;
 import starling.events.Event;
+import starling.events.EventDispatcher;
 
 public class AbstractMediator extends Mediator
 {
@@ -260,6 +261,28 @@ public class AbstractMediator extends Mediator
         }
         return false;
     }
+    
+    /**
+     * Maps a listener to the dispatcher and when the mediator is removed, the
+     * listener is automatically removed.
+     * 
+     * @param dispatcher
+     * @param type
+     * @param listener
+     */
+    protected function mapListener(dispatcher:EventDispatcher, type:String, listener:Function):void
+    {
+        eventMap.mapListener(dispatcher, type, listener);
+    }
+    
+    protected function unmapListener(dispatcher:EventDispatcher, type:String, listener:Function):void
+    {
+        eventMap.unmapListener(dispatcher, type, listener);
+    }
+    
+    //--------------------------------------------------------------------------
+    // Internal
+    //--------------------------------------------------------------------------
     
     private function context_backChangedHandler(event:Event):void
     {

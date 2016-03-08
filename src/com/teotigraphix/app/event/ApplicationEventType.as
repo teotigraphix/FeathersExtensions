@@ -73,6 +73,9 @@ public final class ApplicationEventType
      */
     public static const APPLICATION_COMPLETE:String = "ApplicationEventType/applicationComplete";
 
+    public static const APPLICATION_PRE_SAVE:String = "applicationPreSave";
+    public static const APPLICATION_SAVE_COMPLETED:String = "applicationSaveCompleted";
+    
     /**
      * Dispatched after a Project has been loaded and set on the ProjectModel.
      *
@@ -83,7 +86,7 @@ public final class ApplicationEventType
     /**
      * Dispatched after a Project has been loaded and set on the ProjectModel AND
      * the ProjectController is done configuring models. UI mediators listen to this and refresh
-     * their views.
+     * their views overriding refreshView().
      *
      * @data <code>com.teotigraphix.frameworks.project.IProjectState</code>
      */

@@ -56,11 +56,16 @@ import com.teotigraphix.ui.theme.framework.FrameworkDefaultsFactory;
 import com.teotigraphix.ui.theme.framework.GridGroupFactory;
 import com.teotigraphix.ui.theme.framework.LedFactory;
 import com.teotigraphix.ui.theme.framework.ToastFactory;
+import com.teotigraphix.util.Files;
+
+import flash.display.BitmapData;
+import flash.display.DisplayObject;
+import flash.display.Stage;
+import flash.filesystem.File;
+import flash.utils.ByteArray;
 
 import feathers.system.DeviceCapabilities;
 import feathers.themes.StyleNameFunctionTheme;
-
-import flash.display.Stage;
 
 import starling.core.Starling;
 import starling.textures.TextureAtlas;
@@ -116,8 +121,16 @@ public class AbstractTheme extends StyleNameFunctionTheme
     internal var _originalDPI:int;
     internal var _scaleToDPI:Boolean;
     private var _factories:Vector.<AbstractThemeFactory> = new <AbstractThemeFactory>[];
+    
     private var _atlas:TextureAtlas;
+    private var _runtimeAtlas:TextureAtlas;
 
+    private var runtimeBitmapData:BitmapData;
+    
+    //
+    
+    public var themeColor:uint = 0x00BCD4;   
+    
     public function get factories():Vector.<AbstractThemeFactory>
     {
         return _factories;
@@ -135,6 +148,18 @@ public class AbstractTheme extends StyleNameFunctionTheme
             factory.atlas = _atlas;
     }
 
+    public function get runtimeAtlas():TextureAtlas
+    {
+        return _runtimeAtlas;
+    }
+    
+    public function set runtimeAtlas(value:TextureAtlas):void
+    {
+        _runtimeAtlas = value;
+        for each (var factory:AbstractThemeFactory in _factories)
+            factory.runtimeAtlas = _runtimeAtlas;
+    }
+    
     public function get dp():Number
     {
         return _dp;
@@ -293,6 +318,7 @@ public class AbstractTheme extends StyleNameFunctionTheme
         properties.initialize();
         initializeDimensions();
         initializeFonts();
+        initializeSkins();
         initializeTextures();
         initializeGlobals();
         initializeStage();
@@ -368,7 +394,46 @@ public class AbstractTheme extends StyleNameFunctionTheme
         for each (var factory:AbstractThemeFactory in _factories)
             factory.initializeFonts();
     }
+    
+    /**
+     * Initializes the runtime textures that are placed in the runtimeAtlas.
+     * Classes can then use the runtimeAtlas to retrieve the skins in their
+     * initializeStyleProviders() call.
+     */
+    protected function initializeSkins():void
+    {
+        var result:Vector.<DisplayObject> = new Vector.<DisplayObject>();
+        
+        // create instances, set theme properties
+        for each (var factory:AbstractThemeFactory in _factories)
+            factory.initializeSkins(result);
+        
+        // call draw to create the graphics
+        for (var i:int = 0; i < result.length; i++) 
+        {
+            var skin:AbstractSkin = result[i] as AbstractSkin;
+            skin.draw();
+        }
+        
+        var object:Object = DynamicAtlas.fromInstanceVector(result, 1);
+        runtimeAtlas = object.atlas;
+        // TOD save this to a temp file?
+        runtimeBitmapData = object.bitmapData;
 
+        var encoded:ByteArray = PNGEncoder.encode(runtimeBitmapData);
+        var file:File = File.desktopDirectory.resolvePath("atlas.png");
+        Files.writeBinaryFile(file, encoded);
+        
+        runtimeAtlas.texture.root.onRestore = runtimeAtlas_onRestore;
+        AssetMap.runtimeAtlas = runtimeAtlas;
+    }
+    
+    protected function runtimeAtlas_onRestore():void
+    {
+        runtimeAtlas.texture.root.uploadBitmapData(runtimeBitmapData);
+        //runtimeBitmapData.dispose();
+    }
+    
     /**
      * Initializes the textures by extracting them from the atlas and
      * setting up any scaling grids that are needed.

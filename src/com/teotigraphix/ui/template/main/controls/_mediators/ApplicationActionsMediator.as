@@ -1,18 +1,20 @@
-package com.teotigraphix.ui.template.main._mediators
+package com.teotigraphix.ui.template.main.controls._mediators
 {
-import com.teotigraphix.ui.IUIState;
-import com.teotigraphix.ui.core.AbstractMediator;
-import com.teotigraphix.ui.template.main.ApplicationActions;
+import com.teotigraphix.ui.template.main._mediators.AbstractTemplateControlMediator;
+import com.teotigraphix.ui.template.main.controls.ApplicationActions;
 import com.teotigraphix.ui.template.main.controls.EditActionsList;
 
 import feathers.controls.Callout;
+import feathers.data.ListCollection;
 
 import starling.events.Event;
 
-public class ApplicationActionsMediator extends AbstractMediator
+public class ApplicationActionsMediator extends AbstractTemplateControlMediator
 {
     [Inject]
     public var view:ApplicationActions;
+    
+    private var _callout:Callout;
     
     //--------------------------------------------------------------------------
     // Methods
@@ -20,34 +22,51 @@ public class ApplicationActionsMediator extends AbstractMediator
     
     override protected function initializeView():void
     {
-        addViewListener(ApplicationActions.EVENT_ACTION_TRIGGER, view_actionTriggeredHandler);
-
+        super.initializeView();
     }
     
     override protected function setupViewListeners():void
     {
+        super.setupViewListeners();
+        addViewListener(ApplicationActions.EVENT_ACTION_TRIGGER, view_actionTriggeredHandler);
     }
     
     override protected function setupContextListeners():void
     {
+        super.setupContextListeners();
     }
     
     //--------------------------------------------------------------------------
     // View
     //--------------------------------------------------------------------------
     
-    private var _callout:Callout;
-    
     private function view_actionTriggeredHandler(event:Event):void
     {
         var content:EditActionsList = new EditActionsList();
-        content.dataProvider = uiState.createActionDataProvider();
+        content.dataProvider = createDataProvider(screenLauncher.contentScreenID);
         content.addEventListener(EditActionsList.EVENT_SELECT, list_selectHandler);
         
         _callout = Callout.show(content, view.actionsButton);
         _callout.addEventListener(Event.CLOSE, callout_closeHandler);
     }
     
+    //--------------------------------------------------------------------------
+    // Context
+    //--------------------------------------------------------------------------
+    
+    //--------------------------------------------------------------------------
+    // Internal
+    //--------------------------------------------------------------------------
+    
+    override protected function createDataProvider(screenID:String):ListCollection
+    {
+        return uiState.createActionDataProvider(screenLauncher.contentScreenID)
+    }
+    
+    override protected function redraw(screenID:String):void
+    {
+    }
+
     private function list_selectHandler(event:Event, item:Object):void
     {
         item.command();
@@ -60,10 +79,5 @@ public class ApplicationActionsMediator extends AbstractMediator
         event.target.removeEventListener(Event.CLOSE, callout_closeHandler);
         view.actionsButton.isSelected = false;
     }
-
-    //--------------------------------------------------------------------------
-    // Context
-    //--------------------------------------------------------------------------
-    
 }
 }

@@ -62,7 +62,8 @@ public class TextInputFactory extends AbstractThemeFactory
 
     public function setStyles(input:TextInput):void
     {
-        this.setBaseTextInputStyles(input);
+        setBaseTextInputStyles(input);
+        setDarkStyles(input);
     }
 
     public function setDarkStyles(input:TextInput):void

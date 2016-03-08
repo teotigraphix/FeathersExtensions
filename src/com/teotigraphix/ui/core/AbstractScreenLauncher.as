@@ -34,23 +34,28 @@ import com.teotigraphix.ui.template.MainScreen;
 import com.teotigraphix.ui.template._mediators.LoadingScreenMediator;
 import com.teotigraphix.ui.template._mediators.MainScreenMediator;
 import com.teotigraphix.ui.template.main.ApplicationActionBar;
-import com.teotigraphix.ui.template.main.ApplicationActions;
-import com.teotigraphix.ui.template.main.ApplicationLogoControl;
 import com.teotigraphix.ui.template.main.ApplicationStatusBar;
-import com.teotigraphix.ui.template.main.ApplicationToolBar;
-import com.teotigraphix.ui.template.main.ProjectNameControl;
-import com.teotigraphix.ui.template.main.ScreenToolBar;
-import com.teotigraphix.ui.template.main.StatusToolBar;
-import com.teotigraphix.ui.template.main.TransportToolBar;
 import com.teotigraphix.ui.template.main._mediators.ApplicationActionBarMediator;
-import com.teotigraphix.ui.template.main._mediators.ApplicationActionsMediator;
-import com.teotigraphix.ui.template.main._mediators.ApplicationLogoControlMediator;
 import com.teotigraphix.ui.template.main._mediators.ApplicationStatusBarMediator;
-import com.teotigraphix.ui.template.main._mediators.ApplicationToolBarMediator;
-import com.teotigraphix.ui.template.main._mediators.ProjectNameControlMediator;
-import com.teotigraphix.ui.template.main._mediators.ScreenToolBarMediator;
-import com.teotigraphix.ui.template.main._mediators.StatusToolBarMediator;
-import com.teotigraphix.ui.template.main._mediators.TransportToolBarMediator;
+import com.teotigraphix.ui.template.main._mediators.data.ContentScreenItem;
+import com.teotigraphix.ui.template.main.controls.ApplicationActions;
+import com.teotigraphix.ui.template.main.controls.ApplicationLogoControl;
+import com.teotigraphix.ui.template.main.controls.ProjectNameControl;
+import com.teotigraphix.ui.template.main.controls._mediators.ApplicationActionsMediator;
+import com.teotigraphix.ui.template.main.controls._mediators.ApplicationLogoControlMediator;
+import com.teotigraphix.ui.template.main.controls._mediators.ProjectNameControlMediator;
+import com.teotigraphix.ui.template.main.toolbar.ApplicationContentToolBar;
+import com.teotigraphix.ui.template.main.toolbar.ApplicationToolBar;
+import com.teotigraphix.ui.template.main.toolbar.ScreenToolBar;
+import com.teotigraphix.ui.template.main.toolbar.StatusCenterToolBar;
+import com.teotigraphix.ui.template.main.toolbar.StatusLeftToolBar;
+import com.teotigraphix.ui.template.main.toolbar.StatusRightToolBar;
+import com.teotigraphix.ui.template.main.toolbar._mediators.ApplicationContentToolBarMediator;
+import com.teotigraphix.ui.template.main.toolbar._mediators.ApplicationToolBarMediator;
+import com.teotigraphix.ui.template.main.toolbar._mediators.ScreenToolBarMediator;
+import com.teotigraphix.ui.template.main.toolbar._mediators.StatusCenterToolBarMediator;
+import com.teotigraphix.ui.template.main.toolbar._mediators.StatusLeftToolBarMediator;
+import com.teotigraphix.ui.template.main.toolbar._mediators.StatusRightToolBarMediator;
 
 import flash.errors.IllegalOperationError;
 import flash.utils.getDefinitionByName;
@@ -73,11 +78,6 @@ use namespace sdk_internal;
 
 public class AbstractScreenLauncher extends AbstractController implements IScreenLauncher
 {
-    /**
-     * data - screenID
-     */
-    public static const EVENT_SELECTED_CONTENT_INDEX_CHANGED:String = "selectedContentIndexChanged";
-
     public static const LOAD:String = "load";
     public static const SETTINGS:String = "settings";
     public static const MAIN:String = "main";
@@ -85,7 +85,7 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     //--------------------------------------------------------------------------
     // Private :: Inject
     //--------------------------------------------------------------------------
-
+ 
     [Inject]
     public var _mediatorMap:IMediatorMap;
 
@@ -102,9 +102,7 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     private var _applicationScreenID:String;
 
     protected var rootScreen:String;
-    
-    private var _uiState:IUIState;
-    
+
     //--------------------------------------------------------------------------
     // Private :: Variables
     //--------------------------------------------------------------------------
@@ -159,6 +157,17 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
         return _contentScreenID;
     }
     
+    public function setContentScreenIndex(contentIndex:int):void
+    {
+        var uiState:IUIState = injector.getInstance(IUIState);
+        var screenID:String = ContentScreenItem(uiState.applicationToolBarDataProvider.getItemAt(contentIndex)).id;
+        setContentScreen(screenID);
+    }
+    
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+    
     public function AbstractScreenLauncher()
     {
         rootScreen = MAIN;
@@ -169,7 +178,7 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
         super.onRegister();
         
         addContextListener(ScreenLauncherEventType.SELECTED_CONTENT_INDEX_CHANGED, 
-            context_selectedContentIndexChangedHandler);
+            context_selectedContentIndexChangeHandler);
         
         _popupMediatorMap = new MediatorMap(root.stage, injector, reflector);
 
@@ -257,17 +266,24 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     {
         mediatorMap.mapView(BackButtonControl, BackButtonControlMediator);
         
-        // ActionBar
+        // ApplicationActionBar
         mediatorMap.mapView(ApplicationActionBar, ApplicationActionBarMediator);
+        
         mediatorMap.mapView(ApplicationActions, ApplicationActionsMediator);
         mediatorMap.mapView(ScreenToolBar, ScreenToolBarMediator);
         mediatorMap.mapView(ProjectNameControl, ProjectNameControlMediator);
         mediatorMap.mapView(ApplicationLogoControl, ApplicationLogoControlMediator);
         
-        mediatorMap.mapView(ApplicationStatusBar, ApplicationStatusBarMediator);
+        // left vertical toolbar
         mediatorMap.mapView(ApplicationToolBar, ApplicationToolBarMediator);
-        mediatorMap.mapView(TransportToolBar, TransportToolBarMediator);
-        mediatorMap.mapView(StatusToolBar, StatusToolBarMediator);
+        // right vertical toolbar
+        mediatorMap.mapView(ApplicationContentToolBar, ApplicationContentToolBarMediator);
+        
+        // ApplicationStatusBar
+        mediatorMap.mapView(ApplicationStatusBar, ApplicationStatusBarMediator);
+        mediatorMap.mapView(StatusLeftToolBar, StatusLeftToolBarMediator);
+        mediatorMap.mapView(StatusCenterToolBar, StatusCenterToolBarMediator);
+        mediatorMap.mapView(StatusRightToolBar, StatusRightToolBarMediator);
     }
 
     protected function configurePopUpControls(mediatorMap:IMediatorMap):void
@@ -353,7 +369,7 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
         
         logger.log("ScreenLauncher", "content screen [{0}] created as {1}", screenID, screen);
         
-        dispatchWith(EVENT_SELECTED_CONTENT_INDEX_CHANGED, false, screenID);
+        dispatchWith(ScreenLauncherEventType.CONTENT_SCREEN_ID_CHANGED, false, _contentScreenID);
         
         return screen;
     }
@@ -362,12 +378,9 @@ public class AbstractScreenLauncher extends AbstractController implements IScree
     // Handlers
     //--------------------------------------------------------------------------
     
-    private function context_selectedContentIndexChangedHandler(event:Event, index:int):void
+    private function context_selectedContentIndexChangeHandler(event:Event, index:int):void
     {
-        _uiState = injector.getInstance(IUIState);
-        
-        var screenID:String = _uiState.applicationToolBarDataProvider.getItemAt(index).screenID;
-        setContentScreen(screenID);
+        setContentScreenIndex(index);
     }
 }
 }

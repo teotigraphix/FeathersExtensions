@@ -5,6 +5,10 @@ package com.teotigraphix.ui.template._mediators
 import com.teotigraphix.ui.IScreenLauncher;
 import com.teotigraphix.ui.core.AbstractMediator;
 import com.teotigraphix.ui.template.MainScreen;
+import com.teotigraphix.ui.template.main.controls.ToolBarTaBar;
+import com.teotigraphix.ui.template.main.controls._mediators.ToolBarTaBarMediator;
+
+import org.robotlegs.starling.core.IMediatorMap;
 
 import starling.events.Event;
 
@@ -44,28 +48,21 @@ public class MainScreenMediator extends AbstractMediator
         screenLauncher.contentNavigator = view.contentNavigator;
         
         super.onRegister();
-        // TODO
-//        switch(preferences.ui.selectedContentIndex)
-//        {
-//            case 0:
-//                model.screens.goToContentClip();
-//                break;
-//            
-//            case 1:
-//                model.screens.gotToContentScene();
-//                break;
-//            
-//            case 1:
-//                model.screens.gotToContentRecordTake();
-//                break;
-//        }
+        
+        var contentIndex:int = projectPreferencesProvider.provided.template.selectedContentIndex;
+        screenLauncher.setContentScreenIndex(contentIndex);
     }
-    
+
     override public function onRemove():void
     {
         screenLauncher.contentNavigator = null;
         
         super.onRemove();
+    }
+    
+    public static function mapDependencies(mediatorMap:IMediatorMap):void 
+    {
+        mediatorMap.mapView(ToolBarTaBar, ToolBarTaBarMediator);        
     }
 }
 }

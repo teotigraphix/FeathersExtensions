@@ -41,6 +41,8 @@ public class VGroup extends LayoutGroup
     private var _paddingLeft:Number = 0;
 
     private var _gap:Number = 0;
+    
+    private var _distribute:Boolean;
 
     [Inspectable(type="String", enumeration="top,middle,bottom")]
     public function get verticalAlign():String
@@ -153,7 +155,22 @@ public class VGroup extends LayoutGroup
         _gap = value;
         invalidate(INVALIDATION_FLAG_LAYOUT);
     }
-
+    
+    //----------------------------------
+    // distribute
+    //----------------------------------
+    
+    public function get distribute():Boolean
+    {
+        return _distribute;
+    }
+    
+    public function set distribute(value:Boolean):void
+    {
+        _distribute = value;
+        invalidate(INVALIDATION_FLAG_LAYOUT);
+    }
+    
     public function VGroup()
     {
         layout = new VerticalLayout();
@@ -211,6 +228,7 @@ public class VGroup extends LayoutGroup
             }
 
             l.gap = _gap;
+            l.distributeHeights = _distribute;
         }
     }
 }

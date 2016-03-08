@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<f:LayoutGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                xmlns:s="library://ns.adobe.com/flex/spark" 
+                xmlns:f="library://ns.feathersui.com/mxml" 
+                xmlns:controls="com.teotigraphix.ui.template.main.controls.*">
+
+    <f:layout>
+        <f:VerticalLayout/>
+    </f:layout>
+    
+    <controls:ToolBarTaBar id="tabBar">
+        
+    </controls:ToolBarTaBar>
+
+    <fx:Script>
+        <![CDATA[
+            import feathers.skins.IStyleProvider;
+            
+            public static var globalStyleProvider:IStyleProvider;
+            
+            override protected function get defaultStyleProvider():IStyleProvider
+            {
+                return ApplicationToolBar.globalStyleProvider;
+            }
+        ]]>
+    </fx:Script>
+    
+</f:LayoutGroup>

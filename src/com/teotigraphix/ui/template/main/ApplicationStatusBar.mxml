@@ -3,21 +3,29 @@
                 xmlns:s="library://ns.adobe.com/flex/spark" 
                 xmlns:f="library://ns.feathersui.com/mxml" 
                 xmlns:component="com.teotigraphix.ui.component.*" 
-                xmlns:main="com.teotigraphix.ui.template.main.*">
+                xmlns:toolbar="com.teotigraphix.ui.template.main.toolbar.*">
     
     <f:layout>
         <f:HorizontalLayout/>
     </f:layout>
     
-    <main:TransportToolBar>
-        
-    </main:TransportToolBar>
+    <toolbar:StatusLeftToolBar>
+        <toolbar:layoutData>
+            <f:HorizontalLayoutData/>
+        </toolbar:layoutData>
+    </toolbar:StatusLeftToolBar>
     
-    <component:Spacer percentWidth="100"/>
+    <toolbar:StatusCenterToolBar>
+        <toolbar:layoutData>
+            <f:HorizontalLayoutData percentWidth="100"/>
+        </toolbar:layoutData>
+    </toolbar:StatusCenterToolBar>
     
-    <main:StatusToolBar>
-        
-    </main:StatusToolBar>
+    <toolbar:StatusRightToolBar>
+        <toolbar:layoutData>
+            <f:HorizontalLayoutData/>
+        </toolbar:layoutData>
+    </toolbar:StatusRightToolBar>
     
     <fx:Script>
         <![CDATA[

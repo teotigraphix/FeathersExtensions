@@ -59,7 +59,7 @@ public class AbstractProjectPreferences implements IProjectPreferences
     
     public function AbstractProjectPreferences()
     {
-        _template = new ProjectPreferencesTemplateUI();
+        _template = new ProjectPreferencesTemplateUI(this);
     }
 
     //--------------------------------------------------------------------------

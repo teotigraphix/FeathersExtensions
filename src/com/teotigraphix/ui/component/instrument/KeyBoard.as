@@ -28,11 +28,11 @@ import com.teotigraphix.ui.component.instrument.support.KeyBoarKeyData;
 import com.teotigraphix.ui.component.instrument.support.KeyBoardKey;
 import com.teotigraphix.ui.theme.AssetMap;
 
+import flash.utils.Dictionary;
+
 import feathers.controls.LayoutGroup;
 import feathers.controls.PickerList;
 import feathers.data.ListCollection;
-
-import flash.utils.Dictionary;
 
 import starling.display.DisplayObject;
 import starling.events.Event;
@@ -279,7 +279,7 @@ public class KeyBoard extends LayoutGroup
         {
             refreshKeyData();
 
-            _scalePickerList.selectedIndex = _scaleData.scaleIndex;
+            _scalePickerList.selectedIndex = -1;//_scaleData.scaleIndex;
             _rootKeyPickerList.selectedIndex = _scaleData.noteIndex;
         }
 

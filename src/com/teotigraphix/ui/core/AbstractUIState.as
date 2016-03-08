@@ -4,6 +4,7 @@ import com.teotigraphix.core.sdk_internal;
 import com.teotigraphix.frameworks.project.Project;
 import com.teotigraphix.model.AbstractModel;
 import com.teotigraphix.ui.IUIState;
+import com.teotigraphix.ui.template.main._mediators.data.ContentScreenItem;
 
 import feathers.data.ListCollection;
 
@@ -24,16 +25,47 @@ public class AbstractUIState extends AbstractModel implements IUIState
         return _applicationToolBarDataProvider;
     }
     
+    //--------------------------------------------------------------------------
+    // Constructor
+    //--------------------------------------------------------------------------
+    
     public function AbstractUIState()
     {
         super();
     }
     
     //--------------------------------------------------------------------------
+    // Methods
+    //--------------------------------------------------------------------------
+    
+    override public function onStartup():void
+    {
+        super.onStartup();
+        
+        configureApplicationToolBarDataProvider(_applicationToolBarDataProvider);
+    }
+    
+    //--------------------------------------------------------------------------
     // MainScreen Data
     //--------------------------------------------------------------------------
     
-    public function createActionDataProvider():ListCollection
+    public function contentScreenIndexToID(contentScreenIndex:int):String
+    {
+        for (var i:int = 0; i < _applicationToolBarDataProvider.length; i++) 
+        {
+            var item:ContentScreenItem = _applicationToolBarDataProvider.data[i] as ContentScreenItem;
+            if (i == contentScreenIndex)
+                return item.id;
+        }
+        return null;
+    }
+    
+    public function createActionDataProvider(screenID:String):ListCollection
+    {
+        return new ListCollection([]);
+    }
+    
+    public function createContentToolsDataProvider(screenID:String):ListCollection
     {
         return new ListCollection([]);
     }
@@ -43,27 +75,35 @@ public class AbstractUIState extends AbstractModel implements IUIState
         return new ListCollection([]);
     }
     
-    public function createTransportToolsDataProvider(screenID:String):ListCollection
+    public function createStatusLeftToolsDataProvider(screenID:String):ListCollection
     {
         return new ListCollection([]);
     }
     
-    public function createStatusToolsDataProvider(screenID:String):ListCollection
+    public function createStatusCenterToolsDataProvider(screenID:String):ListCollection
     {
         return new ListCollection([]);
     }
     
-    override public function onStartup():void
+    public function createStatusRightToolsDataProvider(screenID:String):ListCollection
     {
-        super.onStartup();
-        
-        configureApplicationToolBarDataProvider(_applicationToolBarDataProvider);
+        return new ListCollection([]);
     }
     
+    //--------------------------------------------------------------------------
+    // Internal :: Methods
+    //--------------------------------------------------------------------------
+    
+    /**
+     * Subclasses override to create the application's left tool bar data provider.
+     */
     protected function configureApplicationToolBarDataProvider(collection:ListCollection):void
     {
     }
     
+    /**
+     * Called by the ProjectConfigurator, new/load project.
+     */
     sdk_internal function configure(project:Project, isNew:Boolean):void
     {
     }

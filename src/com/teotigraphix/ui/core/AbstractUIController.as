@@ -23,8 +23,10 @@ import com.teotigraphix.controller.core.AbstractController;
 import com.teotigraphix.ui.IUIController;
 import com.teotigraphix.ui.IUIFactory;
 import com.teotigraphix.ui.IUIState;
+import com.teotigraphix.ui.component.ColorChipPicker;
 import com.teotigraphix.ui.component.event.FrameworkEventType;
 import com.teotigraphix.ui.component.file.FileListData;
+import com.teotigraphix.ui.component.support.ColorChip;
 import com.teotigraphix.ui.dialog.AlertDialog;
 import com.teotigraphix.ui.dialog.FileDialog;
 import com.teotigraphix.ui.dialog.GetStringDialog;
@@ -34,11 +36,13 @@ import com.teotigraphix.ui.dialog.WebViewDialog;
 import com.teotigraphix.ui.popup.CenterPopUpContentManager;
 import com.teotigraphix.ui.popup.ProgressPopUp;
 import com.teotigraphix.ui.theme.AssetMap;
+import com.teotigraphix.util.BitwigColor;
 
 import flash.desktop.NativeApplication;
 import flash.filesystem.File;
 
 import feathers.controls.Alert;
+import feathers.controls.Callout;
 import feathers.core.PopUpManager;
 import feathers.data.ListCollection;
 
@@ -53,7 +57,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
 {
     [Inject]
     public var root:DisplayObjectContainer;
-
+    
     [Inject]
     public var _factory:IUIFactory;
     
@@ -79,7 +83,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
     public function AbstractUIController()
     {
     }
-
+    
     override protected function onRegister():void
     {
         super.onRegister();
@@ -117,7 +121,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
             alert.icon = AssetMap.createImage(iconSkin);
             alert.icon.width = alert.icon.height = AssetMap.size(60);
         }
-
+        
         alert.addEventListener(Event.CLOSE, function (event:Event, data:Object):void {
             if (data.label == yesLabel)
                 okHandler();
@@ -159,7 +163,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
         dialog.addEventListener(FrameworkEventType.CANCEL, cancelHandler);
         return dialog;
     }
-
+    
     /**
      * Initializes FileListData for directory selection without files.
      */
@@ -173,7 +177,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
         data.directoryDoubleTapEnabled = false;
         return data;
     }
-
+    
     /**
      * Initializes FileListData for file selection with files and directory double tap.
      */
@@ -187,8 +191,8 @@ public class AbstractUIController extends AbstractController implements IUIContr
         data.directoryDoubleTapEnabled = true;
         return data;
     }
-
-
+    
+    
     
     public function createAndShowProgressPopUp(status:String = null, percent:int = 0):ProgressPopUp
     {
@@ -198,7 +202,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
         addPopUp(popup, true, true);
         return popup;
     }
-
+    
     public function notifyToast(message:String, icon:String = null, duration:Number = 3000):void
     {
         //Toast.show(message, duration);
@@ -206,7 +210,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
         var dialog:MessageDialog = new MessageDialog();
         dialog.message = message;
         dialog.validate();
-
+        
         PopUpManager.addPopUp(dialog, false, false);
         
         var height:Number = dialog.height;
@@ -232,25 +236,25 @@ public class AbstractUIController extends AbstractController implements IUIContr
         
         Starling.juggler.add(t1);
     }
-
+    
     public function showWebText(title:String, htmlText:String, backHandler:Function):WebViewDialog
     {
         var dialog:WebViewDialog = WebViewDialog.show(title, htmlText);
         dialog.addEventListener(FrameworkEventType.BACK, backHandler);
         return dialog;
     }
-
+    
     public function addPopUp(popUp:DisplayObject, isModal:Boolean = true,
                              isCentered:Boolean = true, customOverlayFactory:Function = null):void
     {
         PopUpManager.addPopUp(popUp, isModal, isCentered, customOverlayFactory);
     }
-
+    
     public function removePopUp(popUp:DisplayObject, dispose:Boolean = true):void
     {
         PopUpManager.removePopUp(popUp, dispose);
     }
-
+    
     public function showCenteredPopUp(content:DisplayObject,
                                       closeEvent:String,
                                       closedHandler:Function = null,
@@ -263,7 +267,7 @@ public class AbstractUIController extends AbstractController implements IUIContr
             quad.alpha = 0;
             return quad;
         };
-
+        
         if (closedHandler != null)
         {
             _contentManager.addEventListener(CenterPopUpContentManager.EVENT_CANCEL, closedHandler);
@@ -277,19 +281,50 @@ public class AbstractUIController extends AbstractController implements IUIContr
         _contentManager.open(content, DisplayObject(root));
     }
     
+    public function showCalloutColorChipPicker(origin:DisplayObject, 
+                                               changeHandler:Function, 
+                                               closeHandler:Function):ColorChipPicker
+    {
+        return calloutColorChipPicker(origin, changeHandler, closeHandler);
+    }
+    
     public function exit():void
     {
         NativeApplication.nativeApplication.exit();
     }
-
+    
     private function contentManager_cancelHandler(event:Event):void
     {
     }
-
+    
     private function list_closeHandler(event:Event):void
     {
         _contentManager.close();
         _contentManager = null;
+    }
+    
+    public static function calloutColorChipPicker(origin:DisplayObject, 
+                                                  changeHandler:Function, 
+                                                  closeHandler:Function):ColorChipPicker
+    {
+        var content:ColorChipPicker = new ColorChipPicker();
+        content.addEventListener(ColorChip.EVENT_CHANGE, calloutColorChipPicker_changeHandler);
+        content.addEventListener(ColorChip.EVENT_CHANGE, changeHandler);
+        var callout:Callout = Callout.show(content, origin);
+        callout.addEventListener(Event.CLOSE, function (event:Event):void {
+            closeHandler(event);
+        });
+        return content;
+    }
+    
+    //--------------------------------------------------------------------------
+    // Static Handlers
+    //--------------------------------------------------------------------------
+    
+    private static function calloutColorChipPicker_changeHandler(event:Event, color:BitwigColor):void
+    {
+        var callout:Callout = DisplayObject(event.currentTarget).parent as Callout;
+        callout.close(true);
     }
 }
 }

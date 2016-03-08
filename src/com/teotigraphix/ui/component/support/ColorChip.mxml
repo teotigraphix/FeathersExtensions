@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<f:LayoutGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                xmlns:s="library://ns.adobe.com/flex/spark" 
+                xmlns:f="library://ns.feathersui.com/mxml" 
+                xmlns:component="com.teotigraphix.ui.component.*">
+    
+    <fx:Metadata>
+        [Event(name="change", type="starling.events.Event")]
+    </fx:Metadata>
+    
+    <f:layout>
+        <f:AnchorLayout/>
+    </f:layout>
+    
+    <component:UIBorder id="background" touchable="false" color="#242424">
+        <component:layoutData>
+            <f:AnchorLayoutData top="0" right="0" bottom="0" left="0"/>
+        </component:layoutData>
+    </component:UIBorder>
+    
+    <f:ToggleButton id="button"
+                    isToggle="false"
+                    triggered="dispatchEventWith(EVENT_CHANGE, true, _color)">
+        <f:layoutData>
+            <f:AnchorLayoutData top="1" right="1" bottom="1" left="1"/>
+        </f:layoutData>
+    </f:ToggleButton>
+    
+    <component:UIBorder id="colorChip" touchable="false">
+        <component:layoutData>
+            <f:AnchorLayoutData top="3" right="3" bottom="3" left="3"/>
+        </component:layoutData>
+    </component:UIBorder>
+     
+    <fx:Script>
+        <![CDATA[
+            import com.teotigraphix.util.BitwigColor;
+            
+            import starling.events.Event;
+            
+            public static const EVENT_CHANGE:String = "change";
+            
+            //----------------------------------
+            // color
+            //----------------------------------
+            
+            private var _color:BitwigColor;
+            
+            public function get color():BitwigColor 
+            {
+                return _color;
+            }
+            
+            public function set color(value:BitwigColor):void
+            {
+                _color = value;
+                invalidate("color");
+            }
+            
+            override protected function draw():void
+            {
+                if (isInvalid("color"))
+                {
+                    if (_color != null)
+                    {
+                        colorChip.color = _color.value;
+                    }
+                    else
+                    {
+                        colorChip.color = 0xFFFFFF;
+                    }
+                }
+
+                super.draw();
+            }
+            
+        ]]>
+    </fx:Script>
+    
+</f:LayoutGroup>

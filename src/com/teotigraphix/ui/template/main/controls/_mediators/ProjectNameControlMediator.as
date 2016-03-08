@@ -1,11 +1,11 @@
-package com.teotigraphix.ui.template.main._mediators
+package com.teotigraphix.ui.template.main.controls._mediators
 {
 import com.teotigraphix.controller.ICommandLauncher;
 import com.teotigraphix.model.IProjectModel;
 import com.teotigraphix.model.ISaveStrategy;
 import com.teotigraphix.model.event.CoreModelEventType;
 import com.teotigraphix.ui.core.AbstractMediator;
-import com.teotigraphix.ui.template.main.ProjectNameControl;
+import com.teotigraphix.ui.template.main.controls.ProjectNameControl;
 
 import starling.events.Event;
 

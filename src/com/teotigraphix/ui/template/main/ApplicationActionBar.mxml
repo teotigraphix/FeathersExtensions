@@ -2,31 +2,31 @@
 <f:LayoutGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
                xmlns:f="library://ns.feathersui.com/mxml"
                xmlns:component="com.teotigraphix.ui.component.*" 
-               xmlns:main="com.teotigraphix.ui.template.main.*">
+               xmlns:main="com.teotigraphix.ui.template.main.*" xmlns:toolbar="com.teotigraphix.ui.template.main.toolbar.*" xmlns:controls="com.teotigraphix.ui.template.main.controls.*">
     
     <f:layout>
         <f:HorizontalLayout verticalAlign="middle"/>
     </f:layout>
     
-    <main:ApplicationActions>
+    <controls:ApplicationActions>
         
-    </main:ApplicationActions>
+    </controls:ApplicationActions>
 
     <component:Spacer percentWidth="100"/>
     
-    <main:ScreenToolBar>
+    <toolbar:ScreenToolBar>
         
-    </main:ScreenToolBar>
+    </toolbar:ScreenToolBar>
     
     <component:Spacer percentWidth="100"/>
 
-    <main:ProjectNameControl minWidth="200">
+    <controls:ProjectNameControl minWidth="200">
         
-    </main:ProjectNameControl>
+    </controls:ProjectNameControl>
     
-    <main:ApplicationLogoControl>
+    <controls:ApplicationLogoControl>
         
-    </main:ApplicationLogoControl>
+    </controls:ApplicationLogoControl>
 
     <fx:Script><![CDATA[
         import feathers.skins.IStyleProvider;

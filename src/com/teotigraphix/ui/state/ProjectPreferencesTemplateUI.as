@@ -12,6 +12,9 @@ public class ProjectPreferencesTemplateUI extends AbstractProjectPreferencesChil
     // selectedContentIndex
     //----------------------------------
     
+    /**
+     * Dispatches ScreenLauncherEventType.SELECTED_CONTENT_INDEX_CHANGED.
+     */
     public function get selectedContentIndex():int
     {
         return _selectedContentIndex;

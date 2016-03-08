@@ -58,7 +58,7 @@ public class LoggerImpl implements ILogger
         trace("    [Debug] {" + tag + "} " + replaceTokens(message, rest));
     }
 
-    private static function replaceTokens(message:String, tokens:Array):String
+    protected static function replaceTokens(message:String, tokens:Array):String
     {
         if (tokens.length > 0)
         {
