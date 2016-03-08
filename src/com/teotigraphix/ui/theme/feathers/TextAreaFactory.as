@@ -20,10 +20,14 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import feathers.controls.TextArea;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
+import feathers.controls.TextInputState;
+import feathers.controls.text.StageTextTextEditorViewPort;
+import feathers.skins.ImageSkin;
 
 public class TextAreaFactory extends AbstractThemeFactory
 {
@@ -48,22 +52,25 @@ public class TextAreaFactory extends AbstractThemeFactory
     public function setTextAreaStyles(textArea:TextArea):void
     {
         theme.scroller.setScrollerStyles(textArea);
-
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = shared.backgroundInsetSkinTextures;
-        skinSelector.setValueForState(shared.backgroundDisabledSkinTextures, TextArea.STATE_DISABLED);
-        skinSelector.setValueForState(shared.backgroundFocusedSkinTextures, TextArea.STATE_FOCUSED);
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.wideControlSize,
-            height: properties.wideControlSize,
-            textureScale: properties.scale
-        };
-        textArea.stateToSkinFunction = skinSelector.updateValue;
-
-        textArea.textEditorProperties.textFormat = font.scrollTextTextFormat;
-        textArea.textEditorProperties.disabledTextFormat = font.scrollTextDisabledTextFormat;
-        textArea.textEditorProperties.padding = properties.smallGutterSize;
+        
+        var skin:ImageSkin = new ImageSkin(shared.backgroundInsetSkinTexture);
+        skin.setTextureForState(TextInputState.DISABLED, shared.backgroundDisabledSkinTexture);
+        skin.setTextureForState(TextInputState.FOCUSED, shared.backgroundInsetFocusedSkinTexture);
+        skin.scale9Grid = SharedFactory.DEFAULT_BACKGROUND_SCALE9_GRID;
+        skin.width = properties.wideControlSize;
+        skin.height = properties.wideControlSize;
+        textArea.backgroundSkin = skin;
+        
+        textArea.textEditorFactory = textAreaTextEditorFactory;
+    }
+    
+    /**
+     * The text editor factory for a TextArea creates a
+     * StageTextTextEditorViewPort.
+     */
+    protected static function textAreaTextEditorFactory():StageTextTextEditorViewPort
+    {
+        return new StageTextTextEditorViewPort();
     }
 }
 }

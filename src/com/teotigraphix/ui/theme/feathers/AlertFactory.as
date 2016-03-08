@@ -20,7 +20,10 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.AssetMap;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import feathers.controls.Alert;
 import feathers.controls.Button;
@@ -28,17 +31,17 @@ import feathers.controls.ButtonGroup;
 import feathers.controls.Header;
 import feathers.controls.text.TextBlockTextRenderer;
 import feathers.core.PopUpManager;
-import feathers.display.Scale9Image;
-import feathers.textures.Scale9Textures;
 
 import starling.display.DisplayObject;
+import starling.display.Image;
 import starling.display.Quad;
+import starling.textures.Texture;
 
 public class AlertFactory extends AbstractThemeFactory
 {
     protected static const THEME_STYLE_NAME_ALERT_BUTTON_GROUP_BUTTON:String = "metal-works-mobile-alert-button-group-button";
 
-    protected var backgroundPopUpSkinTextures:Scale9Textures;
+    protected var backgroundPopUpSkinTexture:Texture;
 
     public function AlertFactory(theme:AbstractTheme)
     {
@@ -62,8 +65,7 @@ public class AlertFactory extends AbstractThemeFactory
 
     override public function initializeTextures():void
     {
-        this.backgroundPopUpSkinTextures = new Scale9Textures(AssetMap.getTexture("background-popup-skin"),
-                                                              ThemeProperties.DEFAULT_SCALE9_GRID);
+        this.backgroundPopUpSkinTexture = AssetMap.getTexture("background-popup-skin");
     }
 
     override public function initializeGlobals():void
@@ -84,7 +86,8 @@ public class AlertFactory extends AbstractThemeFactory
     {
         theme.scroller.setScrollerStyles(alert);
 
-        var backgroundSkin:Scale9Image = new Scale9Image(backgroundPopUpSkinTextures, theme.scale);
+        var backgroundSkin:Image = new Image(backgroundPopUpSkinTexture);
+        backgroundSkin.scale9Grid = SharedFactory.DEFAULT_SCALE9_GRID;
         alert.backgroundSkin = backgroundSkin;
 
         alert.paddingTop = 0;

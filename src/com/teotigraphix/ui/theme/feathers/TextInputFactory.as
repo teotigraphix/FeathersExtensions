@@ -20,13 +20,17 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.FontFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 
 import feathers.controls.TextInput;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
+import feathers.controls.TextInputState;
+import feathers.layout.VerticalAlign;
+import feathers.skins.ImageSkin;
 
-import starling.textures.SubTexture;
 import starling.textures.Texture;
 
 public class TextInputFactory extends AbstractThemeFactory
@@ -81,78 +85,42 @@ public class TextInputFactory extends AbstractThemeFactory
 
     public function setDarkTextInputStyles(input:TextInput):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.shared.backgroundInsetSkinTextures;
-        skinSelector.setValueForState(theme.shared.backgroundDisabledSkinTextures, TextInput.STATE_DISABLED);
-        skinSelector.setValueForState(theme.shared.backgroundFocusedSkinTextures, TextInput.STATE_FOCUSED);
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.wideControlSize,
-            height: properties.controlSize,
-            textureScale: properties.scale
-        };
-        input.stateToSkinFunction = skinSelector.updateValue;
-
-        input.minWidth = properties.controlSize;
-        input.minHeight = properties.controlSize;
-        input.minTouchWidth = properties.gridSize;
-        input.minTouchHeight = properties.gridSize;
-        input.gap = properties.smallGutterSize;
-        input.padding = properties.smallGutterSize;
-
-        input.textEditorProperties.fontFamily = "Helvetica";
-        input.textEditorProperties.fontSize = theme.fonts.regularFontSize;
-        input.textEditorProperties.color = FontFactory.DARK_TEXT_COLOR;
-        input.textEditorProperties.disabledColor = FontFactory.DARK_DISABLED_TEXT_COLOR;
-
-        input.promptProperties.elementFormat = theme.fonts.darkElementFormat;
-        input.promptProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
+        setBaseTextInputStyles(input);
     }
 
     public function setBaseTextInputStyles(input:TextInput):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.shared.backgroundInsetSkinTextures;
-        skinSelector.setValueForState(theme.shared.backgroundDisabledSkinTextures, TextInput.STATE_DISABLED);
-        skinSelector.setValueForState(theme.shared.backgroundFocusedSkinTextures, TextInput.STATE_FOCUSED);
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.wideControlSize,
-            height: properties.controlSize,
-            textureScale: properties.scale
-        };
-        input.stateToSkinFunction = skinSelector.updateValue;
-
+        var skin:ImageSkin = new ImageSkin(shared.backgroundInsetSkinTexture);
+        skin.setTextureForState(TextInputState.DISABLED, shared.backgroundInsetDisabledSkinTexture);
+        skin.setTextureForState(TextInputState.FOCUSED, shared.backgroundInsetFocusedSkinTexture);
+        skin.scale9Grid = SharedFactory.DEFAULT_BACKGROUND_SCALE9_GRID;
+        skin.width = properties.wideControlSize;
+        skin.height = properties.controlSize;
+        input.backgroundSkin = skin;
+        
         input.minWidth = properties.controlSize;
         input.minHeight = properties.controlSize;
         input.minTouchWidth = properties.gridSize;
         input.minTouchHeight = properties.gridSize;
         input.gap = properties.smallGutterSize;
         input.padding = properties.smallGutterSize;
-
-        input.textEditorProperties.fontFamily = "Helvetica";
-        input.textEditorProperties.fontSize = theme.fonts.regularFontSize;
-        input.textEditorProperties.color = FontFactory.LIGHT_TEXT_COLOR;
-        input.textEditorProperties.disabledColor = FontFactory.DISABLED_TEXT_COLOR;
-
-        input.promptProperties.elementFormat = theme.fonts.lightElementFormat;
-        input.promptProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
+        input.verticalAlign = VerticalAlign.MIDDLE;
     }
 
     protected function setSearchTextInputStyles(input:TextInput):void
     {
-        this.setBaseTextInputStyles(input);
-
-        var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        iconSelector.setValueTypeHandler(SubTexture, SharedFactory.textureValueTypeHandler);
-        iconSelector.defaultValue = searchIconTexture;
-        iconSelector.setValueForState(searchIconDisabledTexture, TextInput.STATE_DISABLED, false);
-        iconSelector.displayObjectProperties =
-        {
-            textureScale: properties.scale,
-            snapToPixels: true
-        };
-        input.stateToIconFunction = iconSelector.updateValue;
+//        this.setBaseTextInputStyles(input);
+//
+//        var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
+//        iconSelector.setValueTypeHandler(SubTexture, SharedFactory.textureValueTypeHandler);
+//        iconSelector.defaultValue = searchIconTexture;
+//        iconSelector.setValueForState(searchIconDisabledTexture, TextInput.STATE_DISABLED, false);
+//        iconSelector.displayObjectProperties =
+//        {
+//            textureScale: properties.scale,
+//            snapToPixels: true
+//        };
+//        input.stateToIconFunction = iconSelector.updateValue;
     }
 
 }

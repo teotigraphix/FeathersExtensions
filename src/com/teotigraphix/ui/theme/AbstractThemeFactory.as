@@ -24,8 +24,6 @@ import flash.display.DisplayObject;
 import flash.geom.Rectangle;
 
 import feathers.controls.SimpleScrollBar;
-import feathers.display.Scale9Image;
-import feathers.textures.Scale9Textures;
 
 import org.as3commons.lang.StringUtils;
 
@@ -121,11 +119,6 @@ public class AbstractThemeFactory extends EventDispatcher
         }
     }
 
-    public static function createScale9Textures(name:String, rectangle:Rectangle, isRuntime:Boolean = false):Scale9Textures
-    {
-        return AssetMap.createScale9Textures(name, rectangle, isRuntime);
-    }
-
     protected static function scrollBarFactory():SimpleScrollBar
     {
         return new SimpleScrollBar();
@@ -151,7 +144,7 @@ public class AbstractThemeFactory extends EventDispatcher
         return AssetMap.createImage(name, isRuntime);
     }
 
-    protected static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Scale9Image
+    protected static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Image
     {
         return AssetMap.create9ScaleImage(name, x, y, width, height, isRuntime);
     }

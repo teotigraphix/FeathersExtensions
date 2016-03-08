@@ -20,24 +20,20 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
 
 import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.List;
 import feathers.controls.PickerList;
 import feathers.controls.ToggleButton;
 import feathers.controls.popups.CalloutPopUpContentManager;
-import feathers.controls.popups.VerticalCenteredPopUpContentManager;
 import feathers.controls.renderers.BaseDefaultItemRenderer;
-import feathers.display.Scale9Image;
+import feathers.layout.RelativePosition;
 import feathers.layout.VerticalLayout;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
-import feathers.system.DeviceCapabilities;
+import feathers.skins.ImageSkin;
 
-import starling.core.Starling;
-import starling.display.Image;
-import starling.display.Quad;
-import starling.textures.SubTexture;
 import starling.textures.Texture;
 
 public class PickerListFactory extends AbstractThemeFactory
@@ -115,63 +111,57 @@ public class PickerListFactory extends AbstractThemeFactory
     {
         theme.button.setButtonStyles(button);
 
-        var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        iconSelector.setValueTypeHandler(SubTexture, SharedFactory.textureValueTypeHandler);
-        iconSelector.defaultValue = this.pickerListButtonIconTexture;
-        iconSelector.setValueForState(this.pickerListButtonIconDisabledTexture, Button.STATE_DISABLED, false);
-        iconSelector.displayObjectProperties =
-        {
-            textureScale: properties.scale,
-            snapToPixels: true
-        };
-        button.stateToIconFunction = iconSelector.updateValue;
-
+        var icon:ImageSkin = new ImageSkin(this.pickerListButtonIconTexture);
+        icon.selectedTexture = pickerListItemSelectedIconTexture;
+        icon.setTextureForState(ButtonState.DISABLED, this.pickerListButtonIconDisabledTexture);
+        button.defaultIcon = icon;
+        
         button.gap = Number.POSITIVE_INFINITY;
         button.minGap = properties.gutterSize;
-        button.iconPosition = Button.ICON_POSITION_RIGHT;
+        button.iconPosition = RelativePosition.RIGHT;
     }
 
     public function setPickerListItemRendererStyles(renderer:BaseDefaultItemRenderer):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.list.itemRendererUpSkinTextures;
-        skinSelector.setValueForState(theme.list.itemRendererSelectedSkinTextures, Button.STATE_DOWN, false);
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.gridSize,
-            height: properties.gridSize,
-            textureScale: properties.scale
-        };
-        renderer.stateToSkinFunction = skinSelector.updateValue;
-
-        var defaultSelectedIcon:Image = new Image(this.pickerListItemSelectedIconTexture);
-        defaultSelectedIcon.scaleX = defaultSelectedIcon.scaleY = properties.scale;
-        renderer.defaultSelectedIcon = defaultSelectedIcon;
-
-        var defaultIcon:Quad = new Quad(defaultSelectedIcon.width, defaultSelectedIcon.height, 0xff00ff);
-        defaultIcon.alpha = 0;
-        renderer.defaultIcon = defaultIcon;
-
-        renderer.defaultLabelProperties.elementFormat = font.largeLightElementFormat;
-        renderer.downLabelProperties.elementFormat = font.largeDarkElementFormat;
-        renderer.disabledLabelProperties.elementFormat = font.largeDisabledElementFormat;
-
-        renderer.itemHasIcon = false;
-        renderer.horizontalAlign = Button.HORIZONTAL_ALIGN_LEFT;
-        renderer.paddingTop = properties.smallGutterSize;
-        renderer.paddingBottom = properties.smallGutterSize;
-        renderer.paddingLeft = properties.gutterSize;
-        renderer.paddingRight = properties.gutterSize;
-        renderer.gap = Number.POSITIVE_INFINITY;
-        renderer.minGap = properties.gutterSize;
-        renderer.iconPosition = Button.ICON_POSITION_RIGHT;
-        renderer.accessoryGap = Number.POSITIVE_INFINITY;
-        renderer.minAccessoryGap = properties.gutterSize;
-        renderer.accessoryPosition = BaseDefaultItemRenderer.ACCESSORY_POSITION_RIGHT;
-        renderer.minWidth = properties.gridSize;
-        renderer.minHeight = properties.gridSize;
-        renderer.minTouchWidth = properties.gridSize;
-        renderer.minTouchHeight = properties.gridSize;
+//        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
+//        skinSelector.defaultValue = theme.list.itemRendererUpSkinTextures;
+//        skinSelector.setValueForState(theme.list.itemRendererSelectedSkinTextures, Button.STATE_DOWN, false);
+//        skinSelector.displayObjectProperties =
+//        {
+//            width: properties.gridSize,
+//            height: properties.gridSize,
+//            textureScale: properties.scale
+//        };
+//        renderer.stateToSkinFunction = skinSelector.updateValue;
+//
+//        var defaultSelectedIcon:Image = new Image(this.pickerListItemSelectedIconTexture);
+//        defaultSelectedIcon.scaleX = defaultSelectedIcon.scaleY = properties.scale;
+//        renderer.defaultSelectedIcon = defaultSelectedIcon;
+//
+//        var defaultIcon:Quad = new Quad(defaultSelectedIcon.width, defaultSelectedIcon.height, 0xff00ff);
+//        defaultIcon.alpha = 0;
+//        renderer.defaultIcon = defaultIcon;
+//
+//        renderer.defaultLabelProperties.elementFormat = font.largeLightElementFormat;
+//        renderer.downLabelProperties.elementFormat = font.largeDarkElementFormat;
+//        renderer.disabledLabelProperties.elementFormat = font.largeDisabledElementFormat;
+//
+//        renderer.itemHasIcon = false;
+//        renderer.horizontalAlign = Button.HORIZONTAL_ALIGN_LEFT;
+//        renderer.paddingTop = properties.smallGutterSize;
+//        renderer.paddingBottom = properties.smallGutterSize;
+//        renderer.paddingLeft = properties.gutterSize;
+//        renderer.paddingRight = properties.gutterSize;
+//        renderer.gap = Number.POSITIVE_INFINITY;
+//        renderer.minGap = properties.gutterSize;
+//        renderer.iconPosition = Button.ICON_POSITION_RIGHT;
+//        renderer.accessoryGap = Number.POSITIVE_INFINITY;
+//        renderer.minAccessoryGap = properties.gutterSize;
+//        renderer.accessoryPosition = BaseDefaultItemRenderer.ACCESSORY_POSITION_RIGHT;
+//        renderer.minWidth = properties.gridSize;
+//        renderer.minHeight = properties.gridSize;
+//        renderer.minTouchWidth = properties.gridSize;
+//        renderer.minTouchHeight = properties.gridSize;
     }
 }
 }

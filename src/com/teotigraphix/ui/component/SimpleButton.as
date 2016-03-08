@@ -375,7 +375,7 @@ public class SimpleButton extends FeathersControl implements IToggle
             }
 
             touch.getLocation(stage, HELPER_POINT);
-            var isInBounds:Boolean = contains(stage.hitTest(HELPER_POINT, true));
+            var isInBounds:Boolean = contains(stage.hitTest(HELPER_POINT));
             if (touch.phase == TouchPhase.MOVED)
             {
                 if (isInBounds/* || keepDownStateOnRollOut*/)

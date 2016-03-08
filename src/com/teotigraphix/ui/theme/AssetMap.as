@@ -23,8 +23,6 @@ package com.teotigraphix.ui.theme
 import flash.geom.Rectangle;
 import flash.utils.Dictionary;
 
-import feathers.display.Scale9Image;
-import feathers.textures.Scale9Textures;
 import feathers.themes.StyleNameFunctionTheme;
 
 import starling.display.Image;
@@ -72,32 +70,11 @@ public final class AssetMap
         return image;
     }
     
-    public static function createScale9Textures(name:String, rectangle:Rectangle, isRuntime:Boolean = false):Scale9Textures
+    public static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Image
     {
-        var textures:Dictionary = isRuntime ? _runtimeScale9Textures : _scale9Textures;
-        if (textures[name] != null)
-            return textures[name];
-        
-        var texture:Texture = getTexture(name, isRuntime);
-        textures[name] = new Scale9Textures(texture, rectangle);
-        return textures[name]
-    }
-    
-    public static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Scale9Image
-    {
-        var t:Scale9Textures = getScale9Textures(name, x, y, width, height, isRuntime);
-        return new Scale9Image(t, scale);
-    }
-    
-    public static function getScale9Textures(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Scale9Textures
-    {
-        var textures:Dictionary = isRuntime ? _runtimeScale9Textures : _scale9Textures;
-        if (textures[name] != null)
-            return textures[name];
-        
-        var texture:Texture = getTexture(name, isRuntime);
-        textures[name] = new Scale9Textures(texture, new Rectangle(x, y, width, height));
-        return textures[name];
+        var image:Image = createImage(name, isRuntime);
+        image.scale9Grid = new Rectangle(x, y, width, height);
+        return image;
     }
     
     public static function getTexture(name:String, isRuntime:Boolean = false):Texture

@@ -444,7 +444,7 @@ public class UIKnob extends FeathersControl
 
             globalToLocal(HELPER_POINT, TOUCH_POINT);
 
-            var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT, true));
+            var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT));
             if (touch.phase == TouchPhase.MOVED)
             {
                 if (isInBounds /*|| this.keepDownStateOnRollOut*/)

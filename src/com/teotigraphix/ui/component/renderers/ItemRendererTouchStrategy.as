@@ -171,7 +171,7 @@ public class ItemRendererTouchStrategy
             }
             
             touch.getLocation(target.stage, HELPER_POINT);
-            var isInBounds:Boolean = target.contains(target.stage.hitTest(HELPER_POINT, true));
+            var isInBounds:Boolean = target.contains(target.stage.hitTest(HELPER_POINT));
             if(touch.phase == TouchPhase.MOVED)
             {
                 if(isInBounds || _keepDownStateOnRollOut)

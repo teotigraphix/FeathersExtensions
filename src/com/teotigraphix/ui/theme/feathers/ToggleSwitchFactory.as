@@ -20,12 +20,15 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import feathers.controls.Button;
 import feathers.controls.ToggleButton;
 import feathers.controls.ToggleSwitch;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
+import feathers.controls.TrackLayoutMode;
+import feathers.skins.ImageSkin;
 
 public class ToggleSwitchFactory extends AbstractThemeFactory
 {
@@ -52,7 +55,7 @@ public class ToggleSwitchFactory extends AbstractThemeFactory
 
     public function setToggleSwitchStyles(toggle:ToggleSwitch):void
     {
-        toggle.trackLayoutMode = ToggleSwitch.TRACK_LAYOUT_MODE_SINGLE;
+        toggle.trackLayoutMode = TrackLayoutMode.SINGLE;
 
         toggle.defaultLabelProperties.elementFormat = font.lightUIElementFormat;
         toggle.onLabelProperties.elementFormat = font.selectedUIElementFormat;
@@ -63,16 +66,12 @@ public class ToggleSwitchFactory extends AbstractThemeFactory
 
     public function setToggleSwitchTrackStyles(track:Button):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = shared.backgroundSkinTextures;
-        skinSelector.setValueForState(shared.backgroundDisabledSkinTextures, Button.STATE_DISABLED, false);
-        skinSelector.displayObjectProperties =
-        {
-            width: Math.round(properties.controlSize * 2.5),
-            height: properties.controlSize,
-            textureScale: properties.scale
-        };
-        track.stateToSkinFunction = skinSelector.updateValue;
+        var skin:ImageSkin = new ImageSkin(shared.backgroundSkinTexture);
+        skin.disabledTexture = shared.backgroundDisabledSkinTexture;
+        skin.scale9Grid = SharedFactory.DEFAULT_BACKGROUND_SCALE9_GRID;
+        skin.width = Math.round(properties.controlSize * 2.5);
+        skin.height = properties.controlSize;
+        track.defaultSkin = skin;
         track.hasLabelTextRenderer = false;
     }
 }

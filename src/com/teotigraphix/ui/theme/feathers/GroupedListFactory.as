@@ -4,21 +4,24 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
-
-import feathers.controls.Button;
-import feathers.controls.GroupedList;
-import feathers.controls.ImageLoader;
-import feathers.controls.renderers.BaseDefaultItemRenderer;
-import feathers.controls.renderers.DefaultGroupedListHeaderOrFooterRenderer;
-import feathers.controls.renderers.DefaultGroupedListItemRenderer;
-import feathers.layout.VerticalLayout;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
-import feathers.textures.Scale9Textures;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import flash.geom.Rectangle;
 
+import feathers.controls.ButtonState;
+import feathers.controls.GroupedList;
+import feathers.controls.ImageLoader;
+import feathers.controls.renderers.DefaultGroupedListHeaderOrFooterRenderer;
+import feathers.controls.renderers.DefaultGroupedListItemRenderer;
+import feathers.layout.HorizontalAlign;
+import feathers.layout.RelativePosition;
+import feathers.layout.VerticalLayout;
+import feathers.skins.ImageSkin;
+
 import starling.display.Quad;
+import starling.textures.Texture;
 
 public class GroupedListFactory extends AbstractThemeFactory
 {
@@ -28,14 +31,14 @@ public class GroupedListFactory extends AbstractThemeFactory
     public static const INSET_ITEM_RENDERER_LAST_SCALE9_GRID:Rectangle = new Rectangle(13, 0, 3, 75);
     public static const INSET_ITEM_RENDERER_SINGLE_SCALE9_GRID:Rectangle = new Rectangle(13, 13, 3, 62);
 
-    protected var itemRendererUpSkinTextures:Scale9Textures;
-    protected var itemRendererSelectedSkinTextures:Scale9Textures;
-    protected var insetItemRendererFirstUpSkinTextures:Scale9Textures;
-    protected var insetItemRendererFirstSelectedSkinTextures:Scale9Textures;
-    protected var insetItemRendererLastUpSkinTextures:Scale9Textures;
-    protected var insetItemRendererLastSelectedSkinTextures:Scale9Textures;
-    protected var insetItemRendererSingleUpSkinTextures:Scale9Textures;
-    protected var insetItemRendererSingleSelectedSkinTextures:Scale9Textures;
+    protected var itemRendererUpSkinTexture:Texture;
+    protected var itemRendererSelectedSkinTexture:Texture;
+    protected var insetItemRendererFirstUpSkinTexture:Texture;
+    protected var insetItemRendererFirstSelectedSkinTexture:Texture;
+    protected var insetItemRendererLastUpSkinTexture:Texture;
+    protected var insetItemRendererLastSelectedSkinTexture:Texture;
+    protected var insetItemRendererSingleUpSkinTexture:Texture;
+    protected var insetItemRendererSingleSelectedSkinTexture:Texture;
 
     public function GroupedListFactory(theme:AbstractTheme)
     {
@@ -46,23 +49,14 @@ public class GroupedListFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        this.itemRendererUpSkinTextures = new Scale9Textures(this.atlas.getTexture("list-item-up-skin"),
-                                                             ITEM_RENDERER_SCALE9_GRID);
-        this.itemRendererSelectedSkinTextures = new Scale9Textures(this.atlas.getTexture("list-item-selected-skin"),
-                                                                   ITEM_RENDERER_SCALE9_GRID);
-        this.insetItemRendererFirstUpSkinTextures = new Scale9Textures(this.atlas.getTexture("list-inset-item-first-up-skin"),
-                                                                       INSET_ITEM_RENDERER_FIRST_SCALE9_GRID);
-        this.insetItemRendererFirstSelectedSkinTextures = new Scale9Textures(this.atlas.getTexture("list-inset-item-first-selected-skin"),
-                                                                             INSET_ITEM_RENDERER_FIRST_SCALE9_GRID);
-        this.insetItemRendererLastUpSkinTextures = new Scale9Textures(this.atlas.getTexture("list-inset-item-last-up-skin"),
-                                                                      INSET_ITEM_RENDERER_LAST_SCALE9_GRID);
-        this.insetItemRendererLastSelectedSkinTextures = new Scale9Textures(this.atlas.getTexture("list-inset-item-last-selected-skin"),
-                                                                            INSET_ITEM_RENDERER_LAST_SCALE9_GRID);
-        this.insetItemRendererSingleUpSkinTextures = new Scale9Textures(this.atlas.getTexture("list-inset-item-single-up-skin"),
-                                                                        INSET_ITEM_RENDERER_SINGLE_SCALE9_GRID);
-        this.insetItemRendererSingleSelectedSkinTextures = new Scale9Textures(this.atlas.getTexture("list-inset-item-single-selected-skin"),
-                                                                              INSET_ITEM_RENDERER_SINGLE_SCALE9_GRID);
-
+        itemRendererUpSkinTexture = getTexture("list-item-up-skin");
+        itemRendererSelectedSkinTexture = getTexture("list-item-selected-skin");
+        insetItemRendererFirstUpSkinTexture = getTexture("list-inset-item-first-up-skin");
+        insetItemRendererFirstSelectedSkinTexture = getTexture("list-inset-item-first-selected-skin");
+        insetItemRendererLastUpSkinTexture = getTexture("list-inset-item-last-up-skin");
+        insetItemRendererLastSelectedSkinTexture = getTexture("list-inset-item-last-selected-skin");
+        insetItemRendererSingleUpSkinTexture = getTexture("list-inset-item-single-up-skin");
+        insetItemRendererSingleSelectedSkinTexture = getTexture("list-inset-item-single-selected-skin");
     }
 
     override public function initializeStyleProviders():void
@@ -143,67 +137,60 @@ public class GroupedListFactory extends AbstractThemeFactory
         list.layout = layout;
     }
 
-    protected function setInsetGroupedListItemRendererStyles(renderer:DefaultGroupedListItemRenderer,
-                                                             defaultSkinTextures:Scale9Textures,
-                                                             selectedAndDownSkinTextures:Scale9Textures):void
+    protected function setInsetGroupedListItemRendererStyles(renderer:DefaultGroupedListItemRenderer, 
+                                                             defaultSkinTexture:Texture, 
+                                                             selectedAndDownSkinTexture:Texture, 
+                                                             scale9Grid:Rectangle):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = defaultSkinTextures;
-        skinSelector.defaultSelectedValue = selectedAndDownSkinTextures;
-        skinSelector.setValueForState(selectedAndDownSkinTextures, Button.STATE_DOWN, false);
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.gridSize,
-            height: properties.gridSize,
-            textureScale: properties.scale
-        };
-        renderer.stateToSkinFunction = skinSelector.updateValue;
-
-        renderer.defaultLabelProperties.elementFormat = font.largeLightElementFormat;
-        renderer.downLabelProperties.elementFormat = font.largeDarkElementFormat;
-        renderer.defaultSelectedLabelProperties.elementFormat = font.largeDarkElementFormat;
-        renderer.disabledLabelProperties.elementFormat = font.largeDisabledElementFormat;
-
-        renderer.horizontalAlign = Button.HORIZONTAL_ALIGN_LEFT;
+        var skin:ImageSkin = new ImageSkin(defaultSkinTexture);
+        skin.selectedTexture = selectedAndDownSkinTexture;
+        skin.setTextureForState(ButtonState.DOWN, selectedAndDownSkinTexture);
+        skin.scale9Grid = scale9Grid;
+        skin.width = properties.gridSize;
+        skin.height = properties.gridSize;
+        renderer.defaultSkin = skin;
+        
+        renderer.horizontalAlign = HorizontalAlign.LEFT;
         renderer.paddingTop = properties.smallGutterSize;
         renderer.paddingBottom = properties.smallGutterSize;
         renderer.paddingLeft = properties.gutterSize + properties.smallGutterSize;
         renderer.paddingRight = properties.gutterSize;
         renderer.gap = properties.gutterSize;
         renderer.minGap = properties.gutterSize;
-        renderer.iconPosition = Button.ICON_POSITION_LEFT;
+        renderer.iconPosition = RelativePosition.LEFT;
         renderer.accessoryGap = Number.POSITIVE_INFINITY;
         renderer.minAccessoryGap = properties.gutterSize;
-        renderer.accessoryPosition = BaseDefaultItemRenderer.ACCESSORY_POSITION_RIGHT;
+        renderer.accessoryPosition = RelativePosition.RIGHT;
         renderer.minWidth = renderer.minHeight = properties.gridSize;
         renderer.minTouchWidth = renderer.minTouchHeight = properties.gridSize;
-
-        renderer.accessoryLoaderFactory = imageLoaderFactory;
-        renderer.iconLoaderFactory = imageLoaderFactory;
     }
 
     protected function setInsetGroupedListMiddleItemRendererStyles(renderer:DefaultGroupedListItemRenderer):void
     {
-        this.setInsetGroupedListItemRendererStyles(renderer, itemRendererUpSkinTextures,
-                                                   itemRendererSelectedSkinTextures);
+        this.setInsetGroupedListItemRendererStyles(renderer, itemRendererUpSkinTexture,
+                                                   itemRendererSelectedSkinTexture,
+                                                   ITEM_RENDERER_SCALE9_GRID);
     }
 
     protected function setInsetGroupedListFirstItemRendererStyles(renderer:DefaultGroupedListItemRenderer):void
     {
-        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererFirstUpSkinTextures,
-                                                   insetItemRendererFirstSelectedSkinTextures);
+        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererFirstUpSkinTexture,
+                                                   insetItemRendererFirstSelectedSkinTexture,
+                                                   INSET_ITEM_RENDERER_FIRST_SCALE9_GRID);
     }
 
     protected function setInsetGroupedListLastItemRendererStyles(renderer:DefaultGroupedListItemRenderer):void
     {
-        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererLastUpSkinTextures,
-                                                   insetItemRendererLastSelectedSkinTextures);
+        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererLastUpSkinTexture,
+                                                   insetItemRendererLastSelectedSkinTexture,
+                                                   INSET_ITEM_RENDERER_LAST_SCALE9_GRID);
     }
 
     protected function setInsetGroupedListSingleItemRendererStyles(renderer:DefaultGroupedListItemRenderer):void
     {
-        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererSingleUpSkinTextures,
-                                                   insetItemRendererSingleSelectedSkinTextures);
+        this.setInsetGroupedListItemRendererStyles(renderer, insetItemRendererSingleUpSkinTexture,
+                                                   insetItemRendererSingleSelectedSkinTexture,
+                                                   INSET_ITEM_RENDERER_SINGLE_SCALE9_GRID);
     }
 
     protected function setInsetGroupedListHeaderRendererStyles(renderer:DefaultGroupedListHeaderOrFooterRenderer):void

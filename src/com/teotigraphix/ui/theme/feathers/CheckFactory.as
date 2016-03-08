@@ -20,12 +20,14 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
 import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 
-import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.Check;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
+import feathers.layout.HorizontalAlign;
+import feathers.skins.ImageSkin;
 
 import starling.textures.Texture;
 
@@ -65,24 +67,15 @@ public class CheckFactory extends AbstractThemeFactory
 
     public function setStyles(check:Check):void
     {
-        var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        iconSelector.defaultValue = checkUpIconTexture;
-        iconSelector.defaultSelectedValue = checkSelectedUpIconTexture;
-        iconSelector.setValueForState(checkDownIconTexture, Button.STATE_DOWN, false);
-        iconSelector.setValueForState(checkDisabledIconTexture, Button.STATE_DISABLED, false);
-        iconSelector.setValueForState(checkSelectedDownIconTexture, Button.STATE_DOWN, true);
-        iconSelector.setValueForState(checkSelectedDisabledIconTexture, Button.STATE_DISABLED, true);
-        iconSelector.displayObjectProperties =
-        {
-            scaleX: properties.scale,
-            scaleY: properties.scale
-        };
-        check.stateToIconFunction = iconSelector.updateValue;
-
-        check.defaultLabelProperties.elementFormat = theme.fonts.lightUIElementFormat;
-        check.disabledLabelProperties.elementFormat = theme.fonts.lightUIDisabledElementFormat;
-        check.selectedDisabledLabelProperties.elementFormat = theme.fonts.lightUIDisabledElementFormat;
-
+        var icon:ImageSkin = new ImageSkin(this.checkUpIconTexture);
+        icon.selectedTexture = this.checkSelectedUpIconTexture;
+        icon.setTextureForState(ButtonState.DOWN, this.checkDownIconTexture);
+        icon.setTextureForState(ButtonState.DISABLED, this.checkDisabledIconTexture);
+        icon.setTextureForState(ButtonState.DOWN_AND_SELECTED, this.checkSelectedDownIconTexture);
+        icon.setTextureForState(ButtonState.DISABLED_AND_SELECTED, this.checkSelectedDisabledIconTexture);
+        check.defaultIcon = icon;
+        
+        check.horizontalAlign = HorizontalAlign.LEFT;
         check.gap = properties.smallGutterSize;
         check.minWidth = properties.controlSize;
         check.minHeight = properties.controlSize;

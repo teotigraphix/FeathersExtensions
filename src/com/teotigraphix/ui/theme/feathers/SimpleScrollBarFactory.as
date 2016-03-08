@@ -20,12 +20,16 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import feathers.controls.Button;
 import feathers.controls.SimpleScrollBar;
-import feathers.display.Scale3Image;
-import feathers.textures.Scale3Textures;
+import feathers.layout.Direction;
+
+import starling.display.Image;
+import starling.textures.Texture;
 
 public class SimpleScrollBarFactory extends AbstractThemeFactory
 {
@@ -46,8 +50,8 @@ public class SimpleScrollBarFactory extends AbstractThemeFactory
     public static const THEME_STYLE_NAME_VERTICAL_SIMPLE_SCROLL_BAR_THUMB:String =
             "metal-works-mobile-vertical-simple-scroll-bar-thumb";
 
-    public var verticalScrollBarThumbSkinTextures:Scale3Textures;
-    public var horizontalScrollBarThumbSkinTextures:Scale3Textures;
+    public var verticalScrollBarThumbSkinTexture:Texture;
+    public var horizontalScrollBarThumbSkinTexture:Texture;
 
     public function SimpleScrollBarFactory(theme:AbstractTheme)
     {
@@ -58,12 +62,8 @@ public class SimpleScrollBarFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        horizontalScrollBarThumbSkinTextures = new Scale3Textures(
-                atlas.getTexture("horizontal-scroll-bar-thumb-skin"), SCROLL_BAR_THUMB_REGION1,
-                SCROLL_BAR_THUMB_REGION2, Scale3Textures.DIRECTION_HORIZONTAL);
-        verticalScrollBarThumbSkinTextures = new Scale3Textures(
-                atlas.getTexture("vertical-scroll-bar-thumb-skin"), SCROLL_BAR_THUMB_REGION1,
-                SCROLL_BAR_THUMB_REGION2, Scale3Textures.DIRECTION_VERTICAL);
+        horizontalScrollBarThumbSkinTexture = getTexture("horizontal-scroll-bar-thumb-skin");
+        verticalScrollBarThumbSkinTexture = getTexture("vertical-scroll-bar-thumb-skin");
 
     }
 
@@ -78,7 +78,7 @@ public class SimpleScrollBarFactory extends AbstractThemeFactory
 
     public function setSimpleScrollBarStyles(scrollBar:SimpleScrollBar):void
     {
-        if (scrollBar.direction == SimpleScrollBar.DIRECTION_HORIZONTAL)
+        if(scrollBar.direction == Direction.HORIZONTAL)
         {
             scrollBar.paddingRight = properties.scrollBarGutterSize;
             scrollBar.paddingBottom = properties.scrollBarGutterSize;
@@ -96,7 +96,8 @@ public class SimpleScrollBarFactory extends AbstractThemeFactory
 
     public function setHorizontalSimpleScrollBarThumbStyles(thumb:Button):void
     {
-        var defaultSkin:Scale3Image = new Scale3Image(horizontalScrollBarThumbSkinTextures, properties.scale);
+        var defaultSkin:Image = new Image(this.horizontalScrollBarThumbSkinTexture);
+        defaultSkin.scale9Grid = SharedFactory.HORIZONTAL_SCROLL_BAR_THUMB_SCALE9_GRID;
         defaultSkin.width = properties.smallGutterSize;
         thumb.defaultSkin = defaultSkin;
         thumb.hasLabelTextRenderer = false;
@@ -104,7 +105,8 @@ public class SimpleScrollBarFactory extends AbstractThemeFactory
 
     public function setVerticalSimpleScrollBarThumbStyles(thumb:Button):void
     {
-        var defaultSkin:Scale3Image = new Scale3Image(verticalScrollBarThumbSkinTextures, properties.scale);
+        var defaultSkin:Image = new Image(this.verticalScrollBarThumbSkinTexture);
+        defaultSkin.scale9Grid = SharedFactory.VERTICAL_SCROLL_BAR_THUMB_SCALE9_GRID;
         defaultSkin.height = properties.smallGutterSize;
         thumb.defaultSkin = defaultSkin;
         thumb.hasLabelTextRenderer = false;

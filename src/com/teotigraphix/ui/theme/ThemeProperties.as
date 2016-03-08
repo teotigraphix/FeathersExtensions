@@ -20,14 +20,10 @@
 package com.teotigraphix.ui.theme
 {
 
-import flash.geom.Rectangle;
-
 import starling.events.EventDispatcher;
 
 public class ThemeProperties extends EventDispatcher
 {
-    public static const DEFAULT_SCALE9_GRID:Rectangle = new Rectangle(5, 5, 22, 22);
-
     private static var _gap:Number;
     private static var _gapx2:Number;
     private static var _padding:Number;
@@ -108,7 +104,10 @@ public class ThemeProperties extends EventDispatcher
     public var popUpFillSize:int;
     public var calloutBackgroundMinSize:int;
     public var scrollBarGutterSize:int;
-
+    
+    public var calloutArrowOverlapGap:int;
+    public var borderSize:int;
+    
     private var theme:AbstractTheme;
 
     public function ThemeProperties(theme:AbstractTheme)
@@ -120,21 +119,19 @@ public class ThemeProperties extends EventDispatcher
 
     public function initialize():void
     {
-        gap = AssetMap.dp(8);
-        gapx2 = AssetMap.dp(11);
-        padding = AssetMap.dp(11);
-
-        gridSize = Math.round(88 * theme.scale);
-        gutterSize = Math.round(22 * theme.scale);
-        smallGutterSize = Math.round(11 * theme.scale);
-
-        controlSize = Math.round(58 * theme.scale);
-        smallControlSize = Math.round(22 * theme.scale);
+        gridSize = 44;
+        smallGutterSize = 8;
+        gutterSize = 12;
+        controlSize = 28;
+        smallControlSize = 12;
+        popUpFillSize = 276;
+        calloutBackgroundMinSize = 12;
+        calloutArrowOverlapGap = -2;
+        scrollBarGutterSize = 2;
         wideControlSize = gridSize * 3 + gutterSize * 2;
-
-        popUpFillSize = Math.round(552 * theme.scale);
-        calloutBackgroundMinSize = Math.round(11 * theme.scale);
-        scrollBarGutterSize = Math.round(4 * theme.scale);
+        borderSize = 1;
+        
+        
     }
 }
 }

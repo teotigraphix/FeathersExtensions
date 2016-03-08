@@ -20,14 +20,14 @@
 package com.teotigraphix.ui.theme
 {
 
+import flash.geom.Rectangle;
+
 import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.ImageLoader;
 import feathers.controls.Scroller;
 import feathers.controls.SimpleScrollBar;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
-import feathers.textures.Scale9Textures;
-
-import flash.geom.Rectangle;
+import feathers.skins.ImageSkin;
 
 import starling.display.DisplayObject;
 import starling.textures.Texture;
@@ -99,6 +99,17 @@ public class SharedFactory extends AbstractThemeFactory
     public static const TAB_DISABLED_BACKGROUND_COLOR:uint = 0x292624;
     public static const TAB_SCALE9_GRID:Rectangle = new Rectangle(19, 19, 50, 50);
     public static var PRIMARY_BACKGROUND_COLOR:uint = 0x4a4137;
+    
+    
+    // ADDED
+    public static const SMALL_BACKGROUND_SCALE9_GRID:Rectangle = new Rectangle(2, 2, 1, 1);
+    public static const DEFAULT_SCALE9_GRID:Rectangle = new Rectangle(5, 5, 22, 22);
+    public static const HORIZONTAL_SCROLL_BAR_THUMB_SCALE9_GRID:Rectangle = new Rectangle(4, 0, 4, 5);
+    public static const VERTICAL_SCROLL_BAR_THUMB_SCALE9_GRID:Rectangle = new Rectangle(0, 4, 5, 4);
+    public static const DEFAULT_BACKGROUND_SCALE9_GRID:Rectangle = new Rectangle(4, 4, 1, 1);
+    
+    
+    
     public var backgroundSkinTexture:Texture;
     public var backgroundInsetSkinTexture:Texture;
     public var backgroundDownSkinTexture:Texture;
@@ -106,12 +117,12 @@ public class SharedFactory extends AbstractThemeFactory
     public var backgroundFocusedSkinTexture:Texture;
     public var backgroundPopUpSkinTexture:Texture;
 
-    public var backgroundSkinTextures:Scale9Textures;
-    public var backgroundInsetSkinTextures:Scale9Textures;
-    public var backgroundDisabledSkinTextures:Scale9Textures;
-    public var backgroundFocusedSkinTextures:Scale9Textures;
-    public var backgroundPopUpSkinTextures:Scale9Textures;
-
+    // ADDED
+    public var backgroundLightBorderSkinTexture:Texture; // ("background-light-border-skin0000"
+    public var backgroundDarkBorderSkinTexture:Texture;
+    public var backgroundInsetFocusedSkinTexture:Texture;
+    public var backgroundInsetDisabledSkinTexture:Texture;
+    
     public function SharedFactory(theme:AbstractTheme)
     {
         super(theme);
@@ -121,23 +132,17 @@ public class SharedFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        backgroundSkinTexture = atlas.getTexture("background-skin");
+        backgroundSkinTexture = atlas.getTexture("background-skin"); //  ThemeProperties.DEFAULT_SCALE9_GRID
         backgroundInsetSkinTexture = atlas.getTexture("background-inset-skin");
         backgroundDownSkinTexture = atlas.getTexture("background-down-skin");
         backgroundDisabledSkinTexture = atlas.getTexture("background-disabled-skin");
         backgroundFocusedSkinTexture = atlas.getTexture("background-focused-skin");
         backgroundPopUpSkinTexture = atlas.getTexture("background-popup-skin");
-
-        backgroundSkinTextures = new Scale9Textures(AssetMap.getTexture("background-skin"),
-                                                    ThemeProperties.DEFAULT_SCALE9_GRID);
-        backgroundDisabledSkinTextures = new Scale9Textures(AssetMap.getTexture("background-disabled-skin"),
-                                                            ThemeProperties.DEFAULT_SCALE9_GRID);
-        backgroundInsetSkinTextures = new Scale9Textures(AssetMap.getTexture("background-inset-skin"),
-                                                         ThemeProperties.DEFAULT_SCALE9_GRID);
-        backgroundFocusedSkinTextures = new Scale9Textures(AssetMap.getTexture("background-focused-skin"),
-                                                           ThemeProperties.DEFAULT_SCALE9_GRID);
-        backgroundPopUpSkinTextures = new Scale9Textures(AssetMap.getTexture("background-popup-skin"),
-                                                         ThemeProperties.DEFAULT_SCALE9_GRID);
+        
+        backgroundLightBorderSkinTexture = atlas.getTexture("background-light-border-skin0000");
+        backgroundDarkBorderSkinTexture = atlas.getTexture("background-dark-border-skin0000");
+        backgroundInsetFocusedSkinTexture = atlas.getTexture("background-inset-focused-skin0000");
+        backgroundInsetDisabledSkinTexture = atlas.getTexture("background-inset-disabled-skin0000");
     }
 
     override public function initializeStyleProviders():void
@@ -153,19 +158,16 @@ public class SharedFactory extends AbstractThemeFactory
 
     public function setSimpleButtonStyles(button:Button):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.button.buttonUpSkinTextures;
-        skinSelector.setValueForState(theme.button.buttonDownSkinTextures, Button.STATE_DOWN, false);
-        skinSelector.setValueForState(theme.button.buttonDisabledSkinTextures, Button.STATE_DISABLED, false);
-        skinSelector.displayObjectProperties =
-        {
-            width: theme.properties.controlSize,
-            height: theme.properties.controlSize,
-            textureScale: theme.scale
-        };
-        button.stateToSkinFunction = skinSelector.updateValue;
+        var skin:ImageSkin = new ImageSkin(theme.button.buttonUpSkinTexture);
+        skin.setTextureForState(ButtonState.DOWN, theme.button.buttonDownSkinTexture);
+        skin.setTextureForState(ButtonState.DISABLED, theme.button.buttonDisabledSkinTexture);
+        skin.scale9Grid = BUTTON_SCALE9_GRID;
+        skin.width = theme.properties.controlSize;
+        skin.height = theme.properties.controlSize;
+        button.defaultSkin = skin;
+        
         button.hasLabelTextRenderer = false;
-
+        
         button.minWidth = button.minHeight = theme.properties.controlSize;
         button.minTouchWidth = button.minTouchHeight = theme.properties.gridSize;
     }

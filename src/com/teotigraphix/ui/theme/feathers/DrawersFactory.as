@@ -20,7 +20,9 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import feathers.controls.Drawers;
 
@@ -51,6 +53,18 @@ public class DrawersFactory extends AbstractThemeFactory
         var overlaySkin:Quad = new Quad(10, 10, SharedFactory.DRAWER_OVERLAY_COLOR);
         overlaySkin.alpha = SharedFactory.DRAWER_OVERLAY_ALPHA;
         drawers.overlaySkin = overlaySkin;
+        
+        var topDrawerDivider:Quad = new Quad(properties.borderSize, properties.borderSize, SharedFactory.DRAWER_OVERLAY_COLOR);
+        drawers.topDrawerDivider = topDrawerDivider;
+        
+        var rightDrawerDivider:Quad = new Quad(properties.borderSize, properties.borderSize, SharedFactory.DRAWER_OVERLAY_COLOR);
+        drawers.rightDrawerDivider = rightDrawerDivider;
+        
+        var bottomDrawerDivider:Quad = new Quad(properties.borderSize, properties.borderSize, SharedFactory.DRAWER_OVERLAY_COLOR);
+        drawers.bottomDrawerDivider = bottomDrawerDivider;
+        
+        var leftDrawerDivider:Quad = new Quad(properties.borderSize, properties.borderSize, SharedFactory.DRAWER_OVERLAY_COLOR);
+        drawers.leftDrawerDivider = leftDrawerDivider;
     }
 }
 }

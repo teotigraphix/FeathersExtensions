@@ -131,6 +131,9 @@ public class AbstractTheme extends StyleNameFunctionTheme
     
     public var themeColor:uint = 0x00BCD4;   
     
+    
+    public var stageTextScale:Number;
+    
     public function get factories():Vector.<AbstractThemeFactory>
     {
         return _factories;
@@ -352,27 +355,39 @@ public class AbstractTheme extends StyleNameFunctionTheme
      */
     protected function initializeScale():void
     {
-        AssetMap.densityPixelRatio = dp;
-        var scaledDPI:int = DeviceCapabilities.dpi / Starling.contentScaleFactor;
-        this._originalDPI = scaledDPI;
-        if (_scaleToDPI)
+//        AssetMap.densityPixelRatio = dp;
+//        var scaledDPI:int = DeviceCapabilities.dpi / Starling.contentScaleFactor;
+//        this._originalDPI = scaledDPI;
+//        if (_scaleToDPI)
+//        {
+//            if (DeviceCapabilities.isTablet(Starling.current.nativeStage))
+//            {
+//                _originalDPI = SharedFactory.ORIGINAL_DPI_IPAD_RETINA;
+//            }
+//            else
+//            {
+//                _originalDPI = SharedFactory.ORIGINAL_DPI_IPHONE_RETINA;
+//            }
+//        }
+//        scale = scaledDPI / _originalDPI;
+//        if (scale < 0.3)
+//        {
+//           // scale = 1;
+//           // AssetMap.densityPixelRatio = _dp = 1.5;
+//        }
+//        properties.scale = scale;
+        
+        AssetMap.densityPixelRatio = 1;
+        properties.scale = 1;
+        
+        var starling:Starling = Starling.current;
+        var nativeScaleFactor:Number = 1;
+        if(starling.supportHighResolutions)
         {
-            if (DeviceCapabilities.isTablet(Starling.current.nativeStage))
-            {
-                _originalDPI = SharedFactory.ORIGINAL_DPI_IPAD_RETINA;
-            }
-            else
-            {
-                _originalDPI = SharedFactory.ORIGINAL_DPI_IPHONE_RETINA;
-            }
+            nativeScaleFactor = starling.nativeStage.contentsScaleFactor; 
         }
-        scale = scaledDPI / _originalDPI;
-        if (scale < 0.3)
-        {
-           // scale = 1;
-           // AssetMap.densityPixelRatio = _dp = 1.5;
-        }
-        properties.scale = scale;
+        this.stageTextScale = 1 / nativeScaleFactor;
+        
         for each (var factory:AbstractThemeFactory in _factories)
             factory.initializeScale();
     }

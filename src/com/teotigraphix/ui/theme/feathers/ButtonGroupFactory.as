@@ -20,16 +20,18 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import feathers.controls.Button;
 import feathers.controls.ButtonGroup;
+import feathers.controls.ButtonState;
 import feathers.controls.ToggleButton;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
+import feathers.skins.ImageSkin;
 
 public class ButtonGroupFactory extends AbstractThemeFactory
 {
-
     public function ButtonGroupFactory(theme:AbstractTheme)
     {
         super(theme);
@@ -57,31 +59,22 @@ public class ButtonGroupFactory extends AbstractThemeFactory
 
     public function setButtonGroupButtonStyles(button:Button):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.button.buttonUpSkinTextures;
-        skinSelector.setValueForState(theme.button.buttonDownSkinTextures, Button.STATE_DOWN, false);
-        skinSelector.setValueForState(theme.button.buttonDisabledSkinTextures, Button.STATE_DISABLED, false);
-        if (button is ToggleButton)
+        var skin:ImageSkin = new ImageSkin(theme.button.buttonUpSkinTexture);
+        skin.setTextureForState(ButtonState.DOWN, theme.button.buttonDownSkinTexture);
+        skin.setTextureForState(ButtonState.DISABLED, theme.button.buttonDisabledSkinTexture);
+        if(button is ToggleButton)
         {
             //for convenience, this function can style both a regular button
             //and a toggle button
-            skinSelector.defaultSelectedValue = theme.button.buttonSelectedUpSkinTextures;
-            skinSelector.setValueForState(theme.button.buttonSelectedDisabledSkinTextures, Button.STATE_DISABLED, true);
+            skin.selectedTexture = theme.button.buttonSelectedUpSkinTexture;
+            skin.setTextureForState(ButtonState.DISABLED_AND_SELECTED, theme.button.buttonSelectedDisabledSkinTexture);
         }
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.gridSize,
-            height: properties.gridSize,
-            textureScale: properties.scale
-        };
-        button.stateToSkinFunction = skinSelector.updateValue;
-
-        button.defaultLabelProperties.elementFormat = font.largeUIDarkElementFormat;
-        button.disabledLabelProperties.elementFormat = font.largeUIDarkDisabledElementFormat;
-        if (button is ToggleButton)
-        {
-            ToggleButton(button).selectedDisabledLabelProperties.elementFormat = font.largeUIDarkDisabledElementFormat;
-        }
+        skin.scale9Grid = SharedFactory.BUTTON_SCALE9_GRID;
+        skin.width = properties.gridSize;
+        skin.height = properties.gridSize;
+        button.defaultSkin = skin;
+        
+        // TODO button.customLabelStyleName = ButtonFactory.THEME_STYLE_NAME_BUTTON_GROUP_BUTTON_LABEL;
 
         button.paddingTop = properties.smallGutterSize;
         button.paddingBottom = properties.smallGutterSize;

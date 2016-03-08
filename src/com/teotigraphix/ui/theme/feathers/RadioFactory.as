@@ -20,11 +20,13 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
 
-import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.Radio;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
+import feathers.layout.HorizontalAlign;
+import feathers.skins.ImageSkin;
 
 import starling.textures.Texture;
 
@@ -63,25 +65,15 @@ public class RadioFactory extends AbstractThemeFactory
 
     protected function setRadioStyles(radio:Radio):void
     {
-        var iconSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        iconSelector.defaultValue = radioUpIconTexture;
-        iconSelector.defaultSelectedValue = radioSelectedUpIconTexture;
-        iconSelector.setValueForState(radioDownIconTexture, Button.STATE_DOWN, false);
-        iconSelector.setValueForState(radioDisabledIconTexture, Button.STATE_DISABLED, false);
-        iconSelector.setValueForState(radioSelectedDownIconTexture, Button.STATE_DOWN, true);
-        iconSelector.setValueForState(radioSelectedDisabledIconTexture, Button.STATE_DISABLED, true);
-        iconSelector.displayObjectProperties =
-        {
-            scaleX: properties.scale,
-            scaleY: properties.scale
-        };
-        radio.stateToIconFunction = iconSelector.updateValue;
-
-        radio.defaultLabelProperties.elementFormat = font.lightUIElementFormat;
-        radio.disabledLabelProperties.elementFormat = font.lightUIDisabledElementFormat;
-        radio.selectedDisabledLabelProperties.elementFormat = font.lightUIDisabledElementFormat;
-
-        radio.horizontalAlign = Radio.HORIZONTAL_ALIGN_LEFT;
+        var icon:ImageSkin = new ImageSkin(this.radioUpIconTexture);
+        icon.selectedTexture = this.radioSelectedUpIconTexture;
+        icon.setTextureForState(ButtonState.DOWN, this.radioDownIconTexture);
+        icon.setTextureForState(ButtonState.DISABLED, this.radioDisabledIconTexture);
+        icon.setTextureForState(ButtonState.DOWN_AND_SELECTED, this.radioSelectedDownIconTexture);
+        icon.setTextureForState(ButtonState.DISABLED_AND_SELECTED, this.radioSelectedDisabledIconTexture);
+        radio.defaultIcon = icon;
+        
+        radio.horizontalAlign = HorizontalAlign.LEFT;
         radio.gap = properties.smallGutterSize;
         radio.minWidth = properties.controlSize;
         radio.minHeight = properties.controlSize;

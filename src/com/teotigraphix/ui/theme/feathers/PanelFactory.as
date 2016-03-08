@@ -20,12 +20,14 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
 
 import feathers.controls.Header;
 import feathers.controls.Panel;
 import feathers.controls.PanelScreen;
-import feathers.display.Scale9Image;
+
+import starling.display.Image;
 
 public class PanelFactory extends AbstractThemeFactory
 {
@@ -59,7 +61,7 @@ public class PanelFactory extends AbstractThemeFactory
     {
         theme.scroller.setScrollerStyles(panel);
 
-        panel.backgroundSkin = new Scale9Image(shared.backgroundPopUpSkinTextures, properties.scale);
+        panel.backgroundSkin = new Image(shared.backgroundPopUpSkinTexture);
 
         panel.paddingTop = 0;
         panel.paddingRight = properties.smallGutterSize;

@@ -20,10 +20,13 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import feathers.controls.ProgressBar;
-import feathers.display.Scale9Image;
+
+import starling.display.Image;
 
 public class ProgressBarFactory extends AbstractThemeFactory
 {
@@ -47,7 +50,9 @@ public class ProgressBarFactory extends AbstractThemeFactory
 
     protected function setProgressBarStyles(progress:ProgressBar):void
     {
-        var backgroundSkin:Scale9Image = new Scale9Image(shared.backgroundSkinTextures, properties.scale);
+        var backgroundSkin:Image = new Image(shared.backgroundSkinTexture);
+        backgroundSkin.scale9Grid = SharedFactory.DEFAULT_SCALE9_GRID;
+        
         if (progress.direction == ProgressBar.DIRECTION_VERTICAL)
         {
             backgroundSkin.width = properties.smallControlSize;
@@ -60,8 +65,9 @@ public class ProgressBarFactory extends AbstractThemeFactory
         }
         progress.backgroundSkin = backgroundSkin;
 
-        var backgroundDisabledSkin:Scale9Image = new Scale9Image(shared.backgroundDisabledSkinTextures,
-                                                                 properties.scale);
+        var backgroundDisabledSkin:Image = new Image(shared.backgroundDisabledSkinTexture);
+        backgroundDisabledSkin.scale9Grid = SharedFactory.DEFAULT_SCALE9_GRID;
+        
         if (progress.direction == ProgressBar.DIRECTION_VERTICAL)
         {
             backgroundDisabledSkin.width = properties.smallControlSize;
@@ -74,7 +80,9 @@ public class ProgressBarFactory extends AbstractThemeFactory
         }
         progress.backgroundDisabledSkin = backgroundDisabledSkin;
 
-        var fillSkin:Scale9Image = new Scale9Image(theme.button.buttonUpSkinTextures, properties.scale);
+        var fillSkin:Image = new Image(theme.button.buttonUpSkinTexture);
+        fillSkin.scale9Grid = SharedFactory.BUTTON_SCALE9_GRID;
+        
         if (progress.direction == ProgressBar.DIRECTION_VERTICAL)
         {
             fillSkin.width = properties.smallControlSize;
@@ -87,7 +95,9 @@ public class ProgressBarFactory extends AbstractThemeFactory
         }
         progress.fillSkin = fillSkin;
 
-        var fillDisabledSkin:Scale9Image = new Scale9Image(theme.button.buttonDisabledSkinTextures, properties.scale);
+        var fillDisabledSkin:Image = new Image(theme.button.buttonDisabledSkinTexture);
+        fillDisabledSkin.scale9Grid = SharedFactory.BUTTON_SCALE9_GRID;
+        
         if (progress.direction == ProgressBar.DIRECTION_VERTICAL)
         {
             fillDisabledSkin.width = properties.smallControlSize;

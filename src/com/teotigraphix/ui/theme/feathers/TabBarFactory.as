@@ -4,21 +4,25 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
+import feathers.controls.ButtonState;
 import feathers.controls.TabBar;
 import feathers.controls.ToggleButton;
-import feathers.display.Scale9Image;
-import feathers.textures.Scale9Textures;
+import feathers.skins.ImageSkin;
 
-import starling.display.Quad;
+import starling.textures.Texture;
 
 public class TabBarFactory extends AbstractThemeFactory
 {
-
-    public var tabDownSkinTextures:Scale9Textures;
-    public var tabSelectedSkinTextures:Scale9Textures;
-    public var tabSelectedDisabledSkinTextures:Scale9Textures;
+    
+    public var tabUpSkinTexture:Texture;
+    public var tabDownSkinTexture:Texture;
+    public var tabDisabledSkinTexture:Texture;
+    public var tabSelectedUpSkinTexture:Texture;
+    public var tabSelectedDisabledSkinTexture:Texture;
 
     public function TabBarFactory(theme:AbstractTheme)
     {
@@ -29,11 +33,11 @@ public class TabBarFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        tabDownSkinTextures = new Scale9Textures(this.atlas.getTexture("tab-down-skin"), SharedFactory.TAB_SCALE9_GRID);
-        tabSelectedSkinTextures = new Scale9Textures(this.atlas.getTexture("tab-selected-skin"),
-                                                     SharedFactory.TAB_SCALE9_GRID);
-        tabSelectedDisabledSkinTextures = new Scale9Textures(this.atlas.getTexture("tab-selected-disabled-skin"),
-                                                             SharedFactory.TAB_SCALE9_GRID);
+        tabUpSkinTexture = getTexture("tab-up-skin");
+        tabDownSkinTexture = getTexture("tab-down-skin");
+        tabDisabledSkinTexture = getTexture("tab-disabled-skin");
+        tabSelectedUpSkinTexture = getTexture("tab-selected-up-skin");
+        tabSelectedDisabledSkinTexture = getTexture("tab-selected-disabled-skin");
     }
 
     override public function initializeStyleProviders():void
@@ -51,29 +55,18 @@ public class TabBarFactory extends AbstractThemeFactory
 
     public function setTabStyles(tab:ToggleButton):void
     {
-        var defaultSkin:Quad = new Quad(properties.gridSize, properties.gridSize, SharedFactory.TAB_BACKGROUND_COLOR);
-        defaultSkin.alpha = 0;
-        tab.defaultSkin = defaultSkin;
-
-        var downSkin:Scale9Image = new Scale9Image(tabDownSkinTextures, properties.scale);
-        tab.downSkin = downSkin;
-
-        var defaultSelectedSkin:Scale9Image = new Scale9Image(tabSelectedSkinTextures, properties.scale);
-        tab.defaultSelectedSkin = defaultSelectedSkin;
-
-        var disabledSkin:Quad = new Quad(properties.gridSize, properties.gridSize,
-                                         SharedFactory.TAB_DISABLED_BACKGROUND_COLOR);
-        tab.disabledSkin = disabledSkin;
-        disabledSkin.alpha = 0;
-
-        var selectedDisabledSkin:Scale9Image = new Scale9Image(tabSelectedDisabledSkinTextures, properties.scale);
-        tab.selectedDisabledSkin = selectedDisabledSkin;
-
-        tab.defaultLabelProperties.elementFormat = theme.fonts.lightUIElementFormat;
-        tab.defaultSelectedLabelProperties.elementFormat = theme.fonts.darkUIElementFormat;
-        tab.disabledLabelProperties.elementFormat = theme.fonts.lightUIDisabledElementFormat;
-        tab.selectedDisabledLabelProperties.elementFormat = theme.fonts.darkUIDisabledElementFormat;
-
+        var skin:ImageSkin = new ImageSkin(tabUpSkinTexture);
+        skin.selectedTexture = tabSelectedUpSkinTexture;
+        skin.setTextureForState(ButtonState.DOWN, tabDownSkinTexture);
+        skin.setTextureForState(ButtonState.DISABLED, tabDisabledSkinTexture);
+        skin.setTextureForState(ButtonState.DISABLED_AND_SELECTED, this.tabSelectedDisabledSkinTexture);
+        skin.scale9Grid = SharedFactory.TAB_SCALE9_GRID;
+        skin.width = properties.gridSize;
+        skin.height = properties.gridSize;
+        tab.defaultSkin = skin;
+        
+        //tab.customLabelStyleName = THEME_STYLE_NAME_TAB_LABEL;
+        
         tab.paddingTop = properties.smallGutterSize;
         tab.paddingBottom = properties.smallGutterSize;
         tab.paddingLeft = properties.gutterSize;

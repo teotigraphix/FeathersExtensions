@@ -20,13 +20,17 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
+import com.teotigraphix.ui.theme.ThemeProperties;
 
 import feathers.controls.Button;
 import feathers.controls.NumericStepper;
 import feathers.controls.TextInput;
 import feathers.controls.text.TextBlockTextEditor;
-import feathers.display.Scale9Image;
+
+import starling.display.Image;
 
 public class NumericStepperFactory extends AbstractThemeFactory
 {
@@ -60,19 +64,20 @@ public class NumericStepperFactory extends AbstractThemeFactory
 
     public function setNumericStepperTextInputStyles(input:TextInput):void
     {
-        var backgroundSkin:Scale9Image = new Scale9Image(theme.shared.backgroundSkinTextures, properties.scale);
+        var backgroundSkin:Image = new Image(theme.shared.backgroundSkinTexture);
+        backgroundSkin.scale9Grid = SharedFactory.DEFAULT_SCALE9_GRID;
         backgroundSkin.width = properties.controlSize;
         backgroundSkin.height = properties.controlSize;
         input.backgroundSkin = backgroundSkin;
 
-        var backgroundDisabledSkin:Scale9Image = new Scale9Image(theme.shared.backgroundDisabledSkinTextures,
-                                                                 properties.scale);
+        var backgroundDisabledSkin:Image = new Image(theme.shared.backgroundDisabledSkinTexture);
+        backgroundDisabledSkin.scale9Grid = SharedFactory.DEFAULT_SCALE9_GRID;
         backgroundDisabledSkin.width = properties.controlSize;
         backgroundDisabledSkin.height = properties.controlSize;
         input.backgroundDisabledSkin = backgroundDisabledSkin;
 
-        var backgroundFocusedSkin:Scale9Image = new Scale9Image(theme.shared.backgroundFocusedSkinTextures,
-                                                                properties.scale);
+        var backgroundFocusedSkin:Image = new Image(theme.shared.backgroundFocusedSkinTexture);
+        backgroundFocusedSkin.scale9Grid = SharedFactory.DEFAULT_SCALE9_GRID;
         backgroundFocusedSkin.width = properties.controlSize;
         backgroundFocusedSkin.height = properties.controlSize;
         input.backgroundFocusedSkin = backgroundFocusedSkin;

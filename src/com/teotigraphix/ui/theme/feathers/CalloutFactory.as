@@ -22,10 +22,10 @@ package com.teotigraphix.ui.theme.feathers
 
 import com.teotigraphix.ui.theme.AbstractTheme;
 import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 import com.teotigraphix.ui.theme.framework.FrameworkSkinNames;
 
 import feathers.controls.Callout;
-import feathers.display.Scale9Image;
 
 import starling.display.Image;
 import starling.textures.Texture;
@@ -37,6 +37,8 @@ public class CalloutFactory extends AbstractThemeFactory
     public var calloutBottomArrowSkinTexture:Texture;
     public var calloutLeftArrowSkinTexture:Texture;
 
+    protected var calloutArrowOverlapGap:int;
+    
     protected var calloutBackgroundMinSize:int;
 
     public function CalloutFactory(theme:AbstractTheme)
@@ -56,6 +58,7 @@ public class CalloutFactory extends AbstractThemeFactory
         super.initializeDimensions();
 
         calloutBackgroundMinSize = Math.round(11 * properties.scale);
+        this.calloutArrowOverlapGap = -2;
     }
 
     override public function initializeTextures():void
@@ -77,27 +80,27 @@ public class CalloutFactory extends AbstractThemeFactory
 
     public function setCalloutStyles(callout:Callout):void
     {
-        var backgroundSkin:Scale9Image = create9ScaleImage(
-            FrameworkSkinNames.BACKGROUND_POPUP_SHADOW_SKIN, 6, 6, 20, 18);
+        var backgroundSkin:Image = new Image(shared.backgroundLightBorderSkinTexture);
+        backgroundSkin.scale9Grid = SharedFactory.SMALL_BACKGROUND_SCALE9_GRID;
         backgroundSkin.width = this.calloutBackgroundMinSize;
         backgroundSkin.height = this.calloutBackgroundMinSize;
         callout.backgroundSkin = backgroundSkin;
-
+        
         var topArrowSkin:Image = new Image(this.calloutTopArrowSkinTexture);
-        topArrowSkin.scaleX = topArrowSkin.scaleY = properties.scale;
         callout.topArrowSkin = topArrowSkin;
-
+        callout.topArrowGap = this.calloutArrowOverlapGap;
+        
         var rightArrowSkin:Image = new Image(this.calloutRightArrowSkinTexture);
-        rightArrowSkin.scaleX = rightArrowSkin.scaleY = properties.scale;
         callout.rightArrowSkin = rightArrowSkin;
-
+        callout.rightArrowGap = this.calloutArrowOverlapGap;
+        
         var bottomArrowSkin:Image = new Image(this.calloutBottomArrowSkinTexture);
-        bottomArrowSkin.scaleX = bottomArrowSkin.scaleY = properties.scale;
         callout.bottomArrowSkin = bottomArrowSkin;
-
+        callout.bottomArrowGap = this.calloutArrowOverlapGap;
+        
         var leftArrowSkin:Image = new Image(this.calloutLeftArrowSkinTexture);
-        leftArrowSkin.scaleX = leftArrowSkin.scaleY = properties.scale;
         callout.leftArrowSkin = leftArrowSkin;
+        callout.leftArrowGap = this.calloutArrowOverlapGap;
 
         callout.padding = dp(4);//properties.smallGutterSize;
     }

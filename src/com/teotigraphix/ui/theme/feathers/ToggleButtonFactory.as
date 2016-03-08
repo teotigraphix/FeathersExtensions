@@ -20,11 +20,11 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
 
 import feathers.controls.Button;
 import feathers.controls.ToggleButton;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
 
 public class ToggleButtonFactory extends AbstractThemeFactory
 {
@@ -44,45 +44,45 @@ public class ToggleButtonFactory extends AbstractThemeFactory
         super.initializeStyleProviders();
 
         setStyle(ToggleButton, theme.button.setButtonStyles);
-        setStyle(ToggleButton, setQuietButtonStyles, Button.ALTERNATE_NAME_QUIET_BUTTON);
+        //setStyle(ToggleButton, setQuietButtonStyles, Button.ALTERNATE_NAME_QUIET_BUTTON);
     }
 
-    public function setQuietButtonStyles(button:Button):void
-    {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = null;
-        skinSelector.setValueForState(theme.button.buttonDownSkinTextures, Button.STATE_DOWN, false);
-        if(button is ToggleButton)
-        {
-            //for convenience, this function can style both a regular button
-            //and a toggle button
-            skinSelector.defaultSelectedValue = theme.button.buttonSelectedUpSkinTextures;
-        }
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.controlSize,
-            height: properties.controlSize,
-            textureScale: properties.scale
-        };
-        button.stateToSkinFunction = skinSelector.updateValue;
-
-        button.defaultLabelProperties.elementFormat = font.lightUIElementFormat;
-        button.downLabelProperties.elementFormat = font.darkUIElementFormat;
-        button.disabledLabelProperties.elementFormat = font.lightUIDisabledElementFormat;
-        if(button is ToggleButton)
-        {
-            var toggleButton:ToggleButton = ToggleButton(button);
-            toggleButton.defaultSelectedLabelProperties.elementFormat = font.darkUIElementFormat;
-            toggleButton.selectedDisabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
-        }
-
-        button.paddingTop = button.paddingBottom = properties.smallGutterSize;
-        button.paddingLeft = button.paddingRight = properties.gutterSize;
-        button.gap = properties.smallGutterSize;
-        button.minGap = properties.smallGutterSize;
-        button.minWidth = button.minHeight = properties.controlSize;
-        button.minTouchWidth = button.minTouchHeight = properties.gridSize;
-    }
+//    public function setQuietButtonStyles(button:Button):void
+//    {
+//        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
+//        skinSelector.defaultValue = null;
+//        skinSelector.setValueForState(theme.button.buttonDownSkinTextures, Button.STATE_DOWN, false);
+//        if(button is ToggleButton)
+//        {
+//            //for convenience, this function can style both a regular button
+//            //and a toggle button
+//            skinSelector.defaultSelectedValue = theme.button.buttonSelectedUpSkinTextures;
+//        }
+//        skinSelector.displayObjectProperties =
+//        {
+//            width: properties.controlSize,
+//            height: properties.controlSize,
+//            textureScale: properties.scale
+//        };
+//        button.stateToSkinFunction = skinSelector.updateValue;
+//
+//        button.defaultLabelProperties.elementFormat = font.lightUIElementFormat;
+//        button.downLabelProperties.elementFormat = font.darkUIElementFormat;
+//        button.disabledLabelProperties.elementFormat = font.lightUIDisabledElementFormat;
+//        if(button is ToggleButton)
+//        {
+//            var toggleButton:ToggleButton = ToggleButton(button);
+//            toggleButton.defaultSelectedLabelProperties.elementFormat = font.darkUIElementFormat;
+//            toggleButton.selectedDisabledLabelProperties.elementFormat = font.darkUIDisabledElementFormat;
+//        }
+//
+//        button.paddingTop = button.paddingBottom = properties.smallGutterSize;
+//        button.paddingLeft = button.paddingRight = properties.gutterSize;
+//        button.gap = properties.smallGutterSize;
+//        button.minGap = properties.smallGutterSize;
+//        button.minWidth = button.minHeight = properties.controlSize;
+//        button.minTouchWidth = button.minTouchHeight = properties.gridSize;
+//    }
 }
 }
 

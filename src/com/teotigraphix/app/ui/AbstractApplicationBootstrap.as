@@ -198,7 +198,7 @@ public class AbstractApplicationBootstrap extends feathers.core.StarlingBootstra
             //stage.autoOrients = _savedAutoOrients;
         }
         super.starling_rootCreatedHandler(event);
-        stage_resizeHandler(null);
+        //stage_resizeHandler(null);
         trace("============================================================");
     }
     
@@ -208,12 +208,12 @@ public class AbstractApplicationBootstrap extends feathers.core.StarlingBootstra
         trace("setupScaling()");
     }
     
-    override protected function stage_resizeHandler(event:flash.events.Event):void
-    {
-        super.stage_resizeHandler(event);
-        var viewPort:Rectangle = _starling.viewPort;
-        trace("stage_resizeHandler()", viewPort.width, viewPort.height);
-    }
+//    override protected function stage_resizeHandler(event:flash.events.Event):void
+//    {
+//        super.stage_resizeHandler(event);
+//        var viewPort:Rectangle = _starling.viewPort;
+//        trace("stage_resizeHandler()", viewPort.width, viewPort.height);
+//    }
     
     override protected function createStarling():Starling
     {

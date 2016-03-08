@@ -20,11 +20,13 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import feathers.controls.Button;
 import feathers.controls.Slider;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
+import feathers.skins.ImageSkin;
 
 public class SliderFactory extends AbstractThemeFactory
 {
@@ -83,61 +85,49 @@ public class SliderFactory extends AbstractThemeFactory
 
     public function setHorizontalSliderMinimumTrackStyles(track:Button):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.shared.backgroundSkinTextures;
-        skinSelector.setValueForState(theme.shared.backgroundDisabledSkinTextures, Button.STATE_DISABLED, false);
-        skinSelector.displayObjectProperties =
-        {
-            textureScale: theme.scale
-        };
-        skinSelector.displayObjectProperties.width = properties.wideControlSize;
-        skinSelector.displayObjectProperties.height = properties.controlSize;
-        track.stateToSkinFunction = skinSelector.updateValue;
+        var skin:ImageSkin = new ImageSkin(shared.backgroundSkinTexture);
+        skin.disabledTexture = shared.backgroundDisabledSkinTexture;
+        skin.scale9Grid = SharedFactory.DEFAULT_BACKGROUND_SCALE9_GRID;
+        skin.width = properties.wideControlSize;
+        skin.height = properties.controlSize;
+        track.defaultSkin = skin;
+        
         track.hasLabelTextRenderer = false;
     }
 
     public function setHorizontalSliderMaximumTrackStyles(track:Button):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.shared.backgroundSkinTextures;
-        skinSelector.setValueForState(theme.shared.backgroundDisabledSkinTextures, Button.STATE_DISABLED, false);
-        skinSelector.displayObjectProperties =
-        {
-            textureScale: theme.scale
-        };
-        skinSelector.displayObjectProperties.width = properties.wideControlSize;
-        skinSelector.displayObjectProperties.height = properties.controlSize;
-        track.stateToSkinFunction = skinSelector.updateValue;
+        var skin:ImageSkin = new ImageSkin(shared.backgroundSkinTexture);
+        skin.disabledTexture = shared.backgroundDisabledSkinTexture;
+        skin.scale9Grid = SharedFactory.DEFAULT_BACKGROUND_SCALE9_GRID;
+        skin.width = properties.wideControlSize;
+        skin.height = properties.controlSize;
+        track.defaultSkin = skin;
+        
         track.hasLabelTextRenderer = false;
     }
 
     public function setVerticalSliderMinimumTrackStyles(track:Button):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.shared.backgroundSkinTextures;
-        skinSelector.setValueForState(theme.shared.backgroundDisabledSkinTextures, Button.STATE_DISABLED, false);
-        skinSelector.displayObjectProperties =
-        {
-            textureScale: theme.scale
-        };
-        skinSelector.displayObjectProperties.width = properties.controlSize;
-        skinSelector.displayObjectProperties.height = properties.wideControlSize;
-        track.stateToSkinFunction = skinSelector.updateValue;
+        var skin:ImageSkin = new ImageSkin(shared.backgroundSkinTexture);
+        skin.disabledTexture = shared.backgroundDisabledSkinTexture;
+        skin.scale9Grid = SharedFactory.DEFAULT_BACKGROUND_SCALE9_GRID;
+        skin.width = properties.controlSize;
+        skin.height = properties.wideControlSize;
+        track.defaultSkin = skin;
+        
         track.hasLabelTextRenderer = false;
     }
 
     public function setVerticalSliderMaximumTrackStyles(track:Button):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.shared.backgroundSkinTextures;
-        skinSelector.setValueForState(theme.shared.backgroundDisabledSkinTextures, Button.STATE_DISABLED, false);
-        skinSelector.displayObjectProperties =
-        {
-            textureScale: theme.scale
-        };
-        skinSelector.displayObjectProperties.width = properties.controlSize;
-        skinSelector.displayObjectProperties.height = properties.wideControlSize;
-        track.stateToSkinFunction = skinSelector.updateValue;
+        var skin:ImageSkin = new ImageSkin(shared.backgroundSkinTexture);
+        skin.disabledTexture = shared.backgroundDisabledSkinTexture;
+        skin.scale9Grid = SharedFactory.DEFAULT_BACKGROUND_SCALE9_GRID;
+        skin.width = properties.controlSize;
+        skin.height = properties.wideControlSize;
+        track.defaultSkin = skin;
+        
         track.hasLabelTextRenderer = false;
     }
 

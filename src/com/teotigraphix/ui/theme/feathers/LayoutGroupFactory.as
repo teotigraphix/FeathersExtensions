@@ -20,11 +20,13 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
 
 import feathers.controls.LayoutGroup;
-import feathers.display.TiledImage;
 import feathers.layout.HorizontalLayout;
+
+import starling.display.Image;
 
 public class LayoutGroupFactory extends AbstractThemeFactory
 {
@@ -59,7 +61,7 @@ public class LayoutGroupFactory extends AbstractThemeFactory
         group.minWidth = properties.gridSize;
         group.minHeight = properties.gridSize;
 
-        var backgroundSkin:TiledImage = new TiledImage(theme.header.headerBackgroundSkinTexture, properties.scale);
+        var backgroundSkin:Image = new Image(theme.header.headerBackgroundSkinTexture);
         backgroundSkin.width = backgroundSkin.height = properties.gridSize;
         group.backgroundSkin = backgroundSkin;
     }

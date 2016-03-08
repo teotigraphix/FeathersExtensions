@@ -4,24 +4,27 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
-
-import feathers.controls.Button;
-import feathers.controls.SpinnerList;
-import feathers.controls.renderers.BaseDefaultItemRenderer;
-import feathers.controls.renderers.DefaultListItemRenderer;
-import feathers.display.Scale9Image;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
-import feathers.textures.Scale9Textures;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import flash.geom.Rectangle;
+
+import feathers.controls.SpinnerList;
+import feathers.controls.renderers.DefaultListItemRenderer;
+import feathers.layout.HorizontalAlign;
+import feathers.layout.RelativePosition;
+
+import starling.display.Image;
+import starling.display.Quad;
+import starling.textures.Texture;
 
 public class SpinnerListFactory extends AbstractThemeFactory
 {
     protected static const SPINNER_LIST_SELECTION_OVERLAY_SCALE9_GRID:Rectangle = new Rectangle(3, 9, 1, 70);
     protected static const THEME_STYLE_NAME_SPINNER_LIST_ITEM_RENDERER:String = "metal-works-mobile-spinner-list-item-renderer";
 
-    protected var spinnerListSelectionOverlaySkinTextures:Scale9Textures;
+    protected var spinnerListSelectionOverlaySkinTexture:Texture;
 
     public function SpinnerListFactory(theme:AbstractTheme)
     {
@@ -36,8 +39,7 @@ public class SpinnerListFactory extends AbstractThemeFactory
     override public function initializeTextures():void
     {
         super.initializeTextures();
-        spinnerListSelectionOverlaySkinTextures = new Scale9Textures(atlas.getTexture("spinner-list-selection-overlay-skin"),
-                                                                     SPINNER_LIST_SELECTION_OVERLAY_SCALE9_GRID);
+        spinnerListSelectionOverlaySkinTexture = getTexture("spinner-list-selection-overlay-skin");
     }
 
     override public function initializeGlobals():void
@@ -66,44 +68,47 @@ public class SpinnerListFactory extends AbstractThemeFactory
 
     protected function setSpinnerListStyles(list:SpinnerList):void
     {
-        theme.list.setListStyles(list);
+        theme.scroller.setScrollerStyles(list);
+        
+        var backgroundSkin:Image = new Image(shared.backgroundDarkBorderSkinTexture);
+        backgroundSkin.scale9Grid = SharedFactory.SMALL_BACKGROUND_SCALE9_GRID;
+        list.backgroundSkin = backgroundSkin;
+        
+        var selectionOverlaySkin:Image = new Image(this.spinnerListSelectionOverlaySkinTexture);
+        selectionOverlaySkin.scale9Grid = SPINNER_LIST_SELECTION_OVERLAY_SCALE9_GRID;
+        list.selectionOverlaySkin = selectionOverlaySkin;
+        
         list.customItemRendererStyleName = THEME_STYLE_NAME_SPINNER_LIST_ITEM_RENDERER;
-        list.selectionOverlaySkin = new Scale9Image(this.spinnerListSelectionOverlaySkinTextures, properties.scale);
+        
+        list.paddingTop = properties.borderSize;
+        list.paddingBottom = properties.borderSize;
     }
 
     protected function setSpinnerListItemRendererStyles(renderer:DefaultListItemRenderer):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = theme.list.itemRendererUpSkinTextures;
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.gridSize,
-            height: properties.gridSize,
-            textureScale: properties.scale
-        };
-        renderer.stateToSkinFunction = skinSelector.updateValue;
-
-        renderer.defaultLabelProperties.elementFormat = theme.fonts.largeLightElementFormat;
-        renderer.disabledLabelProperties.elementFormat = theme.fonts.largeDisabledElementFormat;
-
-        renderer.horizontalAlign = Button.HORIZONTAL_ALIGN_LEFT;
+        var defaultSkin:Quad = new Quad(1, 1, 0xff00ff);
+        defaultSkin.alpha = 0;
+        renderer.defaultSkin = defaultSkin;
+        
+        //renderer.customLabelStyleName = THEME_STYLE_NAME_SPINNER_LIST_ITEM_RENDERER_LABEL;
+        //renderer.customIconLabelStyleName = THEME_STYLE_NAME_SPINNER_LIST_ITEM_RENDERER_ICON_LABEL;
+        //renderer.customAccessoryLabelStyleName = THEME_STYLE_NAME_SPINNER_LIST_ITEM_RENDERER_ACCESSORY_LABEL;
+        
+        renderer.horizontalAlign = HorizontalAlign.LEFT;
         renderer.paddingTop = properties.smallGutterSize;
         renderer.paddingBottom = properties.smallGutterSize;
         renderer.paddingLeft = properties.gutterSize;
         renderer.paddingRight = properties.gutterSize;
         renderer.gap = properties.gutterSize;
         renderer.minGap = properties.gutterSize;
-        renderer.iconPosition = Button.ICON_POSITION_LEFT;
+        renderer.iconPosition = RelativePosition.LEFT;
         renderer.accessoryGap = Number.POSITIVE_INFINITY;
         renderer.minAccessoryGap = properties.gutterSize;
-        renderer.accessoryPosition = BaseDefaultItemRenderer.ACCESSORY_POSITION_RIGHT;
+        renderer.accessoryPosition = RelativePosition.RIGHT;
         renderer.minWidth = properties.gridSize;
         renderer.minHeight = properties.gridSize;
         renderer.minTouchWidth = properties.gridSize;
         renderer.minTouchHeight = properties.gridSize;
-
-        renderer.accessoryLoaderFactory = theme.list.imageLoaderFactory;
-        renderer.iconLoaderFactory = theme.list.imageLoaderFactory;
     }
 
 }

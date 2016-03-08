@@ -20,26 +20,30 @@
 package com.teotigraphix.ui.theme.feathers
 {
 
-import com.teotigraphix.ui.theme.*;
+import com.teotigraphix.ui.theme.AbstractTheme;
+import com.teotigraphix.ui.theme.AbstractThemeFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
-import feathers.controls.Button;
+import feathers.controls.ButtonState;
 import feathers.controls.ImageLoader;
 import feathers.controls.List;
 import feathers.controls.renderers.BaseDefaultItemRenderer;
 import feathers.controls.renderers.DefaultGroupedListItemRenderer;
 import feathers.controls.renderers.DefaultListItemRenderer;
 import feathers.controls.text.TextBlockTextRenderer;
-import feathers.skins.SmartDisplayObjectStateValueSelector;
-import feathers.textures.Scale9Textures;
+import feathers.layout.HorizontalAlign;
+import feathers.layout.RelativePosition;
+import feathers.skins.ImageSkin;
 
 import starling.display.Quad;
+import starling.textures.Texture;
 
 public class ListFactory extends AbstractThemeFactory
 {
 
     // Shared with SpinnerList etc.
-    public var itemRendererUpSkinTextures:Scale9Textures;
-    public var itemRendererSelectedSkinTextures:Scale9Textures;
+    public var itemRendererUpSkinTexture:Texture;
+    public var itemRendererSelectedSkinTexture:Texture;
 
     public function ListFactory(theme:AbstractTheme)
     {
@@ -50,10 +54,8 @@ public class ListFactory extends AbstractThemeFactory
     {
         super.initializeTextures();
 
-        itemRendererUpSkinTextures = new Scale9Textures(atlas.getTexture("list-item-up-skin"),
-                                                        SharedFactory.ITEM_RENDERER_SCALE9_GRID);
-        itemRendererSelectedSkinTextures = new Scale9Textures(atlas.getTexture("list-item-selected-skin"),
-                                                              SharedFactory.ITEM_RENDERER_SCALE9_GRID);
+        itemRendererUpSkinTexture = getTexture("list-item-up-skin");
+        itemRendererSelectedSkinTexture = getTexture("list-item-selected-skin");
     }
 
     override public function initializeStyleProviders():void
@@ -76,47 +78,29 @@ public class ListFactory extends AbstractThemeFactory
 
     public function setItemRendererStyles(renderer:BaseDefaultItemRenderer):void
     {
-        var skinSelector:SmartDisplayObjectStateValueSelector = new SmartDisplayObjectStateValueSelector();
-        skinSelector.defaultValue = itemRendererUpSkinTextures;
-        skinSelector.defaultSelectedValue = itemRendererSelectedSkinTextures;
-        skinSelector.setValueForState(itemRendererSelectedSkinTextures, Button.STATE_DOWN, false);
-        skinSelector.displayObjectProperties =
-        {
-            width: properties.gridSize,
-            height: properties.gridSize,
-            textureScale: theme.scale
-        };
-        renderer.stateToSkinFunction = skinSelector.updateValue;
-
-        // DARK
-        //renderer.defaultLabelProperties.elementFormat = theme.fonts.largeLightElementFormat;
-        //renderer.downLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
-        //renderer.defaultSelectedLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
-        //renderer.disabledLabelProperties.elementFormat = theme.fonts.largeDisabledElementFormat;
-
-        renderer.defaultLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
-        renderer.downLabelProperties.elementFormat = theme.fonts.largeDarkElementFormat;
-        renderer.defaultSelectedLabelProperties.elementFormat = theme.fonts.themeLargeElementFormat;
-        renderer.disabledLabelProperties.elementFormat = theme.fonts.largeDisabledElementFormat;
-
-        renderer.horizontalAlign = Button.HORIZONTAL_ALIGN_LEFT;
+        var skin:ImageSkin = new ImageSkin(this.itemRendererUpSkinTexture);
+        skin.selectedTexture = itemRendererSelectedSkinTexture;
+        skin.setTextureForState(ButtonState.DOWN, this.itemRendererSelectedSkinTexture);
+        skin.scale9Grid = SharedFactory.ITEM_RENDERER_SCALE9_GRID;
+        skin.width = properties.gridSize;
+        skin.height = properties.gridSize;
+        renderer.defaultSkin = skin;
+        
+        renderer.horizontalAlign = HorizontalAlign.LEFT;
         renderer.paddingTop = properties.smallGutterSize;
         renderer.paddingBottom = properties.smallGutterSize;
         renderer.paddingLeft = properties.gutterSize;
         renderer.paddingRight = properties.gutterSize;
         renderer.gap = properties.gutterSize;
         renderer.minGap = properties.gutterSize;
-        renderer.iconPosition = Button.ICON_POSITION_LEFT;
+        renderer.iconPosition = RelativePosition.LEFT;
         renderer.accessoryGap = Number.POSITIVE_INFINITY;
         renderer.minAccessoryGap = properties.gutterSize;
-        renderer.accessoryPosition = BaseDefaultItemRenderer.ACCESSORY_POSITION_RIGHT;
+        renderer.accessoryPosition = RelativePosition.RIGHT;
         renderer.minWidth = properties.gridSize;
         renderer.minHeight = properties.gridSize;
         renderer.minTouchWidth = properties.gridSize;
         renderer.minTouchHeight = properties.gridSize;
-
-        renderer.accessoryLoaderFactory = imageLoaderFactory;
-        renderer.iconLoaderFactory = imageLoaderFactory;
     }
 
     public function setItemRendererAccessoryLabelRendererStyles(renderer:TextBlockTextRenderer):void
