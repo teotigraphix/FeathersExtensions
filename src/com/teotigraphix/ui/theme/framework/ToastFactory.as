@@ -53,7 +53,7 @@ public class ToastFactory extends AbstractThemeFactory
 
     private function set_messageStyle(label:Label):void
     {
-        theme.label.setLabelDarkStyles(label);
+        //theme.label.setLabelDarkStyles(label);
     }
 
 }

@@ -34,20 +34,6 @@ import starling.textures.Texture;
 
 public class SharedFactory extends AbstractThemeFactory
 {
-
-    /**
-     * The screen density of an iPhone with Retina display. The textures
-     * used by this theme are designed for this density and scale for other
-     * densities.
-     */
-    public static const ORIGINAL_DPI_IPHONE_RETINA:int = 326;
-    /**
-     * The screen density of an iPad with Retina display. The textures used
-     * by this theme are designed for this density and scale for other
-     * densities.
-     */
-    public static const ORIGINAL_DPI_IPAD_RETINA:int = 264;
-
     public static const MODAL_OVERLAY_COLOR:uint = 0x29241e;
 
     // Background colors
@@ -77,12 +63,42 @@ public class SharedFactory extends AbstractThemeFactory
      */
     public static const BACKGROUND_COLOR_DARK_GREY:uint = 0x3C3C3C;
 
+    
+    //I also recommend making sure that each value in the Rectangle is divisible by 2, 
+    //if you can. The example above has a 1, but it would be better to increase the width 
+    //of the image used for the skin by an extra pixel to make it a 2, if possible. 
+    //Some devices may use 1.5x scaling, so that ensures that you'll be working with whole 
+    //pixels. It can affect how crisply things render, but not always. 
+    
+//    protected static const DEFAULT_BACKGROUND_SCALE9_GRID:Rectangle = new Rectangle(4, 4, 1, 1);
+//    protected static const BUTTON_SCALE9_GRID:Rectangle = new Rectangle(4, 4, 1, 20);
+//    protected static const SMALL_BACKGROUND_SCALE9_GRID:Rectangle = new Rectangle(2, 2, 1, 1);
+//    protected static const BACK_BUTTON_SCALE9_GRID:Rectangle = new Rectangle(13, 0, 1, 28);
+//    protected static const FORWARD_BUTTON_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 1, 28);
+//    protected static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(1, 1, 1, 42);
+//    protected static const INSET_ITEM_RENDERER_MIDDLE_SCALE9_GRID:Rectangle = new Rectangle(2, 2, 1, 40);
+//    protected static const INSET_ITEM_RENDERER_FIRST_SCALE9_GRID:Rectangle = new Rectangle(7, 7, 1, 35);
+//    protected static const INSET_ITEM_RENDERER_LAST_SCALE9_GRID:Rectangle = new Rectangle(7, 2, 1, 35);
+//    protected static const INSET_ITEM_RENDERER_SINGLE_SCALE9_GRID:Rectangle = new Rectangle(7, 7, 1, 30);
+//    protected static const TAB_SCALE9_GRID:Rectangle = new Rectangle(11, 11, 1, 22);
+//    protected static const SPINNER_LIST_SELECTION_OVERLAY_SCALE9_GRID:Rectangle = new Rectangle(2, 6, 1, 32);
+//    protected static const HORIZONTAL_SCROLL_BAR_THUMB_SCALE9_GRID:Rectangle = new Rectangle(4, 0, 4, 5);
+//    protected static const VERTICAL_SCROLL_BAR_THUMB_SCALE9_GRID:Rectangle = new Rectangle(0, 4, 5, 4);
+//    
+//    protected static const HEADER_SKIN_TEXTURE_REGION:Rectangle = new Rectangle(1, 1, 128, 64);
+//    protected static const TAB_SKIN_TEXTURE_REGION:Rectangle = new Rectangle(1, 0, 22, 44);
+    
+    
+    //public static const BUTTON_SELECTED_SCALE9_GRID:Rectangle = new Rectangle(4, 4, 22, 22);
+    
+    
+    
     // Alert
     public static const MODAL_OVERLAY_ALPHA:Number = 0.8;
-    public static const BUTTON_SCALE9_GRID:Rectangle = new Rectangle(5, 5, 50, 50);
+    public static const BUTTON_SCALE9_GRID:Rectangle = new Rectangle(6, 6, 18, 18);
 
     // Button
-    public static const BUTTON_SELECTED_SCALE9_GRID:Rectangle = new Rectangle(8, 8, 44, 44);
+
     public static const DRAWER_OVERLAY_COLOR:uint = 0x29241e;
 
     // Drawers
@@ -94,10 +110,10 @@ public class SharedFactory extends AbstractThemeFactory
     public static const LIST_BACKGROUND_COLOR:uint = 0xFFFFFF;//0x383430;
 
     // List
-    public static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(3, 0, 2, 82);
+    public static const ITEM_RENDERER_SCALE9_GRID:Rectangle = new Rectangle(2, 0, 1, 41);
     public static const TAB_BACKGROUND_COLOR:uint = 0x1a1816;
     public static const TAB_DISABLED_BACKGROUND_COLOR:uint = 0x292624;
-    public static const TAB_SCALE9_GRID:Rectangle = new Rectangle(19, 19, 50, 50);
+    public static const TAB_SCALE9_GRID:Rectangle = new Rectangle(8, 8, 25, 25);
     public static var PRIMARY_BACKGROUND_COLOR:uint = 0x4a4137;
     
     

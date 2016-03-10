@@ -96,9 +96,6 @@ public class FontFactory extends AbstractThemeFactory
     // ElementFormat
     //----------------------------------
     
-    public var defaultButtonElementFormat:ElementFormat;
-    public var defaultButtonDisableElementFormat:ElementFormat;
-    
     /**
      * The FTE FontDescription used for text of a normal weight.
      */
@@ -123,6 +120,10 @@ public class FontFactory extends AbstractThemeFactory
      * An ElementFormat used for Header components.
      */
     public var headerElementFormat:ElementFormat;
+    
+    /**
+     * An ElementFormat used for Header components when disabled.
+     */
     public var headerDisabledElementFormat:ElementFormat;
     
     /**
@@ -149,7 +150,6 @@ public class FontFactory extends AbstractThemeFactory
      * An ElementFormat with a dark tint meant for disabled UI controls.
      */
     public var darkUIDisabledElementFormat:ElementFormat;
-    public var darkUIPromptElementFormat:ElementFormat;
     
     /**
      * An ElementFormat with a dark tint meant for larger UI controls.
@@ -206,8 +206,6 @@ public class FontFactory extends AbstractThemeFactory
      */
     public var disabledElementFormat:ElementFormat;
     
-    public var smallDarkElementFormat:ElementFormat;
-    
     /**
      * An ElementFormat with a light tint meant for smaller text.
      */
@@ -217,10 +215,6 @@ public class FontFactory extends AbstractThemeFactory
      * An ElementFormat meant for smaller, disabled text.
      */
     public var smallDisabledElementFormat:ElementFormat;
-    
-    ///
-    public var extraSmallDarkElementFormat:ElementFormat;
-    public var extraSmallDarkDisabledElementFormat:ElementFormat;
     
     public function FontFactory(theme:AbstractTheme)
     {
@@ -275,15 +269,6 @@ public class FontFactory extends AbstractThemeFactory
         largeLightElementFormat = new ElementFormat(regularFontDescription, largeFontSize, LIGHT_TEXT_COLOR);
         largeDisabledElementFormat = new ElementFormat(regularFontDescription, largeFontSize, DISABLED_TEXT_COLOR);
         
-        
-        
-        
-        
-        
-        
-        // ME
-        defaultButtonElementFormat = darkUIElementFormat;
-        defaultButtonDisableElementFormat = darkUIDisabledElementFormat;
         
         themeLargeElementFormat = new ElementFormat(regularFontDescription, largeFontSize, THEME_FONT_COLOR);
     }

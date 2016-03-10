@@ -52,8 +52,8 @@ public class KeyBoardFactory extends AbstractThemeFactory
 
     private function setKeyBoardKeyWhiteLabelStyles(label:Label):void
     {
-        label.textRendererProperties.elementFormat = theme.fonts.smallDarkElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
+        label.textRendererProperties.elementFormat = theme.fonts.darkUIElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.darkUIDisabledElementFormat;
     }
 
     private function setKeyBoardKeyBlackLabelStyles(label:Label):void

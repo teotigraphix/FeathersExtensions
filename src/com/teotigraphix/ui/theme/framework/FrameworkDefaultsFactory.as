@@ -154,7 +154,7 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
 
     public function theme_toolTipLabelStyles(label:Label):void
     {
-        theme.label.setLabelDarkStyles(label);
+        //theme.label.setLabelDarkStyles(label);
         label.padding = 8;
     }
 

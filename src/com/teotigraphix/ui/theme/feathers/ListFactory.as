@@ -27,6 +27,7 @@ import com.teotigraphix.ui.theme.SharedFactory;
 import feathers.controls.ButtonState;
 import feathers.controls.ImageLoader;
 import feathers.controls.List;
+import feathers.controls.ToggleButton;
 import feathers.controls.renderers.BaseDefaultItemRenderer;
 import feathers.controls.renderers.DefaultGroupedListItemRenderer;
 import feathers.controls.renderers.DefaultListItemRenderer;
@@ -66,6 +67,10 @@ public class ListFactory extends AbstractThemeFactory
 
         setStyle(DefaultGroupedListItemRenderer, setItemRendererStyles);
         setStyle(DefaultListItemRenderer, setItemRendererStyles);
+        
+        setStyle(TextBlockTextRenderer, setItemRendererLabelStyles, BaseDefaultItemRenderer.DEFAULT_CHILD_STYLE_NAME_LABEL);
+        setStyle(TextBlockTextRenderer, setItemRendererAccessoryLabelStyles, BaseDefaultItemRenderer.DEFAULT_CHILD_STYLE_NAME_ACCESSORY_LABEL);
+        setStyle(TextBlockTextRenderer, setItemRendererIconLabelStyles, BaseDefaultItemRenderer.DEFAULT_CHILD_STYLE_NAME_ICON_LABEL);
     }
 
     public function setListStyles(list:List):void
@@ -78,9 +83,9 @@ public class ListFactory extends AbstractThemeFactory
 
     public function setItemRendererStyles(renderer:BaseDefaultItemRenderer):void
     {
-        var skin:ImageSkin = new ImageSkin(this.itemRendererUpSkinTexture);
+        var skin:ImageSkin = new ImageSkin(itemRendererUpSkinTexture);
         skin.selectedTexture = itemRendererSelectedSkinTexture;
-        skin.setTextureForState(ButtonState.DOWN, this.itemRendererSelectedSkinTexture);
+        skin.setTextureForState(ButtonState.DOWN, itemRendererSelectedSkinTexture);
         skin.scale9Grid = SharedFactory.ITEM_RENDERER_SCALE9_GRID;
         skin.width = properties.gridSize;
         skin.height = properties.gridSize;
@@ -102,15 +107,29 @@ public class ListFactory extends AbstractThemeFactory
         renderer.minTouchWidth = properties.gridSize;
         renderer.minTouchHeight = properties.gridSize;
     }
-
-    public function setItemRendererAccessoryLabelRendererStyles(renderer:TextBlockTextRenderer):void
+    
+    public function setItemRendererLabelStyles(textRenderer:TextBlockTextRenderer):void
     {
-        renderer.elementFormat = theme.fonts.lightElementFormat;
+        textRenderer.elementFormat = font.largeDarkElementFormat;
+        textRenderer.disabledElementFormat = font.largeDisabledElementFormat;
+        textRenderer.selectedElementFormat = font.largeDarkElementFormat;
+        textRenderer.setElementFormatForState(ToggleButton.STATE_DOWN, font.largeDarkElementFormat);
     }
-
-    public function setItemRendererIconLabelStyles(renderer:TextBlockTextRenderer):void
+    
+    public function setItemRendererAccessoryLabelStyles(textRenderer:TextBlockTextRenderer):void
     {
-        renderer.elementFormat = theme.fonts.lightElementFormat;
+        textRenderer.elementFormat = font.lightElementFormat;
+        textRenderer.disabledElementFormat = font.disabledElementFormat;
+        textRenderer.selectedElementFormat = font.darkElementFormat;
+        textRenderer.setElementFormatForState(ToggleButton.STATE_DOWN, font.darkElementFormat);
+    }
+    
+    public function setItemRendererIconLabelStyles(textRenderer:TextBlockTextRenderer):void
+    {
+        textRenderer.elementFormat = font.lightElementFormat;
+        textRenderer.disabledElementFormat = font.disabledElementFormat;
+        textRenderer.selectedElementFormat = font.darkElementFormat;
+        textRenderer.setElementFormatForState(ToggleButton.STATE_DOWN, font.darkElementFormat);
     }
 
     public function imageLoaderFactory():ImageLoader

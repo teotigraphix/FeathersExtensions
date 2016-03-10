@@ -41,19 +41,34 @@ public class LabelFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
+        
         setStyle(Label, setLabelStyles);
-        setStyle(Label, setHeadingLabelStyles, Label.ALTERNATE_STYLE_NAME_HEADING);
-        setStyle(Label, setDetailLabelStyles, Label.ALTERNATE_STYLE_NAME_DETAIL);
-
-        setStyle(Label, set_label16Dark, FrameworkStyleNames.LABEL_16_DARK);
-        setStyle(Label, set_label20Dark, FrameworkStyleNames.LABEL_20_DARK);
-
-        setStyle(Label, set_themeDarkRegular, FrameworkStyleNames.LABEL_UI_DARK);
-
-        setStyle(Label, set_Styles, FrameworkStyleNames.THEME_LABEL);
-        setStyle(Label, set_themeHeadingStyles, FrameworkStyleNames.THEME_LABEL_HEADING);
-        setStyle(Label, set_themeActionBarStyles, FrameworkStyleNames.THEME_LABEL_ACTION_BAR);
-        setStyle(Label, set_themeSubHeadingStyles, FrameworkStyleNames.THEME_LABEL_SUB_HEADING);
+        setStyle(Label, setLabelStyles, Label.ALTERNATE_STYLE_NAME_HEADING);
+        setStyle(Label, setLabelStyles, Label.ALTERNATE_STYLE_NAME_DETAIL);
+        
+        setStyle(Label, setLabelStyles, FrameworkStyleNames.LABEL_16_DARK);
+        setStyle(Label, setLabelStyles, FrameworkStyleNames.LABEL_20_DARK);
+        
+        setStyle(Label, setLabelStyles, FrameworkStyleNames.LABEL_UI_DARK);
+        
+        setStyle(Label, setLabelStyles, FrameworkStyleNames.THEME_LABEL);
+        setStyle(Label, setLabelStyles, FrameworkStyleNames.THEME_LABEL_HEADING);
+        setStyle(Label, setLabelStyles, FrameworkStyleNames.THEME_LABEL_ACTION_BAR);
+        setStyle(Label, setLabelStyles, FrameworkStyleNames.THEME_LABEL_SUB_HEADING);
+        
+//        setStyle(Label, setLabelStyles);
+//        setStyle(Label, setHeadingLabelStyles, Label.ALTERNATE_STYLE_NAME_HEADING);
+//        setStyle(Label, setDetailLabelStyles, Label.ALTERNATE_STYLE_NAME_DETAIL);
+//
+//        setStyle(Label, set_label16Dark, FrameworkStyleNames.LABEL_16_DARK);
+//        setStyle(Label, set_label20Dark, FrameworkStyleNames.LABEL_20_DARK);
+//
+//        setStyle(Label, set_themeDarkRegular, FrameworkStyleNames.LABEL_UI_DARK);
+//
+//        setStyle(Label, set_Styles, FrameworkStyleNames.THEME_LABEL);
+//        setStyle(Label, set_themeHeadingStyles, FrameworkStyleNames.THEME_LABEL_HEADING);
+//        setStyle(Label, set_themeActionBarStyles, FrameworkStyleNames.THEME_LABEL_ACTION_BAR);
+//        setStyle(Label, set_themeSubHeadingStyles, FrameworkStyleNames.THEME_LABEL_SUB_HEADING);
     }
 
     //--------------------------------------------------------------------------
@@ -62,14 +77,14 @@ public class LabelFactory extends AbstractThemeFactory
 
     public function set_label16Dark(label:Label):void
     {
-        label.textRendererProperties.elementFormat = theme.fonts.extraSmallDarkElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.extraSmallDarkDisabledElementFormat;
+        label.textRendererProperties.elementFormat = theme.fonts.darkUIElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.darkUIDisabledElementFormat;
     }
 
     public function set_label20Dark(label:Label):void
     {
-        label.textRendererProperties.elementFormat = theme.fonts.smallDarkElementFormat; // is 20
-        label.textRendererProperties.disabledElementFormat = theme.fonts.smallDisabledElementFormat;
+        label.textRendererProperties.elementFormat = theme.fonts.darkUIElementFormat; // is 20
+        label.textRendererProperties.disabledElementFormat = theme.fonts.darkUIDisabledElementFormat;
     }
 
     public function set_themeDarkRegular(label:Label):void
@@ -107,8 +122,8 @@ public class LabelFactory extends AbstractThemeFactory
 
     public function set_themeSubHeadingStyles(label:Label):void
     {
-        label.textRendererProperties.elementFormat = theme.fonts.smallDarkElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.smallDisabledElementFormat;
+        label.textRendererProperties.elementFormat = theme.fonts.darkUIElementFormat;
+        label.textRendererProperties.disabledElementFormat = theme.fonts.darkUIDisabledElementFormat;
     }
 
     ///////
@@ -118,12 +133,6 @@ public class LabelFactory extends AbstractThemeFactory
      * @param label
      */
     public function setLabelStyles(label:Label):void
-    {
-        label.textRendererProperties.elementFormat = theme.fonts.lightElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;
-    }
-
-    public function setLabelDarkStyles(label:Label):void
     {
         label.textRendererProperties.elementFormat = theme.fonts.darkElementFormat;
         label.textRendererProperties.disabledElementFormat = theme.fonts.disabledElementFormat;

@@ -79,8 +79,8 @@ public class TextInputFactory extends AbstractThemeFactory
         input.textEditorProperties.color = FontFactory.DARK_TEXT_COLOR;
         input.textEditorProperties.disabledColor = FontFactory.DARK_DISABLED_TEXT_COLOR;
 
-        input.promptProperties.elementFormat = theme.fonts.darkUIPromptElementFormat;
-        input.promptProperties.disabledElementFormat = theme.fonts.darkUIPromptElementFormat;
+        input.promptProperties.elementFormat = theme.fonts.darkUIElementFormat;
+        input.promptProperties.disabledElementFormat = theme.fonts.darkUIDisabledElementFormat;
     }
 
     public function setDarkTextInputStyles(input:TextInput):void

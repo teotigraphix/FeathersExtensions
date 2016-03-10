@@ -25,34 +25,23 @@ import com.teotigraphix.ui.component.UIToggleButton;
 import com.teotigraphix.ui.theme.AbstractTheme;
 import com.teotigraphix.ui.theme.AbstractThemeFactory;
 import com.teotigraphix.ui.theme.AssetMap;
+import com.teotigraphix.ui.theme.CoreSkinNames;
 import com.teotigraphix.ui.theme.SharedFactory;
 import com.teotigraphix.ui.theme.framework.FrameworkStyleNames;
 import com.teotigraphix.ui.theme.framework.skins.ButtonSkin;
 
 import flash.display.DisplayObject;
-import flash.text.engine.ElementFormat;
 
 import feathers.controls.Button;
 import feathers.controls.ButtonState;
 import feathers.controls.ToggleButton;
+import feathers.controls.text.TextBlockTextRenderer;
 import feathers.skins.ImageSkin;
 
 import starling.textures.Texture;
 
 public class ButtonFactory extends AbstractThemeFactory
 {
-    public static const BUTTON_UP_SKIN:String = "button-up-skin";
-    public static const BUTTON_DOWN_SKIN:String = "button-down-skin";
-    public static const BUTTON_DISABLED_SKIN:String = "button-disabled-skin";
-    public static const BUTTON_SELECTED_UP_SKIN:String = "button-selected-up-skin";
-    public static const BUTTON_SELECTED_DISABLED_SKIN:String = "button-selected-disabled-skin";
-
-    public static const BUTTON_RAISED_UP_SKIN:String = "button-raised-up-skin";
-    public static const BUTTON_RAISED_DOWN_SKIN:String = "button-raised-down-skin";
-    public static const BUTTON_RAISED_DISABLED_SKIN:String = "button-raised-disabled-skin";
-    public static const BUTTON_RAISED_SELECTED_UP_SKIN:String = "button-raised-selected-up-skin";
-    public static const BUTTON_RAISED_SELECTED_DISABLED_SKIN:String = "button-raised-selected-disabled-skin";
-    
     public var buttonUpSkinTexture:Texture;
     public var buttonDownSkinTexture:Texture;
     public var buttonDisabledSkinTexture:Texture;
@@ -74,47 +63,47 @@ public class ButtonFactory extends AbstractThemeFactory
     {
         var buttonRaised:ButtonSkin = new ButtonSkin();
         buttonRaised.setSize(60, 60);
-        buttonRaised.name = BUTTON_RAISED_UP_SKIN;
+        buttonRaised.name = CoreSkinNames.BUTTON_RAISED_UP_SKIN;
         skins.push(buttonRaised);
         
         var buttonRaisedDown:ButtonSkin = new ButtonSkin();
         buttonRaisedDown.fillColor = 0x80DEEA;
         buttonRaisedDown.setSize(60, 60);
-        buttonRaisedDown.name = BUTTON_RAISED_DOWN_SKIN;
+        buttonRaisedDown.name = CoreSkinNames.BUTTON_RAISED_DOWN_SKIN;
         skins.push(buttonRaisedDown);
         
         var buttonRaisedDisabled:ButtonSkin = new ButtonSkin();
         buttonRaisedDisabled.fillColor = 0xCCCCCC;
         buttonRaisedDisabled.setSize(60, 60);
-        buttonRaisedDisabled.name = BUTTON_RAISED_DISABLED_SKIN;
+        buttonRaisedDisabled.name = CoreSkinNames.BUTTON_RAISED_DISABLED_SKIN;
         skins.push(buttonRaisedDisabled);
         
         var buttonRaisedSelectedUp:ButtonSkin = new ButtonSkin();
         buttonRaisedSelectedUp.fillColor = 0x80DEEA;
         buttonRaisedSelectedUp.setSize(60, 60);
-        buttonRaisedSelectedUp.name = BUTTON_RAISED_SELECTED_UP_SKIN;
+        buttonRaisedSelectedUp.name = CoreSkinNames.BUTTON_RAISED_SELECTED_UP_SKIN;
         skins.push(buttonRaisedSelectedUp);
         
         var buttonRaisedSelectedDisabled:ButtonSkin = new ButtonSkin();
         buttonRaisedSelectedDisabled.fillColor = 0xCCCCCC;
         buttonRaisedSelectedDisabled.setSize(60, 60);
-        buttonRaisedSelectedDisabled.name = BUTTON_RAISED_SELECTED_DISABLED_SKIN;
+        buttonRaisedSelectedDisabled.name = CoreSkinNames.BUTTON_RAISED_SELECTED_DISABLED_SKIN;
         skins.push(buttonRaisedSelectedDisabled);
     }
     
     override public function initializeTextures():void
     {
-        buttonUpSkinTexture = AssetMap.getTexture(BUTTON_UP_SKIN);
-        buttonDownSkinTexture = AssetMap.getTexture(BUTTON_DOWN_SKIN);
-        buttonDisabledSkinTexture = AssetMap.getTexture(BUTTON_DISABLED_SKIN);
-        buttonSelectedUpSkinTexture = AssetMap.getTexture(BUTTON_SELECTED_UP_SKIN);
-        buttonSelectedDisabledSkinTexture = AssetMap.getTexture(BUTTON_SELECTED_DISABLED_SKIN);
+        buttonUpSkinTexture = getTexture(CoreSkinNames.BUTTON_UP_SKIN);
+        buttonDownSkinTexture = getTexture(CoreSkinNames.BUTTON_DOWN_SKIN);
+        buttonDisabledSkinTexture = getTexture(CoreSkinNames.BUTTON_DISABLED_SKIN);
+        buttonSelectedUpSkinTexture = getTexture(CoreSkinNames.BUTTON_SELECTED_UP_SKIN);
+        buttonSelectedDisabledSkinTexture = getTexture(CoreSkinNames.BUTTON_SELECTED_DISABLED_SKIN);
         
-        buttonRaisedUpSkinTexture = AssetMap.getTexture(BUTTON_RAISED_UP_SKIN, true);
-        buttonRaisedDownSkinTexture = AssetMap.getTexture(BUTTON_RAISED_DOWN_SKIN, true);
-        buttonRaisedDisabledSkinTexture = AssetMap.getTexture(BUTTON_RAISED_DISABLED_SKIN, true);
-        buttonRaisedSelectedUpSkinTexture = AssetMap.getTexture(BUTTON_RAISED_SELECTED_UP_SKIN, true);
-        buttonRaisedSelectedDisabledSkinTexture = AssetMap.getTexture(BUTTON_RAISED_SELECTED_DISABLED_SKIN, true);
+        buttonRaisedUpSkinTexture = getTexture(CoreSkinNames.BUTTON_RAISED_UP_SKIN, true);
+        buttonRaisedDownSkinTexture = getTexture(CoreSkinNames.BUTTON_RAISED_DOWN_SKIN, true);
+        buttonRaisedDisabledSkinTexture = getTexture(CoreSkinNames.BUTTON_RAISED_DISABLED_SKIN, true);
+        buttonRaisedSelectedUpSkinTexture = getTexture(CoreSkinNames.BUTTON_RAISED_SELECTED_UP_SKIN, true);
+        buttonRaisedSelectedDisabledSkinTexture = getTexture(CoreSkinNames.BUTTON_RAISED_SELECTED_DISABLED_SKIN, true);
     }
 
     override public function initializeStyleProviders():void
@@ -127,41 +116,50 @@ public class ButtonFactory extends AbstractThemeFactory
         // Button Raised
         setStyle(Button, setButtonRaisedStyles, FrameworkStyleNames.THEME_BUTTON_RAISED);
         setStyle(ToggleButton, setToggleButtonRaisedStyles, FrameworkStyleNames.THEME_BUTTON_RAISED);
+        setStyle(TextBlockTextRenderer, setButtonLabelStyles, Button.DEFAULT_CHILD_STYLE_NAME_LABEL);
     }
 
     public function setBaseButtonStyles(button:Button):void
     {
-        button.defaultLabelProperties.elementFormat = getFont();
-        button.disabledLabelProperties.elementFormat = getDisabledFont();
-        if (button is ToggleButton)
-        {
-            //for convenience, this function can style both a regular button
-            //and a toggle button
-            ToggleButton(button).selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
-        }
-
-        //button.paddingTop = properties.smallGutterSize;
-        //button.paddingBottom = properties.smallGutterSize;
-        //button.paddingLeft = properties.gutterSize;
-        //button.paddingRight = properties.gutterSize;
-        //button.gap = properties.smallGutterSize;
-        //button.minGap = properties.smallGutterSize;
+        button.paddingTop = properties.smallGutterSize;
+        button.paddingBottom = properties.smallGutterSize;
+        button.paddingLeft = properties.gutterSize;
+        button.paddingRight = properties.gutterSize;
+        button.gap = properties.smallGutterSize;
+        button.minGap = properties.smallGutterSize;
         button.minWidth = button.minHeight = properties.controlSize;
-        //button.minWidth = dp(64);
-        button.height = 36;
-        button.padding = 8;
-        button.gap = 8;
         button.minTouchWidth = properties.gridSize;
         button.minTouchHeight = properties.gridSize;
+//        button.defaultLabelProperties.elementFormat = getFont();
+//        button.disabledLabelProperties.elementFormat = getDisabledFont();
+//        if (button is ToggleButton)
+//        {
+//            //for convenience, this function can style both a regular button
+//            //and a toggle button
+//            ToggleButton(button).selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
+//        }
+//
+//        //button.paddingTop = properties.smallGutterSize;
+//        //button.paddingBottom = properties.smallGutterSize;
+//        //button.paddingLeft = properties.gutterSize;
+//        //button.paddingRight = properties.gutterSize;
+//        //button.gap = properties.smallGutterSize;
+//        //button.minGap = properties.smallGutterSize;
+//        button.minWidth = button.minHeight = properties.controlSize;
+//        //button.minWidth = dp(64);
+//        button.height = 36;
+//        button.padding = 8;
+//        button.gap = 8;
+//        button.minTouchWidth = properties.gridSize;
+//        button.minTouchHeight = properties.gridSize;
     }
-
-    public function setSimpleButtonStyles(button:SimpleButton):void
+    
+    public function setButtonLabelStyles(textRenderer:TextBlockTextRenderer):void
     {
-        button.upSkin = AssetMap.createImage("button-up-skin");
-        button.downSkin = AssetMap.createImage("button-down-skin");
-        button.selectedSkin = AssetMap.createImage("button-selected-up-skin");
+        textRenderer.elementFormat = font.darkUIElementFormat;
+        textRenderer.disabledElementFormat = font.darkUIDisabledElementFormat;
     }
-
+    
     public function setButtonStyles(button:Button):void
     {
         var skin:ImageSkin = new ImageSkin(buttonUpSkinTexture);
@@ -213,8 +211,8 @@ public class ButtonFactory extends AbstractThemeFactory
             skin.setTextureForState(ButtonState.DISABLED_AND_SELECTED, buttonRaisedSelectedDisabledSkinTexture);
             
             var toggleButton:ToggleButton = ToggleButton(button);
-            toggleButton.defaultSelectedLabelProperties.elementFormat = getSelectedFont();
-            toggleButton.selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
+            //toggleButton.defaultSelectedLabelProperties.elementFormat = getSelectedFont();
+            //toggleButton.selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
         }
         skin.scale9Grid = SharedFactory.BUTTON_SCALE9_GRID;
         skin.width = theme.properties.controlSize;
@@ -222,37 +220,45 @@ public class ButtonFactory extends AbstractThemeFactory
         button.defaultSkin = skin;
         setBaseButtonStyles(button);
     }
-
-    /**
-     * Regular button font, darkElementFormat.
-     */
-    protected function getFont():ElementFormat
+    
+    // TODO get rid of OR subclass the new SimpleButton
+    public function setSimpleButtonStyles(button:SimpleButton):void
     {
-        return font.darkElementFormat;
+        button.upSkin = AssetMap.createImage(CoreSkinNames.BUTTON_UP_SKIN);
+        button.downSkin = AssetMap.createImage(CoreSkinNames.BUTTON_DOWN_SKIN);
+        button.selectedSkin = AssetMap.createImage(CoreSkinNames.BUTTON_SELECTED_UP_SKIN);
     }
-
-    /**
-     * Regular disabled button font, lightElementFormat.
-     */
-    protected function getDisabledFont():ElementFormat
-    {
-        return font.disabledElementFormat;
-    }
-
-    /**
-     * Selected font, darkUIElementFormat.
-     */
-    protected function getSelectedFont():ElementFormat
-    {
-        return font.darkUIElementFormat;
-    }
-
-    /**
-     * Selected disabled font, darkUIDisabledElementFormat.
-     */
-    protected function getSelectedDisabledFont():ElementFormat
-    {
-        return font.darkUIDisabledElementFormat;
-    }
+//    
+//    /**
+//     * Regular button font, darkElementFormat.
+//     */
+//    protected function getFont():ElementFormat
+//    {
+//        return font.darkElementFormat;
+//    }
+//
+//    /**
+//     * Regular disabled button font, lightElementFormat.
+//     */
+//    protected function getDisabledFont():ElementFormat
+//    {
+//        return font.disabledElementFormat;
+//    }
+//
+//    /**
+//     * Selected font, darkUIElementFormat.
+//     */
+//    protected function getSelectedFont():ElementFormat
+//    {
+//        return font.darkUIElementFormat;
+//    }
+//
+//    /**
+//     * Selected disabled font, darkUIDisabledElementFormat.
+//     */
+//    protected function getSelectedDisabledFont():ElementFormat
+//    {
+//        return font.darkUIDisabledElementFormat;
+//    }
 }
 }
