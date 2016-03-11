@@ -77,10 +77,10 @@ public class ThemeProperties extends EventDispatcher
 
     public function initialize():void
     {
-        gridSize = 44;
+        gridSize = 48;//44;
         smallGutterSize = 8;
-        gutterSize = 12;
-        controlSize = 28;
+        gutterSize = 16; //12;
+        controlSize = 36;//28;
         smallControlSize = 12;
         popUpFillSize = 276;
         calloutBackgroundMinSize = 12;

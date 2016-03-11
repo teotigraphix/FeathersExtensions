@@ -139,30 +139,10 @@ public class LabelFactory extends AbstractThemeFactory
     }
 
     /**
-     * largeLightElementFormat
+     * largeDarkElementFormat
      * @param label
      */
     public function setHeadingLabelStyles(label:Label):void
-    {
-        label.textRendererProperties.elementFormat = theme.fonts.largeLightElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.largeDisabledElementFormat;
-    }
-
-    /**
-     * headerElementFormat
-     * @param label
-     */
-    public function setHeading1LabelStyles(label:Label):void
-    {
-        label.textRendererProperties.elementFormat = theme.fonts.headerElementFormat;
-        label.textRendererProperties.disabledElementFormat = theme.fonts.headerElementFormat;
-    }
-
-    /**
-     * headerElementFormat
-     * @param label
-     */
-    public function setHeading1DarkLabelStyles(label:Label):void
     {
         label.textRendererProperties.elementFormat = theme.fonts.headerElementFormat;
         label.textRendererProperties.disabledElementFormat = theme.fonts.headerDisabledElementFormat;

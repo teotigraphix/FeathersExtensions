@@ -130,28 +130,6 @@ public class ButtonFactory extends AbstractThemeFactory
         button.minWidth = button.minHeight = properties.controlSize;
         button.minTouchWidth = properties.gridSize;
         button.minTouchHeight = properties.gridSize;
-//        button.defaultLabelProperties.elementFormat = getFont();
-//        button.disabledLabelProperties.elementFormat = getDisabledFont();
-//        if (button is ToggleButton)
-//        {
-//            //for convenience, this function can style both a regular button
-//            //and a toggle button
-//            ToggleButton(button).selectedDisabledLabelProperties.elementFormat = getSelectedDisabledFont();
-//        }
-//
-//        //button.paddingTop = properties.smallGutterSize;
-//        //button.paddingBottom = properties.smallGutterSize;
-//        //button.paddingLeft = properties.gutterSize;
-//        //button.paddingRight = properties.gutterSize;
-//        //button.gap = properties.smallGutterSize;
-//        //button.minGap = properties.smallGutterSize;
-//        button.minWidth = button.minHeight = properties.controlSize;
-//        //button.minWidth = dp(64);
-//        button.height = 36;
-//        button.padding = 8;
-//        button.gap = 8;
-//        button.minTouchWidth = properties.gridSize;
-//        button.minTouchHeight = properties.gridSize;
     }
     
     public function setButtonLabelStyles(textRenderer:TextBlockTextRenderer):void
@@ -196,6 +174,7 @@ public class ButtonFactory extends AbstractThemeFactory
         skin.height = theme.properties.controlSize;
         button.defaultSkin = skin;
         setBaseButtonStyles(button);
+        button.paddingBottom += 4; // shadow
     }
 
     public function setToggleButtonRaisedStyles(button:ToggleButton):void
@@ -219,6 +198,7 @@ public class ButtonFactory extends AbstractThemeFactory
         skin.height = theme.properties.controlSize;
         button.defaultSkin = skin;
         setBaseButtonStyles(button);
+        button.paddingBottom += 4; // shadow
     }
     
     // TODO get rid of OR subclass the new SimpleButton

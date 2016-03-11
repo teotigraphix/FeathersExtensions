@@ -23,6 +23,9 @@ import com.teotigraphix.ui.template.main.ApplicationActionBar;
 import com.teotigraphix.ui.template.main.ApplicationStatusBar;
 import com.teotigraphix.ui.template.main.toolbar.ApplicationContentToolBar;
 import com.teotigraphix.ui.template.main.toolbar.ApplicationToolBar;
+import com.teotigraphix.ui.template.main.toolbar.StatusCenterToolBar;
+import com.teotigraphix.ui.template.main.toolbar.StatusLeftToolBar;
+import com.teotigraphix.ui.template.main.toolbar.StatusRightToolBar;
 import com.teotigraphix.ui.theme.AbstractTheme;
 import com.teotigraphix.ui.theme.AbstractThemeFactory;
 import com.teotigraphix.ui.theme.framework.skins.ActionBarSkin;
@@ -88,6 +91,10 @@ public class AbstractApplicationTemplateFactory extends AbstractThemeFactory
         // StatusBar
         setStyle(ApplicationStatusBar, set_statusBarStyles);
         
+        setStyle(StatusLeftToolBar, set_statusBar_StatusLeftToolBar_Styles);
+        setStyle(StatusCenterToolBar, set_statusBar_StatusCenterToolBar_Styles);
+        setStyle(StatusRightToolBar, set_statusBar_StatusRightToolBar_Styles);
+        
         // ToolBar
         setStyle(ApplicationToolBar, set_applicationToolBarStyle);
         setStyle(ApplicationContentToolBar, set_applicationContentToolBarStyle);
@@ -131,12 +138,33 @@ public class AbstractApplicationTemplateFactory extends AbstractThemeFactory
         statusBar.backgroundSkin = create9ScaleImage(
             FrameworkSkinNames.APPLICATION_STATUS_BAR_BACKGROUND_SKIN, 4, 4, 40, 40, true);
         
-        statusBar.minHeight = 40;
+        statusBar.minHeight = 36;
         
         var hl:HorizontalLayout = statusBar.layout as HorizontalLayout;
-        hl.padding = 4;
+        hl.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
+        hl.padding = 8;
         hl.gap = 8;
     }    
+    
+    protected function set_statusBar_StatusLeftToolBar_Styles(toolBar:StatusLeftToolBar):void
+    {
+        var hl:HorizontalLayout = toolBar.layout as HorizontalLayout;
+        hl.gap = 8;
+    }
+    
+    protected function set_statusBar_StatusCenterToolBar_Styles(toolBar:StatusCenterToolBar):void
+    {
+        var hl:HorizontalLayout = toolBar.layout as HorizontalLayout;
+        hl.gap = 8;
+    }
+    
+    protected function set_statusBar_StatusRightToolBar_Styles(toolBar:StatusRightToolBar):void
+    {
+        var hl:HorizontalLayout = toolBar.layout as HorizontalLayout;
+        hl.gap = 8;
+    }
+    
+    ////////
     
     protected function set_actionsButtonStyle(button:ToggleButton):void
     {

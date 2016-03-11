@@ -51,7 +51,6 @@ public class FrameworkStyleNames
     public static const BACK_BUTTON:String = "back-button";
 
     // Screen Dialog
-    public static const DIALOG_SCREEN_CONTENT:String = "dialog-content-group";
     public static const DIALOG_BUTTON_FOOTER:String = "dialog-button-footer";
 
     // Form

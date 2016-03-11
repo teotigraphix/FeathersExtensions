@@ -235,7 +235,6 @@ public class FontFactory extends AbstractThemeFactory
         
         inputFontSize = Math.round(12 * theme.stageTextScale);
         
-        
         //these are for components that don't use FTE
         scrollTextTextFormat = new TextFormat("_sans", regularFontSize, LIGHT_TEXT_COLOR);
         scrollTextDisabledTextFormat = new TextFormat("_sans", regularFontSize, DISABLED_TEXT_COLOR);
@@ -243,7 +242,7 @@ public class FontFactory extends AbstractThemeFactory
         regularFontDescription = new FontDescription(FONT_NAME, FontWeight.NORMAL, FontPosture.NORMAL, FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
         boldFontDescription = new FontDescription(FONT_NAME, FontWeight.BOLD, FontPosture.NORMAL, FontLookup.EMBEDDED_CFF, RenderingMode.CFF, CFFHinting.NONE);
         
-        headerElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, LIGHT_TEXT_COLOR);
+        headerElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, DARK_TEXT_COLOR);
         headerDisabledElementFormat = new ElementFormat(boldFontDescription, extraLargeFontSize, DISABLED_TEXT_COLOR);
         
         darkUIElementFormat = new ElementFormat(boldFontDescription, regularFontSize, DARK_TEXT_COLOR);

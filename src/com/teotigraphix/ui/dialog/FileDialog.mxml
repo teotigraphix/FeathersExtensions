@@ -79,6 +79,12 @@
                 dispatchEventWith(EVENT_FILE_CHANGE, false, fileList.selectedFile);
             }
             
+            override protected function initialize():void
+            {
+                super.initialize();
+                fillParent = true;
+            }            
+            
             override protected function draw():void
             {
                 if (_data != null && isInvalid(INVALIDATION_FLAG_DATA))

@@ -26,6 +26,7 @@ import com.teotigraphix.ui.dialog.FileDialog;
 import com.teotigraphix.ui.theme.AbstractTheme;
 import com.teotigraphix.ui.theme.AbstractThemeFactory;
 import com.teotigraphix.ui.theme.FontFactory;
+import com.teotigraphix.ui.theme.SharedFactory;
 
 import flash.text.engine.CFFHinting;
 import flash.text.engine.ElementFormat;
@@ -40,6 +41,7 @@ import feathers.controls.Label;
 import feathers.controls.LayoutGroup;
 import feathers.controls.TextInput;
 import feathers.layout.HorizontalLayout;
+import feathers.layout.VerticalLayout;
 
 import starling.display.Quad;
 
@@ -82,8 +84,11 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
     {
         super.initializeStyleProviders();
 
-        setStyle(Dialog, theme_dialogContentGroup, FrameworkStyleNames.DIALOG_SCREEN_CONTENT);
-        setStyle(FileDialog, theme_dialogContentGroup, FrameworkStyleNames.DIALOG_SCREEN_CONTENT);
+        setStyle(Dialog, set_DialogStyles);
+        setStyle(Label, set_Dialog_TitleLabel_Styles,  "dialog-title-label");
+        
+       
+        setStyle(FileDialog, set_DialogStyles);
         
         setStyle(Button, setFormButtonStyles, FrameworkStyleNames.FORM_BUTTON);
         setStyle(Button, setFormOkButtonStyles, FrameworkStyleNames.FORM_OK_BUTTON);
@@ -133,13 +138,55 @@ public class FrameworkDefaultsFactory extends AbstractThemeFactory
         group.backgroundSkin = quad;
     }
 
-    private function theme_dialogContentGroup(group:Dialog):void
-    {
-        group.minWidth = 300;
-       // FileDialog(group).padding = dp(2);
-        group.backgroundSkin = create9ScaleImage('background-popup-skin', 4, 4, 24, 24);
-    }
+    
+    //----------------------------------
+    // Dialog
+    //----------------------------------
 
+    
+    private function set_DialogStyles(dialog:Dialog):void
+    {
+        var border:Number = 0;
+        
+        var hl:HorizontalLayout = dialog.header.layout as HorizontalLayout;
+        hl.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_LEFT;
+        
+        dialog.titleLabel.styleName = "dialog-title-label";
+        dialog.minWidth = 300;
+        
+        var dl:VerticalLayout = dialog.contentContainer.layout as VerticalLayout;
+        dl.padding = 24 + border;
+        dl.gap = 20;
+        dl.lastGap = 24;
+        
+        var fl:HorizontalLayout = dialog.footer.layout as HorizontalLayout;
+        fl.padding = 8 + border;
+        fl.gap = 8;
+        fl.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_RIGHT;
+        
+        /*
+        Padding around content area: 24dp
+        Padding between title and body text: 20dp
+        Padding around buttons: 8dp
+        Button height: 36dp
+        Action area height: 52dp
+        Dialog elevation: 24dp
+        */
+
+        
+        dialog.backgroundSkin = create9ScaleImageFrom(
+            FrameworkSkinNames.BACKGROUND_POPUP_SHADOW_SKIN, 
+            SharedFactory.BACKGROUND_POPUP_SHADOW_SKIN_SCALE9_GRID);
+    }
+    
+    private function set_Dialog_TitleLabel_Styles(label:Label):void
+    {
+        theme.label.setHeadingLabelStyles(label);
+    }
+    
+    
+    ////
+    
     private function theme_textInputDarkStyles(textInput:TextInput):void
     {
         theme.textInput.setDarkTextInputStyles(textInput);

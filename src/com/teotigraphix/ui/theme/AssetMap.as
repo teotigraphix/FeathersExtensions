@@ -37,8 +37,6 @@ public final class AssetMap
     
     public static var theme:StyleNameFunctionTheme;
     
-    //public static var scaleManager:ScreenDensityScaleFactorManager;
-    
     private static var _textures:Dictionary = new Dictionary();
     private static var _scale9Textures:Dictionary = new Dictionary();
     
@@ -58,11 +56,16 @@ public final class AssetMap
         return new Image(texture);
     }
     
-    public static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Image
+    public static function create9ScaleImageFrom(name:String, rectangle:Rectangle, isRuntime:Boolean = false):Image
     {
         var image:Image = createImage(name, isRuntime);
-        image.scale9Grid = new Rectangle(x, y, width, height);
+        image.scale9Grid = rectangle;
         return image;
+    }
+    
+    public static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Image
+    {
+        return create9ScaleImageFrom(name, new Rectangle(x, y, width, height), isRuntime);
     }
     
     public static function getTexture(name:String, isRuntime:Boolean = false):Texture

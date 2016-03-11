@@ -129,6 +129,11 @@ public class AbstractThemeFactory extends EventDispatcher
         return AssetMap.createImage(name, isRuntime);
     }
 
+    protected static function create9ScaleImageFrom(name:String, rectangle:Rectangle, isRuntime:Boolean = false):Image
+    {
+        return AssetMap.create9ScaleImageFrom(name, rectangle, isRuntime);
+    }
+    
     protected static function create9ScaleImage(name:String, x:int, y:int, width:int, height:int, isRuntime:Boolean = false):Image
     {
         return AssetMap.create9ScaleImage(name, x, y, width, height, isRuntime);

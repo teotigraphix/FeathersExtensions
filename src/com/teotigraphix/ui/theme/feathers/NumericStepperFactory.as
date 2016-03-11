@@ -23,7 +23,6 @@ package com.teotigraphix.ui.theme.feathers
 import com.teotigraphix.ui.theme.AbstractTheme;
 import com.teotigraphix.ui.theme.AbstractThemeFactory;
 import com.teotigraphix.ui.theme.SharedFactory;
-import com.teotigraphix.ui.theme.ThemeProperties;
 
 import feathers.controls.Button;
 import feathers.controls.NumericStepper;

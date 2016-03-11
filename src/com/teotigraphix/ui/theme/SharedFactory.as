@@ -91,6 +91,9 @@ public class SharedFactory extends AbstractThemeFactory
     
     //public static const BUTTON_SELECTED_SCALE9_GRID:Rectangle = new Rectangle(4, 4, 22, 22);
     
+    public static const BACKGROUND_POPUP_SHADOW_SKIN_SCALE9_GRID:Rectangle = new Rectangle(3, 3, 2, 2);
+    
+    
     
     
     // Alert

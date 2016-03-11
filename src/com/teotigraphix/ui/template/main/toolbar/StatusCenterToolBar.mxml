@@ -7,4 +7,18 @@
         <f:HorizontalLayout/>
     </f:layout>
     
+    <fx:Script>
+        <![CDATA[
+            import feathers.skins.IStyleProvider;
+            
+            public static var globalStyleProvider:IStyleProvider;
+            
+            override protected function get defaultStyleProvider():IStyleProvider
+            {
+                return StatusCenterToolBar.globalStyleProvider;
+            }
+        ]]>
+    </fx:Script>
+    
+    
 </f:LayoutGroup>

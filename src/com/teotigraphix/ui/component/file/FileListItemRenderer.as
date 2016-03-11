@@ -44,6 +44,8 @@ public class FileListItemRenderer extends DefaultListItemRenderer
 
     override protected function initialize():void
     {
+        super.initialize();
+        
         addEventListener(TouchEvent.TOUCH, touch);
 //
 //        layout = new AnchorLayout();
